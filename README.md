@@ -1,4 +1,4 @@
-# Booking app
+# Washed Up
 
 ## Tech stack
 
@@ -16,7 +16,6 @@
 
 ### Frontend
 
-- Washed Up
 - Udlejning af vaskemaskine og tørretumbler
 - React Native App frontend
 - Brugere skal scanne en QR kode for at kunne registrere
