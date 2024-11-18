@@ -7,5 +7,5 @@ RUN bun install
 COPY . .
 RUN bun run build
 
-EXPOSE 3000
+EXPOSE 3001
 ENTRYPOINT ["bun", "./build"]
