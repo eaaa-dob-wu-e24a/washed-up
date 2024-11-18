@@ -1,3 +1,13 @@
-# Svelte! Laravel! React Native!
+# Booking app
 
-Yep, det er based
+## Tech stack
+
+### Frontend
+
+- React Native: User Frontend
+- Svelte 5: Admin Panel
+
+### Backend
+
+- Laravel
+- MySQL
