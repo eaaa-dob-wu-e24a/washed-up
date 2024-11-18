@@ -1,3 +1,3 @@
-# Svelte? React? Tauri? TypeScript? Rust? shadcn?
+# Svelte! Laravel! React Native!
 
 Yep, det er based
