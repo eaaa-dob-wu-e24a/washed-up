@@ -1,5 +1,7 @@
 # svelte 5.0
 
 - bun run dev
-  eller
+
+eller
+
 - bun run dev --open
