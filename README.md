@@ -16,13 +16,14 @@
 
 ### Frontend
 
-- Udlejning af vaskemaskine og tørretumbler
 - React Native App frontend
+- Udlejning af vaskemaskine og tørretumbler
 - Brugere skal scanne en QR kode for at kunne registrere
 - Brugere kan scanne en QR kode på vaskemaskinen eller tørretumbleren for at leje dem
 - Alternativt taste en kode som står under QR koden, hvis kamera ikke virker
 - De kan bestemme hvor meget tid (vask default 3 timer, tørretumbler default 1:30 time)
 - Kan også leje igennem appen til en senere dato/tid
+- Kan se hvilke vaskemaskiner og tørretumbler er udlejet
 
 ### Admin
 
