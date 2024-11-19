@@ -5,19 +5,25 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Books;
 
-class BookController extends Controller {
-    public function index() {
+class BookController extends Controller
+{
+    public function index()
+    {
         $books = Books::all();
         return response()->json($books);
     }
-    public function store(Request $request) {
+
+    public function store(Request $request)
+    {
         $book = new Books();
         $book->title = $request->title;
         $book->author = $request->author;
         $book->save();
         return response()->json(['message' => 'Book created!'], 201);
     }
-    public function show($id) {
+
+    public function show($id)
+    {
         $book = Books::find($id);
         if (!empty($book)) {
             return response()->json($book);
@@ -25,7 +31,9 @@ class BookController extends Controller {
             return response()->json(['message' => 'Book not found!'], 404);
         }
     }
-    public function update(Request $request, $id) {
+
+    public function update(Request $request, $id)
+    {
 
         if (Books::where('id', $id)->exists()) {
             $book = Books::find($id);
@@ -45,7 +53,9 @@ class BookController extends Controller {
             ], 404);
         }
     }
-    public function destroy($id) {
+
+    public function destroy($id)
+    {
         if (Books::where('id', $id)->exists()) {
             $book = Books::find($id);
             $book->delete();
@@ -54,6 +64,9 @@ class BookController extends Controller {
                 "message" => "Book deleted"
             ], 202);
         } else {
+            return response()->json([
+                "message" => "Book not found"
+            ], 404);
         }
     }
 }
