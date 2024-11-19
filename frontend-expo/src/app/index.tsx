@@ -1,12 +1,29 @@
 import { Link } from "expo-router";
-import React from "react";
-import { Text, View } from "react-native";
+import React, { useState } from "react";
+import { Button, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+async function fetchBooks() {
+  const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/books`);
+  const data = await response.json();
+
+  return data;
+}
+
 export default function Page() {
+  const [books, setBooks] = useState([]);
+
   return (
     <View className="flex flex-1">
       <Header />
+      <View className="h-10 bg-yellow-500 flex-1">
+        <Button
+          title="Fetch Books"
+          onPress={async () => setBooks(await fetchBooks())}
+        />
+        <Text>Books</Text>
+        <Text className="text-red-600">{JSON.stringify(books)}</Text>
+      </View>
       <Content />
       <Footer />
     </View>

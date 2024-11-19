@@ -3,8 +3,9 @@
     "scheme": "acme",
     "userInterfaceStyle": "automatic",
     "orientation": "default",
+    "newArchEnabled": true,
     "web": {
-      "output": "static",
+      "output": "server",
       "bundler": "metro"
     },
     "plugins": [
@@ -16,6 +17,22 @@
       ]
     ],
     "name": "frontend-expo",
-    "slug": "frontend-expo"
+    "slug": "washedup",
+    "extra": {
+      "router": {
+        "origin": "https://n"
+      },
+      "eas": {
+        "projectId": "1ed9b1c1-8834-4d10-9245-7121929e6e79"
+      }
+    },
+    "owner": "fred9891",
+    "production": {},
+    "android": {
+      "package": "com.fred9891.washedup"
+    },
+    "ios": {
+      "bundleIdentifier": "com.fred9891.washedup"
+    }
   }
 }
