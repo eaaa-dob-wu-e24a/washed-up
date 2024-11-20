@@ -11,4 +11,8 @@ class Machine extends Model {
         'location',
         'status',
     ];
+
+    public function qrCode() {
+        return $this->hasOne(QRCode::class);
+    }
 }
