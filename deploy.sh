@@ -4,6 +4,7 @@
 DOMAIN_NAME="washed-up.frederikbarbre.dk" # replace with your domain
 EMAIL="fr.barbre@gmail.com" # replace with your email
 AUTH_SECRET=auth-secret-here
+ORIGIN=https://${DOMAIN_NAME}
 
 # Backend Environment Variables
 BACKEND_ENV_VARS="APP_ENV=production
@@ -77,6 +78,9 @@ fi
 
 # Set up frontend env variables
 echo "$FRONTEND_ENV_VARS" > "$APP_DIR/frontend-svelte/.env"
+
+echo "AUTH_SECRET=${AUTH_SECRET}" > "$APP_DIR/.env"
+echo "ORIGIN=${ORIGIN}" >> "$APP_DIR/.env"
 
 # Set up backend env variables
 echo "$BACKEND_ENV_VARS" > "$APP_DIR/backend-laravel/.env"
