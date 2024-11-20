@@ -10,8 +10,8 @@ class DatabaseSeeder extends Seeder {
      * Seed the application's database.
      */
     public function run(): void {
-        // User::factory(10)->create();
         $this->call(MachineSeeder::class);
         $this->call(QRCodeSeeder::class);
+        $this->call(ScheduleSeeder::class);
     }
 }
