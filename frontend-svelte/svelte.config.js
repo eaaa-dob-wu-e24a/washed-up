@@ -15,6 +15,9 @@ const config = {
 		adapter: adapter({
 			envPrefix: false
 		}),
+		csrf: {
+			checkOrigin: false
+		},
 		alias: {
 			'@/*': './src/lib/*'
 		}

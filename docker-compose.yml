@@ -8,6 +8,8 @@ services:
       - "3001:3000"
     environment:
       - API_URL=http://laravel # Use `laravel` as the hostname and default port 80
+      - AUTH_SECRET=${AUTH_SECRET}
+      - NODE_ENV=production
     depends_on:
       - laravel # Ensure the backend is started before the frontend
 
