@@ -9,7 +9,7 @@ return new class extends Migration {
      * Run the migrations.
      */
     public function up(): void {
-        Schema::create('schedules', function (Blueprint $table) {
+        Schema::create('rentals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('machine_id')->constrained('machines')->onDelete('cascade');
@@ -23,6 +23,6 @@ return new class extends Migration {
      * Reverse the migrations.
      */
     public function down(): void {
-        Schema::dropIfExists('schedules');
+        Schema::dropIfExists('rentals');
     }
 };

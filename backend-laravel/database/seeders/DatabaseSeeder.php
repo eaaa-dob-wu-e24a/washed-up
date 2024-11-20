@@ -13,5 +13,6 @@ class DatabaseSeeder extends Seeder {
         $this->call(MachineSeeder::class);
         $this->call(QRCodeSeeder::class);
         $this->call(ScheduleSeeder::class);
+        $this->call(RentalSeeder::class);
     }
 }
