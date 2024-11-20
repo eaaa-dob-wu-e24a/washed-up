@@ -24,6 +24,7 @@ export const { signIn, signOut, handle } = SvelteKitAuth(async (event) => {
 		redirect(302, '/sign-in');
 	}
 	const authOptions: SvelteKitAuthConfig = {
+		trustHost: true,
 		providers: [
 			Credentials({
 				// You can specify which fields should be submitted, by adding keys to the `credentials` object.
