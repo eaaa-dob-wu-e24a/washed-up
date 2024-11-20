@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  sveltekit:
+    build:
+      context: ./frontend-svelte
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - AUTH_SECRET=R8phSFle7/LxgZGyTv1JnGR0TLnleC2lHUoXBakLnJQ=
+      - API_URL=http://laravel # Use `laravel` as the hostname and default port 80
+    depends_on:
+      - laravel # Ensure the backend is started before the frontend
+
+  laravel:
+    build:
+      context: ./backend-laravel
+    ports:
+      - "8181:80" # Map container's Apache port 80 to host port 8181
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
