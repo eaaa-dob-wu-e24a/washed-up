@@ -28,7 +28,7 @@ jobs:
             export GITHUB_TOKEN=${{ secrets.REPO_TOKEN }}
 
             # Define application directory and repository URL
-            REPO_URL="https://$GITHUB_TOKEN@github.com/eaaa-dob-wu-e24a/locks-locks-tobias-andre-frederik-mads.git"
+            REPO_URL="https://$GITHUB_TOKEN@github.com/eaaa-dob-wu-e24a/final-project-fucc.git"
             APP_DIR=~/locks
 
             # Pull latest changes from the Git repository
