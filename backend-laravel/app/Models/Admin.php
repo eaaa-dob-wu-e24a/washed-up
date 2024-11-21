@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Admin extends Model {
     protected $fillable = [
         'name',
-        'role',
+        'location',
     ];
 
     public function reports() {
