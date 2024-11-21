@@ -29,12 +29,15 @@ jobs:
 
             # Define application directory and repository URL
             REPO_URL="https://$GITHUB_TOKEN@github.com/eaaa-dob-wu-e24a/final-project-fucc.git"
-            APP_DIR=~/locks
+            APP_DIR=~/booking_app/myapp
 
             # Pull latest changes from the Git repository
             if [ -d "$APP_DIR" ]; then
-              echo "Directory $APP_DIR exists. Pulling latest changes..."
+              echo "Directory $APP_DIR exists. Resetting remote repository..."
               cd $APP_DIR
+
+              # Reset the Git remote URL to prevent using cached data
+              git remote set-url origin $REPO_URL
               git fetch origin main
               git reset --hard origin/main
             else
@@ -62,4 +65,4 @@ jobs:
             sudo docker system df
 
             # Output success message
-            echo "Update complete. Your Next.js app has been deployed with the latest changes."
+            echo "Update complete. Your app has been deployed with the latest changes."
