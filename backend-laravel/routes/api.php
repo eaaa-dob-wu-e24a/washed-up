@@ -6,9 +6,9 @@ use App\Http\Controllers\MachineController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\AuthController;
 
-Route::controller(RegisterController::class)->group(function () {
+Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
 });
