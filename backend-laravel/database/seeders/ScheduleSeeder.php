@@ -26,14 +26,14 @@ class ScheduleSeeder extends Seeder {
         }
 
         foreach ($users as $user) {
-            foreach ($machines as $machine) {
-                Schedule::create([
-                    'user_id' => $user->id,
-                    'machine_id' => $machine->id,
-                    'start_time' => Carbon::now(),
-                    'end_time' => Carbon::now()->addHours(rand(1, 8)),
-                ]);
-            }
+            $machine = $machines->random();
+            $starttime = Carbon::now()->addHours(rand(1, 8));
+            Schedule::create([
+                'user_id' => $user->id,
+                'machine_id' => $machine->id,
+                'start_time' => $starttime,
+                'end_time' => $starttime->copy()->addHours(rand(1, 8)),
+            ]);
         }
     }
 }

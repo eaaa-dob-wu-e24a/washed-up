@@ -12,7 +12,7 @@ return new class extends Migration {
         Schema::create('machines', function (Blueprint $table) {
             $table->id();
             $table->string('model');
-            $table->string('location');
+            $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
             $table->boolean('status');
             $table->timestamps();
         });

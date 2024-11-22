@@ -8,9 +8,13 @@ class Machine extends Model {
     protected $table = 'machines';
     protected $fillable = [
         'model',
-        'location',
+        'location_id',
         'status',
     ];
+
+    public function location() {
+        return $this->belongsTo(Location::class);
+    }
 
     public function qrCode() {
         return $this->hasOne(QRCode::class);
