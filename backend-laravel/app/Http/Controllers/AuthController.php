@@ -61,7 +61,7 @@ class AuthController extends Controller {
             return response()->json($validate->errors(), 400);
         } else {
             return response()->json([
-                'message' => 'Validated'
+                'success' => true
             ]);
         }
     }
