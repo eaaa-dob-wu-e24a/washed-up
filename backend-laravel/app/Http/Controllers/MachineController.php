@@ -7,12 +7,12 @@ use Illuminate\Http\Request;
 
 class MachineController extends Controller {
     public function index() {
-        $machines = Machine::all();
+        $machines = Machine::with('location')->get();
         return response()->json($machines);
     }
 
     public function show($id) {
-        $machine = Machine::findOrFail($id);
+        $machine = Machine::with('location')->findOrFail($id);
         return response()->json($machine);
     }
 

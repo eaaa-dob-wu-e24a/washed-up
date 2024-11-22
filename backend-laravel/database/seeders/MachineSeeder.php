@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Machine;
+use App\Models\Location;
 
 class MachineSeeder extends Seeder {
     /**
@@ -11,10 +12,17 @@ class MachineSeeder extends Seeder {
      */
     public function run() {
         $faker = \Faker\Factory::create();
-        for ($i = 0; $i < 10; $i++) {
+
+        $locations = Location::all();
+
+        if ($locations->isEmpty()) {
+            $locations = Location::factory()->count(10)->create();
+        }
+
+        for ($i = 0; $i < 100; $i++) {
             Machine::create([
-                'model' => $faker->sentence,
-                'location' => $faker->sentence,
+                'model' => $faker->word,
+                'location_id' => $locations->random()->id,
                 'status' => $faker->boolean,
             ]);
         }

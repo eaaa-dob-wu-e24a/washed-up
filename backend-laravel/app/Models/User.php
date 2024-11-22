@@ -19,6 +19,7 @@ class User extends Authenticatable {
         'name',
         'email',
         'password',
+        'location_id',
     ];
 
     /**
@@ -49,5 +50,9 @@ class User extends Authenticatable {
 
     public function rentals() {
         return $this->hasMany(Rental::class);
+    }
+
+    public function location() {
+        return $this->belongsTo(Location::class);
     }
 }
