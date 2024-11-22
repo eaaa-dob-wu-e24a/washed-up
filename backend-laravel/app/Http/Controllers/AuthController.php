@@ -8,24 +8,30 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
-class AuthController extends Controller {
-    public function index() {
+class AuthController extends Controller
+{
+    public function index()
+    {
         $user = Auth::user();
         if ($user) {
             return response()->json($user);
         } else {
-            return response()->json([
-                'message' => 'Unauthenticated'
-            ], 401);
+            return response()->json(
+                [
+                    'message' => 'Unauthenticated',
+                ],
+                401
+            );
         }
     }
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8',
             'c_password' => 'required|same:password',
-            'location_id' => 'required|exists:locations,id'
+            'location_id' => 'required|exists:locations,id',
         ]);
 
         if ($validate->fails()) {
@@ -36,7 +42,7 @@ class AuthController extends Controller {
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'location_id' => $request->location_id
+            'location_id' => $request->location_id,
         ]);
 
         $user->save();
@@ -45,31 +51,36 @@ class AuthController extends Controller {
 
         return response()->json([
             'access_token' => $token,
-            'token_type' => 'Bearer'
+            'token_type' => 'Bearer',
         ]);
     }
-    public function validate(Request $request) {
+    public function validate(Request $request)
+    {
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8',
             'c_password' => 'required|same:password',
-            'location_id' => 'required|exists:locations,id'
+            'location_id' => 'required|exists:locations,id',
         ]);
 
         if ($validate->fails()) {
             return response()->json($validate->errors(), 400);
         } else {
             return response()->json([
-                'success' => true
+                'success' => true,
             ]);
         }
     }
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json([
-                'message' => 'Invalid login details'
-            ], 401);
+            return response()->json(
+                [
+                    'message' => 'Invalid login details',
+                ],
+                401
+            );
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
@@ -77,7 +88,7 @@ class AuthController extends Controller {
 
         return response()->json([
             'access_token' => $token,
-            'token_type' => 'Bearer'
+            'token_type' => 'Bearer',
         ]);
     }
 }

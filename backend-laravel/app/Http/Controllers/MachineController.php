@@ -10,9 +10,7 @@ class MachineController extends Controller
 {
     public function index()
     {
-        $user = Auth::user();
-
-        $machines = Machine::with('location')->where('location_id', $user->location_id)->get();
+        $machines = Machine::with('location')->get();
         return response()->json($machines);
     }
 

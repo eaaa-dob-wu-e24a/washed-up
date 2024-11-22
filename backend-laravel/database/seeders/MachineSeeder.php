@@ -6,11 +6,13 @@ use Illuminate\Database\Seeder;
 use App\Models\Machine;
 use App\Models\Location;
 
-class MachineSeeder extends Seeder {
+class MachineSeeder extends Seeder
+{
     /**
      * Run the database seeds.
      */
-    public function run() {
+    public function run()
+    {
         $faker = \Faker\Factory::create();
 
         $locations = Location::all();
