@@ -1,18 +1,23 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { TextInput, Button, View } from "react-native";
 import { useSignUp, useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
-import { signUp as dbSignUp } from "@/queries/sign-up";
+import { signUp as dbSignUp, updateClerkMetadata } from "@/queries";
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const { user } = useUser();
   const router = useRouter();
 
-  const [emailAddress, setEmailAddress] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [pendingVerification, setPendingVerification] = React.useState(false);
-  const [code, setCode] = React.useState("");
+  const [name, setName] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [location, setLocation] = useState("");
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [code, setCode] = useState("");
+  const [metaData, setMetaData] = useState<{
+    [key: string]: any;
+  }>({});
 
   const onSignUpPress = async () => {
     if (!isLoaded) {
@@ -21,12 +26,19 @@ export default function SignUpScreen() {
 
     try {
       const db_sign_up = await dbSignUp({
-        name: "Frederik Barbre",
+        name,
         email: emailAddress,
         password,
+        location,
       });
 
-      if (!db_sign_up) return;
+      if (!db_sign_up?.access_token) return;
+
+      setMetaData({
+        access_token: db_sign_up.access_token,
+        location: location,
+        name: name,
+      });
 
       await signUp.create({
         emailAddress,
@@ -65,16 +77,30 @@ export default function SignUpScreen() {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!user) return;
 
-    const id = user.id;
+    async function updateMetadata() {
+      if (!metaData?.access_token) return;
+      await updateClerkMetadata({
+        access_token: metaData?.access_token,
+        metadata: metaData,
+        user_id: user.id,
+      });
+    }
+
+    updateMetadata();
   }, [user]);
 
   return (
     <View>
       {!pendingVerification && (
         <>
+          <TextInput
+            value={name}
+            placeholder="Name..."
+            onChangeText={(name) => setName(name)}
+          />
           <TextInput
             autoCapitalize="none"
             value={emailAddress}
@@ -87,9 +113,16 @@ export default function SignUpScreen() {
             secureTextEntry={true}
             onChangeText={(password) => setPassword(password)}
           />
+          <TextInput
+            value={location}
+            placeholder="Location..."
+            onChangeText={(location) => setLocation(location)}
+          />
+
           <Button title="Sign Up" onPress={onSignUpPress} />
         </>
       )}
+
       {pendingVerification && (
         <>
           <TextInput
