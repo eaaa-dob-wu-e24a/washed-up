@@ -7,14 +7,16 @@ use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\API\RegisterController;
+use App\Http\Controllers\ClerkController;
 
 Route::controller(RegisterController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
 });
 
-
 Route::middleware('auth:sanctum')->group(function () {
+    Route::patch("/clerk-metadata/{id}", [ClerkController::class, 'updateMetadata']);
+
     Route::get('/books', [BookController::class, 'index']);
     Route::get('/books/{id}', [BookController::class, 'show']);
     Route::post('/books', [BookController::class, 'store']);
