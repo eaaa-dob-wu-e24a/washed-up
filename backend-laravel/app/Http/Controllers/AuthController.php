@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
 class AuthController extends Controller {
+    public function index() {
+        $user = Auth::user();
+        if ($user) {
+            return response()->json($user);
+        } else {
+            return response()->json([
+                'message' => 'Unauthenticated'
+            ], 401);
+        }
+    }
     public function register(Request $request) {
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -50,9 +60,5 @@ class AuthController extends Controller {
             'access_token' => $token,
             'token_type' => 'Bearer'
         ]);
-    }
-    public function show() {
-        $user = Auth::user();
-        return response()->json($user);
     }
 }
