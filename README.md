@@ -4,7 +4,7 @@
 
 ### Frontend
 
-- React Native: User Frontend
+- Expo: User Frontend
 - Svelte 5: Admin Panel
 
 ### Backend
