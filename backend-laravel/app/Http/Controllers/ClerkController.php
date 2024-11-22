@@ -12,8 +12,9 @@ class ClerkController extends Controller
 
         $curl = curl_init();
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.clerk.com/v1/users/' . $id . '/metadata',
+        curl_setopt_array($curl, [
+            CURLOPT_URL =>
+                'https://api.clerk.com/v1/users/' . $id . '/metadata',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -22,11 +23,11 @@ class ClerkController extends Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'PATCH',
             CURLOPT_POSTFIELDS => json_encode($body),
-            CURLOPT_HTTPHEADER => array(
+            CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . env('CLERK_API_KEY'),
-            ),
-        ));
+            ],
+        ]);
 
         $response = curl_exec($curl);
 
@@ -39,7 +40,13 @@ class ClerkController extends Controller
         if (json_last_error() === JSON_ERROR_NONE) {
             return response()->json($decodedResponse, 200);
         } else {
-            return response()->json(['error' => 'Invalid JSON response from API', 'raw_response' => $response], 500);
+            return response()->json(
+                [
+                    'error' => 'Invalid JSON response from API',
+                    'raw_response' => $response,
+                ],
+                500
+            );
         }
     }
 }

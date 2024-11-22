@@ -4,7 +4,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "prettier": "prettier"
+        "format": "prettier --write . --config .prettierrc"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.20",
