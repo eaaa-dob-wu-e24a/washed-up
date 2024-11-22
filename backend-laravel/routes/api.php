@@ -6,7 +6,6 @@ use App\Http\Controllers\MachineController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\ClerkController;
 use App\Http\Controllers\AuthController;
 
