@@ -12,6 +12,13 @@
 - Laravel
 - MySQL
 
+### DevOps
+
+- VPS (Hetzner)
+- Docker
+- Docker Compose
+- Nginx 
+
 ## Case specifics
 
 ### Frontend
