@@ -12,7 +12,7 @@
 - Laravel
 - MySQL
 
-## DevOps
+### DevOps
 
 - VPS (Hetzner)
 - Docker
