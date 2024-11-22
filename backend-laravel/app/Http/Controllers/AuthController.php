@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
-class AuthController extends Controller {
-    public function index() {
+class AuthController extends Controller
+{
+    public function index()
+    {
         $user = Auth::user();
         if ($user) {
             return response()->json($user);
@@ -19,7 +21,8 @@ class AuthController extends Controller {
             ], 401);
         }
     }
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
@@ -46,7 +49,8 @@ class AuthController extends Controller {
             'token_type' => 'Bearer'
         ]);
     }
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Invalid login details'
