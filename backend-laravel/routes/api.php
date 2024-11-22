@@ -10,6 +10,7 @@ use App\Http\Controllers\ClerkController;
 use App\Http\Controllers\AuthController;
 
 Route::controller(AuthController::class)->group(function () {
+    Route::post('validate', 'validate');
     Route::post('register', 'register');
     Route::post('login', 'login');
 });

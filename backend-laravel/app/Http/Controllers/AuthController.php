@@ -48,6 +48,23 @@ class AuthController extends Controller {
             'token_type' => 'Bearer'
         ]);
     }
+    public function validate(Request $request) {
+        $validate = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string|min:8',
+            'c_password' => 'required|same:password',
+            'location_id' => 'required|exists:locations,id'
+        ]);
+
+        if ($validate->fails()) {
+            return response()->json($validate->errors(), 400);
+        } else {
+            return response()->json([
+                'message' => 'Validated'
+            ]);
+        }
+    }
     public function login(Request $request) {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
