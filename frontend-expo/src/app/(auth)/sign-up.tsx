@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
-import { TextInput, Button, View } from "react-native";
+import { Api } from "@/api";
 import { useSignUp, useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
-import { signUp as dbSignUp, updateClerkMetadata } from "@/queries";
+import { useEffect, useState } from "react";
+import { Button, TextInput, View } from "react-native";
 
 export default function SignUpScreen() {
+  const api = new Api();
+
   const { isLoaded, signUp, setActive } = useSignUp();
   const { user } = useUser();
   const router = useRouter();
@@ -25,20 +27,14 @@ export default function SignUpScreen() {
     }
 
     try {
-      const db_sign_up = await dbSignUp({
+      const validate = await api.validateCredentials({
         name,
         email: emailAddress,
         password,
         location,
       });
 
-      if (!db_sign_up?.access_token) return;
-
-      setMetaData({
-        access_token: db_sign_up.access_token,
-        location: location,
-        name: name,
-      });
+      if (!validate?.success) return;
 
       await signUp.create({
         emailAddress,
@@ -66,6 +62,21 @@ export default function SignUpScreen() {
       });
 
       if (completeSignUp.status === "complete") {
+        const db_sign_up = await api.signUp({
+          name,
+          email: emailAddress,
+          password,
+          location,
+        });
+
+        if (!db_sign_up?.access_token) return;
+
+        setMetaData({
+          access_token: db_sign_up.access_token,
+          location: location,
+          name: name,
+        });
+
         await setActive({ session: completeSignUp.createdSessionId });
       } else {
         console.error(JSON.stringify(completeSignUp, null, 2));
@@ -82,7 +93,7 @@ export default function SignUpScreen() {
 
     async function updateMetadata() {
       if (!metaData?.access_token) return;
-      await updateClerkMetadata({
+      await api.updateClerkMetadata({
         access_token: metaData?.access_token,
         metadata: metaData,
         user_id: user.id,

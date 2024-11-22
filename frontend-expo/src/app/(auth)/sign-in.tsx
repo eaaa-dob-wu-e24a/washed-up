@@ -1,12 +1,10 @@
-import { useSignIn, useUser } from "@clerk/clerk-expo";
-import { Link, useRouter } from "expo-router";
-import React, { useEffect } from "react";
+import { useSignIn } from "@clerk/clerk-expo";
+import { Link } from "expo-router";
+import React from "react";
 import { Button, Text, TextInput, View } from "react-native";
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn();
-  const { user } = useUser();
-  const router = useRouter();
 
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -37,13 +35,6 @@ export default function Page() {
       console.error(JSON.stringify(err, null, 2));
     }
   }, [isLoaded, emailAddress, password]);
-
-  useEffect(() => {
-    if (!user) return;
-    console.log("im creating a metadata here on sign in!", user.id);
-  }, [user]);
-
-  console.log("user", user);
 
   return (
     <View>

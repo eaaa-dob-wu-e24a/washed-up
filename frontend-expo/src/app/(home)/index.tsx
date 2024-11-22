@@ -1,24 +1,17 @@
-import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
-import { Link } from "expo-router";
-import { Text, View } from "react-native";
+import AuthScreen from "@/components/auth/auth-screen";
+import HomeScreen from "@/components/home/home-screen";
+import { SignedIn, SignedOut } from "@clerk/clerk-expo";
+import { View } from "react-native";
 
 export default function Page() {
-  const { user } = useUser();
-
-  console.log(user);
-
   return (
     <View>
       <SignedIn>
-        <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
+        <HomeScreen />
       </SignedIn>
+
       <SignedOut>
-        <Link href="/sign-in">
-          <Text>Sign In</Text>
-        </Link>
-        <Link href="/sign-up">
-          <Text>Sign Up</Text>
-        </Link>
+        <AuthScreen />
       </SignedOut>
     </View>
   );
