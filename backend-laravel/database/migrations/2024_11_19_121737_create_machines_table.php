@@ -8,15 +8,11 @@ return new class extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
+    public function up(): void {
         Schema::create('machines', function (Blueprint $table) {
             $table->id();
             $table->string('model');
-            $table
-                ->foreignId('location_id')
-                ->constrained('locations')
-                ->onDelete('cascade');
+            $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
             $table->boolean('status');
             $table->timestamps();
         });
@@ -25,8 +21,7 @@ return new class extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
+    public function down(): void {
         Schema::dropIfExists('machines');
     }
 };

@@ -35,6 +35,7 @@ class ScheduleSeeder extends Seeder
                 'machine_id' => $machine->id,
                 'start_time' => $starttime,
                 'end_time' => $starttime->copy()->addHours(rand(1, 8)),
+
             ]);
         }
     }

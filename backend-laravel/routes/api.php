@@ -16,10 +16,7 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::patch('/clerk-metadata/{id}', [
-        ClerkController::class,
-        'updateMetadata',
-    ]);
+    Route::patch("/clerk-metadata/{id}", [ClerkController::class, 'updateMetadata']);
 
     Route::get('/user', [AuthController::class, 'index']);
 
