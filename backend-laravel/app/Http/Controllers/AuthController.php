@@ -51,4 +51,8 @@ class AuthController extends Controller {
             'token_type' => 'Bearer'
         ]);
     }
+    public function show() {
+        $user = Auth::user();
+        return response()->json($user);
+    }
 }
