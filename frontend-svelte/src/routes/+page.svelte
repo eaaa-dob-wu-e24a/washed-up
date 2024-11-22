@@ -3,7 +3,7 @@
 	let count = $state(0);
 </script>
 
-<h1>Welcome to SvelteKit</h1>
+<h1>Vi deployer for sjov</h1>
 
 <a href="/about">Go to About</a>
 

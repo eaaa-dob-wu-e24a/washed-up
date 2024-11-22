@@ -8,11 +8,13 @@ use App\Models\Rental;
 use App\Models\User;
 use App\Models\Machine;
 
-class RentalSeeder extends Seeder {
+class RentalSeeder extends Seeder
+{
     /**
      * Run the database seeds.
      */
-    public function run(): void {
+    public function run(): void
+    {
         // Ensure there are some users and machines to associate with rentals
         $users = User::all();
         $machines = Machine::all();

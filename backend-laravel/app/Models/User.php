@@ -7,7 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable {
+class User extends Authenticatable
+{
     use HasFactory, Notifiable, HasApiTokens;
 
     /**
@@ -15,44 +16,40 @@ class User extends Authenticatable {
      *
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'location_id',
-    ];
+    protected $fillable = ['name', 'email', 'password', 'location_id'];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var array
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
     /**
      * Get the attributes that should be cast.
      *
      * @return array
      */
-    protected function casts(): array {
+    protected function casts(): array
+    {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
 
-    public function schedules() {
+    public function schedules()
+    {
         return $this->hasMany(Schedule::class);
     }
 
-    public function rentals() {
+    public function rentals()
+    {
         return $this->hasMany(Rental::class);
     }
 
-    public function location() {
+    public function location()
+    {
         return $this->belongsTo(Location::class);
     }
 }
