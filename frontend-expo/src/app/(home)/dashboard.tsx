@@ -1,5 +1,5 @@
-import { Api } from "@/api";
-import { Machine } from "@/types";
+import { Api } from "api";
+import { Machine } from "types";
 import { useUser } from "@clerk/clerk-expo";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";

@@ -1,4 +1,4 @@
-import { Api } from "@/api";
+import { Api } from "api";
 import { useSignUp, useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";

@@ -1,4 +1,4 @@
-import AuthScreen from "@/components/auth/auth-screen";
+import AuthScreen from "components/auth/auth-screen";
 import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
 import { View } from "react-native";

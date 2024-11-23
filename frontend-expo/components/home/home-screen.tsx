@@ -1,8 +1,8 @@
-import { Api } from "@/api";
-import { Machine } from "@/types";
+import { Machine } from "types";
 import { useUser } from "@clerk/clerk-expo";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import { Api } from "api";
 
 export default function HomeScreen() {
   const { user, isLoaded } = useUser();
