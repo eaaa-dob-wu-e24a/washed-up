@@ -1,18 +1,21 @@
-import { useAuth } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
+import { Redirect } from "expo-router";
 import { Stack } from "expo-router/stack";
-import { Pressable, Text } from "react-native";
+import { Button } from "react-native";
 
 export default function Layout() {
   const { signOut } = useAuth();
+  const { user } = useUser();
+
+  if (!user) {
+    return <Redirect href={"/"} />;
+  }
+
   return (
     <Stack
       screenOptions={{
         headerRight: () => {
-          return (
-            <Pressable onPress={() => signOut()}>
-              <Text>Sign out</Text>
-            </Pressable>
-          );
+          return <Button onPress={() => signOut()} title="Sign out" />;
         },
       }}
     />

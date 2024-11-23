@@ -4,15 +4,12 @@ import { useUser } from "@clerk/clerk-expo";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
-export default function HomeScreen() {
-  const { user, isLoaded } = useUser();
+export default function Dashboard() {
+  const { user } = useUser();
   const [machines, setMachines] = useState<Machine[]>([]);
 
-  console.log("initial user", user);
-
   useEffect(() => {
-    const token = user.publicMetadata.access_token;
-    console.log(token);
+    const token = user?.publicMetadata?.access_token;
     if (!token) return;
     const api = new Api(token);
 
@@ -21,7 +18,7 @@ export default function HomeScreen() {
       setMachines(data);
     }
     getData();
-  }, [isLoaded]);
+  }, [user]);
 
   return (
     <View>

@@ -35,7 +35,6 @@ export class Api {
       });
 
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (error) {
       console.error("Error signing up", error);
@@ -73,7 +72,6 @@ export class Api {
       );
 
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (error) {
       console.error("Error validating credentials", error);

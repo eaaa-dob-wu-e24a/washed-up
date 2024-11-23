@@ -98,6 +98,8 @@ export default function SignUpScreen() {
         metadata: metaData,
         user_id: user.id,
       });
+
+      await user.reload();
     }
 
     updateMetadata();
