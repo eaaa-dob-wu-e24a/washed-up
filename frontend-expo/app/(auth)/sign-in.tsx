@@ -2,6 +2,7 @@ import { useSignIn } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
 import React from "react";
 import { Button, Text, TextInput, View } from "react-native";
+import { Input } from "~/components/ui/input";
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -38,13 +39,13 @@ export default function Page() {
 
   return (
     <View>
-      <TextInput
+      <Input
         autoCapitalize="none"
         value={emailAddress}
         placeholder="Email..."
         onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
       />
-      <TextInput
+      <Input
         value={password}
         placeholder="Password..."
         secureTextEntry={true}
