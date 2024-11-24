@@ -1,38 +1,35 @@
 {
   "expo": {
-    "scheme": "acme",
+    "name": "Starter Base",
+    "slug": "starter-base",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    "orientation": "default",
-    "newArchEnabled": true,
-    "web": {
-      "output": "server",
-      "bundler": "metro"
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
-    "plugins": [
-      [
-        "expo-router",
-        {
-          "origin": "https://n"
-        }
-      ]
-    ],
-    "name": "frontend-expo",
-    "slug": "washedup",
-    "extra": {
-      "router": {
-        "origin": "https://n"
-      },
-      "eas": {
-        "projectId": "1ed9b1c1-8834-4d10-9245-7121929e6e79"
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
       }
     },
-    "owner": "fred9891",
-    "production": {},
-    "android": {
-      "package": "com.fred9891.washedup"
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
     },
-    "ios": {
-      "bundleIdentifier": "com.fred9891.washedup"
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }

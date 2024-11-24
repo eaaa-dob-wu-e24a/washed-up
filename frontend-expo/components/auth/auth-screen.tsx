@@ -1,15 +1,21 @@
 import { Link } from "expo-router";
-import { Text } from "react-native";
+import { View } from "react-native";
+import { Button } from "../ui/button";
+import { Text } from "../ui/text";
 
 export default function AuthScreen() {
   return (
-    <>
-      <Link href="/sign-in">
-        <Text>Sign In</Text>
+    <View className="flex gap-3 px-6">
+      <Link href="/sign-in" asChild>
+        <Button>
+          <Text>Sign In</Text>
+        </Button>
       </Link>
-      <Link href="/sign-up">
-        <Text>Sign Up</Text>
+      <Link href={"/sign-up"} asChild>
+        <Button variant={"outline"}>
+          <Text>Sign Up</Text>
+        </Button>
       </Link>
-    </>
+    </View>
   );
 }
