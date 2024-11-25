@@ -46,11 +46,13 @@ export class Api {
     name,
     email,
     password,
+    confirm_password,
     location,
   }: {
     name: string;
     email: string;
     password: string;
+    confirm_password: string;
     location: string;
   }) {
     try {
@@ -65,7 +67,7 @@ export class Api {
             name,
             email,
             password,
-            c_password: password,
+            c_password: confirm_password,
             location_id: location,
           }),
         }

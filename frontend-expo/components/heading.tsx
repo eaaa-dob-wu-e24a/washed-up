@@ -9,9 +9,13 @@ export default function Heading({
   subtitle?: string;
 }) {
   return (
-    <View className="p-6">
-      <Text className="text-3xl font-bold">{title}</Text>
-      {subtitle && <Text className="text-lg text-gray-500">{subtitle}</Text>}
+    <View className="mb-8">
+      <Text className="text-3xl" weight={600}>
+        {title}
+      </Text>
+      {subtitle && (
+        <Text className="text-base text-foreground/60 pt-2">{subtitle}</Text>
+      )}
     </View>
   );
 }

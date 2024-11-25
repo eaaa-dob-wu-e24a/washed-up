@@ -1,11 +1,12 @@
 import { useSignUp, useUser } from "@clerk/clerk-expo";
 import { Api } from "api";
-import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Heading from "~/components/heading";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
 
 export default function SignUpScreen() {
@@ -13,11 +14,11 @@ export default function SignUpScreen() {
 
   const { isLoaded, signUp, setActive } = useSignUp();
   const { user } = useUser();
-  const router = useRouter();
 
   const [name, setName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [location, setLocation] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
@@ -35,9 +36,11 @@ export default function SignUpScreen() {
         name,
         email: emailAddress,
         password,
+        confirm_password: confirmPassword,
         location,
       });
 
+      console.log(validate);
       if (!validate?.success) return;
 
       await signUp.create({
@@ -109,37 +112,58 @@ export default function SignUpScreen() {
   }, [user]);
 
   return (
-    <SafeAreaView className="flex flex-1">
+    <SafeAreaView className="flex flex-1 justify-between p-6">
       {!pendingVerification && (
         <>
-          <Heading
-            title="Sign Up"
-            subtitle="Get Washed Up by creating an account"
-          />
-          <Input
-            value={name}
-            placeholder="Name..."
-            onChangeText={(name) => setName(name)}
-          />
-          <Input
-            autoCapitalize="none"
-            value={emailAddress}
-            placeholder="Email..."
-            onChangeText={(email) => setEmailAddress(email)}
-          />
-          <Input
-            value={password}
-            placeholder="Password..."
-            secureTextEntry={true}
-            onChangeText={(password) => setPassword(password)}
-          />
-          <Input
-            value={location}
-            placeholder="Location..."
-            onChangeText={(location) => setLocation(location)}
-          />
+          <View>
+            <Heading
+              title="Sign Up"
+              subtitle="Get Washed Up by creating an account"
+            />
 
-          <Button onPress={onSignUpPress}>
+            <View className="flex gap-4">
+              <View>
+                <Label className="mb-1">Name</Label>
+                <Input
+                  value={name}
+                  placeholder="Name..."
+                  onChangeText={(name) => setName(name)}
+                />
+              </View>
+
+              <View>
+                <Label className="mb-1">Email</Label>
+                <Input
+                  autoCapitalize="none"
+                  value={emailAddress}
+                  placeholder="Email..."
+                  onChangeText={(email) => setEmailAddress(email)}
+                />
+              </View>
+
+              <View>
+                <Label className="mb-1">Password</Label>
+                <Input
+                  value={password}
+                  placeholder="Password..."
+                  secureTextEntry={true}
+                  onChangeText={(password) => setPassword(password)}
+                />
+              </View>
+
+              <View>
+                <Label className="mb-1">Confirm Password</Label>
+                <Input
+                  value={confirmPassword}
+                  placeholder="Confirm Password..."
+                  secureTextEntry={true}
+                  onChangeText={(password) => setConfirmPassword(password)}
+                />
+              </View>
+            </View>
+          </View>
+
+          <Button size={"high"} onPress={onSignUpPress}>
             <Text>Next step</Text>
           </Button>
         </>
@@ -152,7 +176,7 @@ export default function SignUpScreen() {
             placeholder="Code..."
             onChangeText={(code) => setCode(code)}
           />
-          <Button onPress={onPressVerify}>
+          <Button size={"high"} onPress={onPressVerify}>
             <Text>Verify</Text>
           </Button>
         </>
