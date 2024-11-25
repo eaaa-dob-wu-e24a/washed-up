@@ -6,13 +6,35 @@ import { cn } from "~/lib/utils";
 
 const TextClassContext = React.createContext<string | undefined>(undefined);
 
-const Text = React.forwardRef<TextRef, SlottableTextProps>(
-  ({ className, asChild = false, ...props }, ref) => {
+type TextWeight = 400 | 500 | 600 | 700;
+
+interface TextProps extends SlottableTextProps {
+  weight?: TextWeight;
+}
+
+const Text = React.forwardRef<TextRef, TextProps>(
+  ({ className, asChild = false, weight = 400, ...props }, ref) => {
     const textClass = React.useContext(TextClassContext);
     const Component = asChild ? Slot.Text : RNText;
+
+    const fontFamily = React.useMemo(() => {
+      switch (weight) {
+        case 400:
+          return "Poppins_400Regular";
+        case 500:
+          return "Poppins_500Medium";
+        case 600:
+          return "Poppins_600SemiBold";
+        case 700:
+          return "Poppins_700Bold";
+        default:
+          return "Poppins_400Regular";
+      }
+    }, [weight]);
+
     return (
       <Component
-        style={{ fontFamily: "Poppins_400Regular" }}
+        style={{ fontFamily }}
         className={cn(
           "text-base text-foreground web:select-text",
           textClass,
@@ -27,3 +49,4 @@ const Text = React.forwardRef<TextRef, SlottableTextProps>(
 Text.displayName = "Text";
 
 export { Text, TextClassContext };
+export type { TextWeight };

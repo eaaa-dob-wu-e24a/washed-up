@@ -1,11 +1,12 @@
-import { Api } from "api";
 import { useSignUp, useUser } from "@clerk/clerk-expo";
+import { Api } from "api";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { SafeAreaView, TextInput, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Heading from "~/components/heading";
+import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { Button } from "~/components/ui/button";
 
 export default function SignUpScreen() {
   const api = new Api();
@@ -111,6 +112,10 @@ export default function SignUpScreen() {
     <SafeAreaView className="flex flex-1">
       {!pendingVerification && (
         <>
+          <Heading
+            title="Sign Up"
+            subtitle="Get Washed Up by creating an account"
+          />
           <Input
             value={name}
             placeholder="Name..."

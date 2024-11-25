@@ -1,7 +1,8 @@
 import { useSignIn } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
 import React from "react";
-import { Button, SafeAreaView, View } from "react-native";
+import { Button, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 
