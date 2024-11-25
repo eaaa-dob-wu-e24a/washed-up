@@ -1,22 +1,30 @@
 import "global.css";
 
-import * as SecureStore from "expo-secure-store";
-import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
-import { Slot, SplashScreen, Stack } from "expo-router";
+import { ClerkLoaded, ClerkProvider } from "@clerk/clerk-expo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   DarkTheme,
   DefaultTheme,
   Theme,
   ThemeProvider,
 } from "@react-navigation/native";
-import { NAV_THEME } from "~/lib/constants";
+import { SplashScreen, Stack } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "lib/useColorScheme";
 import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
-import { StatusBar } from "expo-status-bar";
-import { ThemeToggle } from "~/components/ThemeToggle";
+import { NAV_THEME } from "~/lib/constants";
+import {
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+  Poppins_700Bold,
+  useFonts,
+} from "@expo-google-fonts/poppins";
+
+SplashScreen.preventAutoHideAsync();
 
 const tokenCache = {
   async getToken(key: string) {
@@ -98,6 +106,23 @@ export default function RootLayoutNav() {
     });
   }, []);
 
+  const [loaded, error] = useFonts({
+    Poppins_400Regular,
+    Poppins_500Medium,
+    Poppins_600SemiBold,
+    Poppins_700Bold,
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
+
   if (!isColorSchemeLoaded) {
     return null;
   }
@@ -107,14 +132,12 @@ export default function RootLayoutNav() {
       <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
         <ClerkLoaded>
           <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-          <Stack>
-            <Stack.Screen
-              name="index"
-              options={{
-                title: "Washed Up",
-                headerRight: () => <ThemeToggle />,
-              }}
-            />
+          <Stack
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Stack.Screen name="index" />
           </Stack>
         </ClerkLoaded>
       </ClerkProvider>

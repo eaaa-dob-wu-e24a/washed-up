@@ -1,6 +1,5 @@
-import { Redirect, Stack, Tabs } from "expo-router";
 import { useAuth } from "@clerk/clerk-expo";
-import { Pressable } from "react-native";
+import { Redirect, Stack } from "expo-router";
 
 export default function AuthRoutesLayout() {
   const { isSignedIn } = useAuth();

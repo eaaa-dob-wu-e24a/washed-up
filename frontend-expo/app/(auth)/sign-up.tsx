@@ -2,7 +2,10 @@ import { Api } from "api";
 import { useSignUp, useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Button, TextInput, View } from "react-native";
+import { SafeAreaView, TextInput, View } from "react-native";
+import { Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
+import { Button } from "~/components/ui/button";
 
 export default function SignUpScreen() {
   const api = new Api();
@@ -89,9 +92,8 @@ export default function SignUpScreen() {
   };
 
   useEffect(() => {
-    if (!user) return;
-
     async function updateMetadata() {
+      if (!user) return;
       if (!metaData?.access_token) return;
       await api.updateClerkMetadata({
         access_token: metaData?.access_token,
@@ -106,46 +108,50 @@ export default function SignUpScreen() {
   }, [user]);
 
   return (
-    <View>
+    <SafeAreaView className="flex flex-1">
       {!pendingVerification && (
         <>
-          <TextInput
+          <Input
             value={name}
             placeholder="Name..."
             onChangeText={(name) => setName(name)}
           />
-          <TextInput
+          <Input
             autoCapitalize="none"
             value={emailAddress}
             placeholder="Email..."
             onChangeText={(email) => setEmailAddress(email)}
           />
-          <TextInput
+          <Input
             value={password}
             placeholder="Password..."
             secureTextEntry={true}
             onChangeText={(password) => setPassword(password)}
           />
-          <TextInput
+          <Input
             value={location}
             placeholder="Location..."
             onChangeText={(location) => setLocation(location)}
           />
 
-          <Button title="Sign Up" onPress={onSignUpPress} />
+          <Button onPress={onSignUpPress}>
+            <Text>Next step</Text>
+          </Button>
         </>
       )}
 
       {pendingVerification && (
         <>
-          <TextInput
+          <Input
             value={code}
             placeholder="Code..."
             onChangeText={(code) => setCode(code)}
           />
-          <Button title="Verify Email" onPress={onPressVerify} />
+          <Button onPress={onPressVerify}>
+            <Text>Verify</Text>
+          </Button>
         </>
       )}
-    </View>
+    </SafeAreaView>
   );
 }

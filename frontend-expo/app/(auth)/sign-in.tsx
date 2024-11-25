@@ -1,8 +1,9 @@
 import { useSignIn } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
 import React from "react";
-import { Button, Text, TextInput, View } from "react-native";
+import { Button, SafeAreaView, View } from "react-native";
 import { Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -38,7 +39,7 @@ export default function Page() {
   }, [isLoaded, emailAddress, password]);
 
   return (
-    <View>
+    <SafeAreaView>
       <Input
         autoCapitalize="none"
         value={emailAddress}
@@ -58,6 +59,6 @@ export default function Page() {
           <Text>Sign up</Text>
         </Link>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
