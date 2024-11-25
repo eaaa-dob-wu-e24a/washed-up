@@ -54,7 +54,6 @@ class AuthController extends Controller {
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8',
             'c_password' => 'required|same:password',
-            'location_id' => 'required|exists:locations,id'
         ]);
 
         if ($validate->fails()) {
