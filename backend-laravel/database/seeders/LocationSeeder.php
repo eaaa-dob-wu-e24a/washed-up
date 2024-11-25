@@ -13,7 +13,8 @@ class LocationSeeder extends Seeder {
         $faker = \Faker\Factory::create();
         for ($i = 0; $i < 10; $i++) {
             Location::create([
-                'name' => $faker->city()
+                'name' => $faker->city(),
+                'code' => strtoupper($faker->lexify('??????????'))
             ]);
         }
     }
