@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'code'];
 
     public function user() {
         return $this->hasOne(User::class);
