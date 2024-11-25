@@ -1,5 +1,5 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
-import { Redirect } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import { Stack } from "expo-router/stack";
 import { Button } from "react-native";
 
@@ -12,12 +12,10 @@ export default function Layout() {
   }
 
   return (
-    <Stack
-      screenOptions={{
-        headerRight: () => {
-          return <Button onPress={() => signOut()} title="Sign out" />;
-        },
-      }}
-    />
+    <Tabs>
+      <Tabs.Screen name="dashboard" />
+      <Tabs.Screen name="my-page" />
+      <Tabs.Screen name="my-qr" />
+    </Tabs>
   );
 }
