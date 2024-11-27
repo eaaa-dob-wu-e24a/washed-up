@@ -4,10 +4,13 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { formSchema } from './schema';
 import { api } from '../../utils/api.js';
+import type { Location } from '@/types/index.js';
 
 export const load: PageServerLoad = async () => {
+	const { data }: { data: Location[] } = await api.get('/locations');
 	return {
-		form: await superValidate(zod(formSchema))
+		form: await superValidate(zod(formSchema)),
+		locations: data
 	};
 };
 

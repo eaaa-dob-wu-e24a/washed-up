@@ -4,16 +4,42 @@
 	import Button from '@/components/ui/button/button.svelte';
 	import { formSchema, type FormSchema } from './schema';
 	import { type SuperValidated, type Infer, superForm } from 'sveltekit-superforms';
+	import { tick } from 'svelte';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import * as Select from "$lib/components/ui/select/index.js";
+	import * as Select from '$lib/components/ui/select/index.js';
+	import { type Location } from '$lib/types';
+	import * as Command from '$lib/components/ui/command/index.js';
+	import * as Popover from '$lib/components/ui/popover/index.js';
+	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
+	import { cn } from '@/utils';
+	import { buttonVariants } from '@/components/ui/button';
+	import { useId } from 'bits-ui';
+	import Check from 'lucide-svelte/icons/check';
 
-	export let data: SuperValidated<Infer<FormSchema>>;
+	let { locations, data }: { locations: Location[]; data: SuperValidated<Infer<FormSchema>> } =
+		$props();
 
 	const form = superForm(data, {
 		validators: zodClient(formSchema)
 	});
 
 	const { form: formData, enhance } = form;
+
+	let open = $state(false);
+	let value = $state('');
+	let triggerRef = $state<HTMLButtonElement>(null!);
+
+	// We want to refocus the trigger button when the user selects
+	// an item from the list so users can continue navigating the
+	// rest of the form with the keyboard.
+	function closeAndFocusTrigger() {
+		open = false;
+		tick().then(() => {
+			triggerRef.focus();
+		});
+	}
+
+	const triggerId = useId();
 </script>
 
 <form method="POST" use:enhance class="mx-auto max-w-md">
@@ -57,35 +83,55 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<Form.Field {form} name="email">
-		<Form.Control>
-		  {#snippet children({ props })}
-			<Form.Label>Location</Form.Label>
-			<Select.Root
-			  type="single"
-			  bind:value={$formData.location_id}
-			  name={props.name}
-			>
-			  <Select.Trigger {...props}>
-				{$formData.email
-				  ? $formData.email
-				  : "Select a verified email to display"}
-			  </Select.Trigger>
-			  <Select.Content>
-				<Select.Item value="m@example.com" label="m@example.com" />
-				<Select.Item value="m@google.com" label="m@google.com" />
-				<Select.Item value="m@support.com" label="m@support.com" />
-			  </Select.Content>
-			</Select.Root>
-		  {/snippet}
-		</Form.Control>
-		<Form.Description>
-		  You can manage email address in your <a href="/examples/forms"
-			>email settings</a
-		  >.
-		</Form.Description>
+	<Form.Field {form} name="location_id" class="flex flex-col">
+		<Popover.Root bind:open>
+			<Form.Control id={triggerId}>
+				{#snippet children({ props })}
+					<Form.Label>Language</Form.Label>
+					<Popover.Trigger
+						class={cn(
+							buttonVariants({ variant: 'outline' }),
+							'w-[200px] justify-between',
+							!$formData.location_id && 'text-muted-foreground'
+						)}
+						role="combobox"
+						{...props}
+					>
+						{locations.find((f) => String(f.id) === $formData.location_id)?.name ??
+							'Select location'}
+						<ChevronsUpDown class="opacity-50" />
+					</Popover.Trigger>
+					<input hidden value={$formData.location_id} name={props.name} />
+				{/snippet}
+			</Form.Control>
+			<Popover.Content class="w-[200px] p-0">
+				<Command.Root>
+					<Command.Input autofocus placeholder="Search location..." class="h-9" />
+					<Command.Empty>No locations found.</Command.Empty>
+					<Command.Group>
+						{#each locations as location}
+							<Command.Item
+								value={location.name}
+								onSelect={() => {
+									$formData.location_id = String(location.id);
+									closeAndFocusTrigger();
+								}}
+							>
+								{location.name}
+								<Check
+									class={cn(
+										'ml-auto',
+										String(location.id) !== $formData.location_id && 'text-transparent'
+									)}
+								/>
+							</Command.Item>
+						{/each}
+					</Command.Group>
+				</Command.Root>
+			</Popover.Content>
+		</Popover.Root>
 		<Form.FieldErrors />
-	  </Form.Field>
+	</Form.Field>
 
 	<Button type="submit">Hello</Button>
 </form>

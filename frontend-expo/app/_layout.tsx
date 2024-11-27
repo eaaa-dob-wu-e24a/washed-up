@@ -24,6 +24,10 @@ import {
   useFonts,
 } from "@expo-google-fonts/poppins";
 import { PortalHost } from "@rn-primitives/portal";
+import {
+  GestureHandlerRootView,
+  NativeViewGestureHandler,
+} from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -134,16 +138,19 @@ export default function RootLayoutNav() {
         <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
           <ClerkLoaded>
             <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-            <Stack
-              screenOptions={{
-                headerShown: false,
-              }}>
-              <Stack.Screen name="index" />
-            </Stack>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen name="index" />
+              </Stack>
+              <PortalHost />
+            </GestureHandlerRootView>
           </ClerkLoaded>
         </ClerkProvider>
       </ThemeProvider>
-      <PortalHost />
     </>
   );
 }

@@ -4,4 +4,4 @@
 	let { data } = $props();
 </script>
 
-<SignUpForm data={data.form} />
+<SignUpForm locations={data.locations} data={data.form} />

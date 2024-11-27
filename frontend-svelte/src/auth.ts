@@ -52,20 +52,28 @@ export const { signIn, signOut, handle } = SvelteKitAuth(async (event) => {
 
 						const data = await response.json();
 
-						if (!data.success) {
+						const cred = data;
+
+						if (!cred?.access_token) {
 							// No user found, so this is their first attempt to login
 							// Optionally, this is also the place you could do a user registration
 							throw new Error('Invalid credentials.');
+						} else {
+							const response = await fetch(`${env.API_URL}/api/user`, {
+								headers: {
+									Authorization: `Bearer ${cred.access_token}`
+								}
+							});
+
+							const data = await response.json();
+
+							// return JSON object with the user data
+							return {
+								id: cred.access_token,
+								email: data.email,
+								name: data.name
+							};
 						}
-
-						user = data;
-
-						// return JSON object with the user data
-						return {
-							id: user.data.token,
-							email: user.data.email,
-							name: user.data.name
-						};
 					} catch (error) {
 						console.error(error);
 						return null;

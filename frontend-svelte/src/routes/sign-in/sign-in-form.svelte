@@ -22,11 +22,7 @@
 	const { form: formData, enhance } = form;
 </script>
 
-<form
-	method="POST"
-	use:enhance
-	class="mx-auto max-w-md"
->
+<form method="POST" use:enhance class="mx-auto max-w-md">
 	<Form.Field {form} name="email">
 		<Form.Control>
 			{#snippet children({ props })}

@@ -1,7 +1,9 @@
 import { useSignUp, useUser } from "@clerk/clerk-expo";
+import { FlashList } from "@shopify/flash-list";
 import { Api } from "api";
 import { useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { FlatList, View } from "react-native";
+
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -10,7 +12,6 @@ import Heading from "~/components/heading";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Text } from "~/components/ui/text";
 import {
   Select,
   SelectContent,
@@ -20,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Text } from "~/components/ui/text";
 import { Location } from "~/types";
 
 export default function SignUpScreen() {
@@ -204,6 +206,7 @@ export default function SignUpScreen() {
           </Button>
         </>
       )}
+
       {locationSelection && (
         <>
           <View>
@@ -215,20 +218,22 @@ export default function SignUpScreen() {
                   placeholder="Choose your location"
                 />
               </SelectTrigger>
-              <SelectContent insets={contentInsets} className="h-72">
-                <SelectGroup>
-                  <ScrollView onStartShouldSetResponder={() => true}>
-                    <SelectLabel>Locations</SelectLabel>
-                    {locations.map((loc) => (
-                      <SelectItem
-                        key={loc.id}
-                        label={loc.name}
-                        value={`${loc.id}`}>
-                        {loc.name}
-                      </SelectItem>
-                    ))}
-                  </ScrollView>
-                </SelectGroup>
+              <SelectContent insets={contentInsets} className="h-[110px]">
+                <FlashList
+                  nestedScrollEnabled
+                  data={locations}
+                  renderItem={({ item }) => (
+                    <Text
+                      // key={item.id}
+                      // label={item.name}
+                      // value={`${item.id}`}
+                      className="w-[400px]"
+                    >
+                      {item.name}
+                    </Text>
+                  )}
+                  estimatedItemSize={50}
+                />
               </SelectContent>
             </Select>
           </View>
