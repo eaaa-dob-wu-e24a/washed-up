@@ -8,5 +8,5 @@
 <a href="/about">Go to About</a>
 
 <Button onclick={() => count++}>
-	Press me baby! {count} more times
+	Press me baby! {count} more times hello
 </Button>
