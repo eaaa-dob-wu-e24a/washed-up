@@ -23,6 +23,7 @@ import {
   Poppins_700Bold,
   useFonts,
 } from "@expo-google-fonts/poppins";
+import { PortalHost } from "@rn-primitives/portal";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -128,19 +129,21 @@ export default function RootLayoutNav() {
   }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-        <ClerkLoaded>
-          <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name="index" />
-          </Stack>
-        </ClerkLoaded>
-      </ClerkProvider>
-    </ThemeProvider>
+    <>
+      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+        <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+          <ClerkLoaded>
+            <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+            <Stack
+              screenOptions={{
+                headerShown: false,
+              }}>
+              <Stack.Screen name="index" />
+            </Stack>
+          </ClerkLoaded>
+        </ClerkProvider>
+      </ThemeProvider>
+      <PortalHost />
+    </>
   );
 }

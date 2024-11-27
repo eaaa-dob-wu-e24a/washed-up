@@ -8,12 +8,14 @@ import { Text } from "~/components/ui/text";
 export default function Welcome() {
   return (
     <SafeAreaView className="flex flex-1 justify-center">
-      <Image
-        source={require("../../assets/images/washed-up-logo.svg")}
-        className="flex items-center h-96"
-        contentFit="fill"
-        transition={1000}
-      />
+      <View className="flex items-center">
+        <Image
+          style={{ width: 256, height: 200 }}
+          source={require("../../assets/images/washed-up-logo.svg")}
+          contentFit="cover"
+          transition={1000}
+        />
+      </View>
       <View className="flex items-center">
         <Text className="text-xl">The easiest way to get washed up!</Text>
       </View>

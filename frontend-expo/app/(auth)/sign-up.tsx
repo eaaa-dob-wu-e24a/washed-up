@@ -1,13 +1,26 @@
 import { useSignUp, useUser } from "@clerk/clerk-expo";
 import { Api } from "api";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView, View } from "react-native";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import Heading from "~/components/heading";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { Location } from "~/types";
 
 export default function SignUpScreen() {
   const api = new Api();
@@ -19,13 +32,29 @@ export default function SignUpScreen() {
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [locations, setLocations] = useState([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [location, setLocation] = useState("");
+  const [locationSelection, setLocationSelection] = useState(true);
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
   const [metaData, setMetaData] = useState<{
     [key: string]: any;
   }>({});
+
+  const insets = useSafeAreaInsets();
+  const contentInsets = {
+    top: insets.top,
+    bottom: insets.bottom,
+    left: 16,
+    right: 16,
+  };
+
+  const toLocationSelect = async () => {
+    if (!isLoaded) {
+      return;
+    }
+    setLocationSelection(true);
+  };
 
   const onSignUpPress = async () => {
     if (!isLoaded) {
@@ -38,6 +67,7 @@ export default function SignUpScreen() {
         email: emailAddress,
         password,
         confirm_password: confirmPassword,
+        location: location,
       });
 
       console.log(validate);
@@ -112,17 +142,19 @@ export default function SignUpScreen() {
   }, [user]);
 
   useEffect(() => {
-    async function fetchLocation() {
-      const location = await api.getLocations();
+    async function getLocations() {
+      await api.getLocations().then((data) => {
+        setLocations(data);
+      });
     }
 
-    fetchLocation();
-  }
+    getLocations();
+  }, []);
 
   return (
     <SafeAreaView className="flex flex-1 justify-between p-6">
       <Heading title="Create new account" subtitle="Start getting washed up!" />
-      {!pendingVerification && (
+      {!locationSelection && (
         <>
           <View>
             <View className="flex gap-4">
@@ -167,12 +199,44 @@ export default function SignUpScreen() {
             </View>
           </View>
 
+          <Button size={"high"} onPress={toLocationSelect}>
+            <Text>Next step</Text>
+          </Button>
+        </>
+      )}
+      {locationSelection && (
+        <>
+          <View>
+            <Label className="mb-2">Location</Label>
+            <Select>
+              <SelectTrigger>
+                <SelectValue
+                  className="text-foreground text-sm native:text-lg"
+                  placeholder="Choose your location"
+                />
+              </SelectTrigger>
+              <SelectContent insets={contentInsets} className="h-72">
+                <SelectGroup>
+                  <ScrollView onStartShouldSetResponder={() => true}>
+                    <SelectLabel>Locations</SelectLabel>
+                    {locations.map((loc) => (
+                      <SelectItem
+                        key={loc.id}
+                        label={loc.name}
+                        value={`${loc.id}`}>
+                        {loc.name}
+                      </SelectItem>
+                    ))}
+                  </ScrollView>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </View>
           <Button size={"high"} onPress={onSignUpPress}>
             <Text>Next step</Text>
           </Button>
         </>
       )}
-
       {pendingVerification && (
         <>
           <Input

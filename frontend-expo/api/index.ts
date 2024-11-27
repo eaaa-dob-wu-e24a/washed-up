@@ -1,4 +1,4 @@
-import { Machine } from "types";
+import { Location, Machine } from "types";
 
 export class Api {
   private accessToken: unknown | undefined;
@@ -47,11 +47,13 @@ export class Api {
     email,
     password,
     confirm_password,
+    location,
   }: {
     name: string;
     email: string;
     password: string;
     confirm_password: string;
+    location: string;
   }) {
     try {
       const response = await fetch(
@@ -134,7 +136,7 @@ export class Api {
     }
   }
 
-  public async getLocations(): Promise<Machine[]> {
+  public async getLocations(): Promise<Location[]> {
     try {
       const response = await fetch(`${this.baseUrl}/api/locations`, {
         headers: {
