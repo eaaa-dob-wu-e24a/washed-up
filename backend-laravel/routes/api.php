@@ -8,12 +8,16 @@ use App\Http\Controllers\RentalController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ClerkController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LocationController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('validate', 'validate');
     Route::post('register', 'register');
     Route::post('login', 'login');
+    Route::get('locations', [LocationController::class, 'index']);
 });
+
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::patch("/clerk-metadata/{id}", [ClerkController::class, 'updateMetadata']);

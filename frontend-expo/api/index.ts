@@ -47,13 +47,11 @@ export class Api {
     email,
     password,
     confirm_password,
-    location,
   }: {
     name: string;
     email: string;
     password: string;
     confirm_password: string;
-    location: string;
   }) {
     try {
       const response = await fetch(
@@ -68,7 +66,6 @@ export class Api {
             email,
             password,
             c_password: confirm_password,
-            location_id: location,
           }),
         }
       );
@@ -133,6 +130,27 @@ export class Api {
       return data;
     } catch (error) {
       console.error("Error getting machines", error);
+      return [];
+    }
+  }
+
+  public async getLocations(): Promise<Machine[]> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/locations`, {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        return [];
+      }
+
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      console.error("Error getting locations", error);
       return [];
     }
   }

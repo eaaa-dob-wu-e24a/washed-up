@@ -19,6 +19,7 @@ export default function SignUpScreen() {
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [locations, setLocations] = useState([]);
   const [location, setLocation] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
@@ -37,7 +38,6 @@ export default function SignUpScreen() {
         email: emailAddress,
         password,
         confirm_password: confirmPassword,
-        location,
       });
 
       console.log(validate);
@@ -111,19 +111,23 @@ export default function SignUpScreen() {
     updateMetadata();
   }, [user]);
 
+  useEffect(() => {
+    async function fetchLocation() {
+      const location = await api.getLocations();
+    }
+
+    fetchLocation();
+  }
+
   return (
     <SafeAreaView className="flex flex-1 justify-between p-6">
+      <Heading title="Create new account" subtitle="Start getting washed up!" />
       {!pendingVerification && (
         <>
           <View>
-            <Heading
-              title="Sign Up"
-              subtitle="Get Washed Up by creating an account"
-            />
-
             <View className="flex gap-4">
               <View>
-                <Label className="mb-1">Name</Label>
+                <Label className="mb-2">Name</Label>
                 <Input
                   value={name}
                   placeholder="Name..."
@@ -132,7 +136,7 @@ export default function SignUpScreen() {
               </View>
 
               <View>
-                <Label className="mb-1">Email</Label>
+                <Label className="mb-2">Email</Label>
                 <Input
                   autoCapitalize="none"
                   value={emailAddress}
@@ -142,7 +146,7 @@ export default function SignUpScreen() {
               </View>
 
               <View>
-                <Label className="mb-1">Password</Label>
+                <Label className="mb-2">Password</Label>
                 <Input
                   value={password}
                   placeholder="Password..."
@@ -152,7 +156,7 @@ export default function SignUpScreen() {
               </View>
 
               <View>
-                <Label className="mb-1">Confirm Password</Label>
+                <Label className="mb-2">Confirm Password</Label>
                 <Input
                   value={confirmPassword}
                   placeholder="Confirm Password..."
