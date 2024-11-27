@@ -1,9 +1,8 @@
 import { useSignUp, useUser } from "@clerk/clerk-expo";
-import { FlashList } from "@shopify/flash-list";
 import { Api } from "api";
 import { useEffect, useState } from "react";
-import { FlatList, View } from "react-native";
-
+import { View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -218,22 +217,19 @@ export default function SignUpScreen() {
                   placeholder="Choose your location"
                 />
               </SelectTrigger>
-              <SelectContent insets={contentInsets} className="h-[110px]">
-                <FlashList
-                  nestedScrollEnabled
-                  data={locations}
-                  renderItem={({ item }) => (
-                    <Text
-                      // key={item.id}
-                      // label={item.name}
-                      // value={`${item.id}`}
-                      className="w-[400px]"
-                    >
-                      {item.name}
-                    </Text>
-                  )}
-                  estimatedItemSize={50}
-                />
+              <SelectContent insets={contentInsets} className="w-[250px]">
+                <ScrollView className="max-h-64">
+                  <SelectGroup>
+                    {locations.map((location) => (
+                      <SelectItem
+                        key={location.id}
+                        label={location.name}
+                        value={`${location.id}`}>
+                        {location.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </ScrollView>
               </SelectContent>
             </Select>
           </View>
