@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Starter Base",
-    "slug": "starter-base",
+    "name": "Washed Up",
+    "slug": "washed-up",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,14 +15,16 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.fred9891.washedup"
     },
+
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.fred9891.starterbase"
+      "package": "com.fred9891.washedup"
     },
     "web": {
       "bundler": "metro",

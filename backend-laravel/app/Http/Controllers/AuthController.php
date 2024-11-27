@@ -25,7 +25,8 @@ class AuthController extends Controller {
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8',
             'c_password' => 'required|same:password',
-            'location_id' => 'required|exists:locations,id'
+            'location_id' => 'required|exists:locations,id',
+            'role' => 'nullable|string|in:admin,user'
         ]);
 
         if ($validate->fails()) {
@@ -36,7 +37,8 @@ class AuthController extends Controller {
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'location_id' => $request->location_id
+            'location_id' => $request->location_id,
+            'role' => $request->role ?? 'user'
         ]);
 
         $user->save();
@@ -45,7 +47,8 @@ class AuthController extends Controller {
 
         return response()->json([
             'access_token' => $token,
-            'token_type' => 'Bearer'
+            'token_type' => 'Bearer',
+            'role' => $user->role
         ]);
     }
     public function validate(Request $request) {
@@ -76,7 +79,8 @@ class AuthController extends Controller {
 
         return response()->json([
             'access_token' => $token,
-            'token_type' => 'Bearer'
+            'token_type' => 'Bearer',
+            'role' => $user->role,
         ]);
     }
 }
