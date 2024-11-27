@@ -1,5 +1,6 @@
 import { useSignUp, useUser } from "@clerk/clerk-expo";
 import { Api } from "api";
+import { Redirect, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -8,6 +9,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import Heading from "~/components/heading";
+import InputError from "~/components/input-error";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -16,7 +18,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
@@ -29,20 +30,25 @@ export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const { user } = useUser();
 
+  const insets = useSafeAreaInsets();
+
+  const [screen, setScreen] = useState<
+    "userInfo" | "location" | "verification"
+  >("userInfo");
   const [name, setName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [locations, setLocations] = useState<Location[]>([]);
   const [location, setLocation] = useState("");
-  const [locationSelection, setLocationSelection] = useState(true);
-  const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
   const [metaData, setMetaData] = useState<{
     [key: string]: any;
   }>({});
+  const [errors, setErrors] = useState<{
+    [key: string]: string;
+  }>({});
 
-  const insets = useSafeAreaInsets();
   const contentInsets = {
     top: insets.top,
     bottom: insets.bottom,
@@ -50,50 +56,47 @@ export default function SignUpScreen() {
     right: 16,
   };
 
-  const toLocationSelect = async () => {
-    if (!isLoaded) {
-      return;
-    }
-    setLocationSelection(true);
-  };
-
-  const onSignUpPress = async () => {
-    if (!isLoaded) {
-      return;
-    }
-
-    try {
+  const onNextStep = async () => {
+    if (screen === "userInfo") {
       const validate = await api.validateCredentials({
         name,
         email: emailAddress,
         password,
         confirm_password: confirmPassword,
-        location: location,
       });
 
-      console.log(validate);
-      if (!validate?.success) return;
-
-      await signUp.create({
-        emailAddress,
-        password,
-      });
-
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
-      setPendingVerification(true);
-    } catch (err: any) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
+      if (validate?.success) {
+        setScreen("location");
+      } else {
+        setErrors(validate);
+      }
+    } else if (screen === "location") {
+      if (!isLoaded) return;
+      if (location === "") {
+        setErrors({ location: "Location is required" });
+        return;
+      }
+      try {
+        await signUp.create({
+          emailAddress,
+          password,
+        });
+        await signUp.prepareEmailAddressVerification({
+          strategy: "email_code",
+        });
+        setScreen("verification");
+      } catch (err: any) {
+        console.error(JSON.stringify(err, null, 2));
+      }
     }
   };
 
-  const onPressVerify = async () => {
-    if (!isLoaded) {
+  const onVerify = async () => {
+    if (!isLoaded) return;
+    if (code === "") {
+      setErrors({ code: "Verification code is required" });
       return;
     }
-
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
@@ -107,21 +110,18 @@ export default function SignUpScreen() {
           location,
         });
 
-        if (!db_sign_up?.access_token) return;
-
-        setMetaData({
-          access_token: db_sign_up.access_token,
-          location: location,
-          name: name,
-        });
-
-        await setActive({ session: completeSignUp.createdSessionId });
+        if (db_sign_up?.access_token) {
+          setMetaData({
+            access_token: db_sign_up.access_token,
+            location: location,
+            name: name,
+          });
+          await setActive({ session: completeSignUp.createdSessionId });
+        }
       } else {
-        console.error(JSON.stringify(completeSignUp, null, 2));
+        setErrors({ code: "Invalid verification code" });
       }
     } catch (err: any) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
     }
   };
@@ -155,62 +155,66 @@ export default function SignUpScreen() {
   return (
     <SafeAreaView className="flex flex-1 justify-between p-6">
       <Heading title="Create new account" subtitle="Start getting washed up!" />
-      {!locationSelection && (
+
+      {screen === "userInfo" && (
         <>
-          <View>
-            <View className="flex gap-4">
-              <View>
-                <Label className="mb-2">Name</Label>
-                <Input
-                  value={name}
-                  placeholder="Name..."
-                  onChangeText={(name) => setName(name)}
-                />
-              </View>
-
-              <View>
-                <Label className="mb-2">Email</Label>
-                <Input
-                  autoCapitalize="none"
-                  value={emailAddress}
-                  placeholder="Email..."
-                  onChangeText={(email) => setEmailAddress(email)}
-                />
-              </View>
-
-              <View>
-                <Label className="mb-2">Password</Label>
-                <Input
-                  value={password}
-                  placeholder="Password..."
-                  secureTextEntry={true}
-                  onChangeText={(password) => setPassword(password)}
-                />
-              </View>
-
-              <View>
-                <Label className="mb-2">Confirm Password</Label>
-                <Input
-                  value={confirmPassword}
-                  placeholder="Confirm Password..."
-                  secureTextEntry={true}
-                  onChangeText={(password) => setConfirmPassword(password)}
-                />
-              </View>
+          <View className="flex gap-4">
+            <View>
+              <Label className="mb-2">Name</Label>
+              <Input
+                value={name}
+                placeholder="Name..."
+                onChangeText={setName}
+              />
+              <InputError errors={errors} name="name" />
+            </View>
+            <View>
+              <Label className="mb-2">Email</Label>
+              <Input
+                autoCapitalize="none"
+                value={emailAddress}
+                placeholder="Email..."
+                onChangeText={setEmailAddress}
+              />
+              <InputError errors={errors} name="email" />
+            </View>
+            <View>
+              <Label className="mb-2">Password</Label>
+              <Input
+                value={password}
+                placeholder="Password..."
+                secureTextEntry={true}
+                onChangeText={setPassword}
+              />
+              <InputError errors={errors} name="password" />
+            </View>
+            <View>
+              <Label className="mb-2">Confirm Password</Label>
+              <Input
+                value={confirmPassword}
+                placeholder="Confirm Password..."
+                secureTextEntry={true}
+                onChangeText={setConfirmPassword}
+              />
+              <InputError errors={errors} name="c_password" />
             </View>
           </View>
-
-          <Button size={"high"} onPress={toLocationSelect}>
+          <Button size="high" onPress={onNextStep}>
             <Text>Next step</Text>
           </Button>
         </>
       )}
 
-      {locationSelection && (
+      {screen === "location" && (
         <>
           <View>
             <Label className="mb-2">Location</Label>
-            <Select>
+            <Select
+              onValueChange={(value) => {
+                if (!value) return;
+                setLocation(value?.value);
+              }}
+            >
               <SelectTrigger>
                 <SelectValue
                   className="text-foreground text-sm native:text-lg"
@@ -220,32 +224,39 @@ export default function SignUpScreen() {
               <SelectContent insets={contentInsets} className="w-[250px]">
                 <ScrollView className="max-h-64">
                   <SelectGroup>
-                    {locations.map((location) => (
+                    {locations.map((loc) => (
                       <SelectItem
-                        key={location.id}
-                        label={location.name}
-                        value={`${location.id}`}>
-                        {location.name}
+                        key={loc.id}
+                        label={loc.name}
+                        value={`${loc.id}`}
+                      >
+                        {loc.name}
                       </SelectItem>
                     ))}
                   </SelectGroup>
                 </ScrollView>
               </SelectContent>
             </Select>
+            <InputError errors={errors} name="location" />
           </View>
-          <Button size={"high"} onPress={onSignUpPress}>
+          <Button size="high" onPress={onNextStep}>
             <Text>Next step</Text>
           </Button>
         </>
       )}
-      {pendingVerification && (
+
+      {screen === "verification" && (
         <>
-          <Input
-            value={code}
-            placeholder="Code..."
-            onChangeText={(code) => setCode(code)}
-          />
-          <Button size={"high"} onPress={onPressVerify}>
+          <View>
+            <Label className="mb-2">Verification Code</Label>
+            <Input
+              value={code}
+              placeholder="Enter verification code..."
+              onChangeText={setCode}
+            />
+            <InputError errors={errors} name="code" />
+          </View>
+          <Button size="high" onPress={onVerify}>
             <Text>Verify</Text>
           </Button>
         </>

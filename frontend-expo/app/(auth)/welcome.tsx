@@ -10,7 +10,7 @@ export default function Welcome() {
     <SafeAreaView className="flex flex-1 justify-center">
       <View className="flex items-center">
         <Image
-          style={{ width: 256, height: 200 }}
+          style={{ width: 256, height: 230 }}
           source={require("../../assets/images/washed-up-logo.svg")}
           contentFit="cover"
           transition={1000}

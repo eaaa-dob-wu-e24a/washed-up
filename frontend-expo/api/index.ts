@@ -47,13 +47,11 @@ export class Api {
     email,
     password,
     confirm_password,
-    location,
   }: {
     name: string;
     email: string;
     password: string;
     confirm_password: string;
-    location: string;
   }) {
     try {
       const response = await fetch(
