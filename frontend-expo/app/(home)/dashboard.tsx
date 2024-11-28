@@ -3,6 +3,8 @@ import { Machine } from "types";
 import { useUser } from "@clerk/clerk-expo";
 import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Heading from "~/components/heading";
 
 export default function Dashboard() {
   const { user } = useUser();
@@ -21,11 +23,15 @@ export default function Dashboard() {
   }, [user]);
 
   return (
-    <View>
-      <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
-      {machines?.map((machine) => (
-        <Text key={machine.id}>{machine.model}</Text>
-      ))}
-    </View>
+    <SafeAreaView className="p-6 h-screen justify-between">
+      <View className="gap-4">
+        <Heading title="Hello!" />
+        <View>
+          {machines?.map((machine) => (
+            <Text key={machine.id}>{machine.model}</Text>
+          ))}
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }

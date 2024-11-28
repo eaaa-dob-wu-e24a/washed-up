@@ -9,7 +9,7 @@ export default function Layout() {
   }
 
   return (
-    <Tabs>
+    <Tabs screenOptions={{ headerShown: false }}>
       <Tabs.Screen name="dashboard" />
       <Tabs.Screen name="my-page" />
       <Tabs.Screen name="qr" />
