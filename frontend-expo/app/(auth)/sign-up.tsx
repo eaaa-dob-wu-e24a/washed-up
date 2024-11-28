@@ -153,12 +153,14 @@ export default function SignUpScreen() {
   }, []);
 
   return (
-    <SafeAreaView className="flex flex-1 justify-between p-6">
-      <Heading title="Create new account" subtitle="Start getting washed up!" />
-
+    <SafeAreaView className="p-6 h-screen justify-between">
       {screen === "userInfo" && (
         <>
-          <View className="flex gap-4">
+          <View className="gap-4">
+            <Heading
+              title="Create new account"
+              subtitle="Start getting washed up!"
+            />
             <View>
               <Label className="mb-2">Name</Label>
               <Input
@@ -199,22 +201,27 @@ export default function SignUpScreen() {
               <InputError errors={errors} name="c_password" />
             </View>
           </View>
-          <Button size="high" onPress={onNextStep}>
-            <Text>Next step</Text>
-          </Button>
+          <View className="">
+            <Button size="high" onPress={onNextStep}>
+              <Text>Next step</Text>
+            </Button>
+          </View>
         </>
       )}
 
       {screen === "location" && (
         <>
           <View>
+            <Heading
+              title="Select your location"
+              subtitle="You're almost ready to get washed up!"
+            />
             <Label className="mb-2">Location</Label>
             <Select
               onValueChange={(value) => {
                 if (!value) return;
                 setLocation(value?.value);
-              }}
-            >
+              }}>
               <SelectTrigger>
                 <SelectValue
                   className="text-foreground text-sm native:text-lg"
@@ -228,8 +235,7 @@ export default function SignUpScreen() {
                       <SelectItem
                         key={loc.id}
                         label={loc.name}
-                        value={`${loc.id}`}
-                      >
+                        value={`${loc.id}`}>
                         {loc.name}
                       </SelectItem>
                     ))}
@@ -248,6 +254,10 @@ export default function SignUpScreen() {
       {screen === "verification" && (
         <>
           <View>
+            <Heading
+              title="Verify your account"
+              subtitle="We've sent you an e-mail!"
+            />
             <Label className="mb-2">Verification Code</Label>
             <Input
               value={code}
