@@ -21,7 +21,7 @@ class MachineSeeder extends Seeder {
 
         for ($i = 0; $i < 100; $i++) {
             Machine::create([
-                'model' => $faker->word,
+                'model' => $faker->randomElement(['wash', 'dry']),
                 'location_id' => $locations->random()->id,
                 'status' => $faker->boolean,
             ]);

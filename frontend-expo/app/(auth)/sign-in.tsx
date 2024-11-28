@@ -1,5 +1,5 @@
 import { useSignIn } from "@clerk/clerk-expo";
-import { Label } from "@rn-primitives/select";
+import { Label } from "~/components/ui/label";
 import { Link } from "expo-router";
 import React from "react";
 import { View } from "react-native";
