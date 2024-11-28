@@ -1,6 +1,5 @@
 import { useSignUp, useUser } from "@clerk/clerk-expo";
 import { Api } from "api";
-import { Redirect, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -201,7 +200,7 @@ export default function SignUpScreen() {
               <InputError errors={errors} name="c_password" />
             </View>
           </View>
-          <View className="">
+          <View>
             <Button size="high" onPress={onNextStep}>
               <Text>Next step</Text>
             </Button>
