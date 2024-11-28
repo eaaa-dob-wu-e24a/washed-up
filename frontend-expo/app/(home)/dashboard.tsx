@@ -8,11 +8,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Heading from "~/components/heading";
 import ScheduleCard from "~/components/schedule-card";
 import { ScrollView } from "react-native-gesture-handler";
+import { Button } from "~/components/ui/button";
 
 export default function Dashboard() {
   const { user } = useUser();
   const [machines, setMachines] = useState<Machine[]>([]);
   const [schedule, setSchedule] = useState(true);
+  const [selectedBadge, setSelectedBadge] = useState("All");
 
   useEffect(() => {
     const token = user?.publicMetadata?.access_token;
@@ -47,6 +49,26 @@ export default function Dashboard() {
           ))}
         </View> */}
         <Text className="text-2xl">All machines</Text>
+        <View className="flex flex-row justify-start gap-4">
+          <Button
+            className="py-3 px-6 rounded-full"
+            variant={selectedBadge === "All" ? "default" : "outline"}
+            onPress={() => setSelectedBadge("All")}>
+            <Text className="text-sm">All</Text>
+          </Button>
+          <Button
+            className="py-3 px-6 rounded-full"
+            variant={selectedBadge === "Washers" ? "default" : "outline"}
+            onPress={() => setSelectedBadge("Washers")}>
+            <Text className="text-sm">Washers</Text>
+          </Button>
+          <Button
+            className="py-3 px-6 rounded-full"
+            variant={selectedBadge === "Dryers" ? "default" : "outline"}
+            onPress={() => setSelectedBadge("Dryers")}>
+            <Text className="text-sm">Dryers</Text>
+          </Button>
+        </View>
       </View>
     </SafeAreaView>
   );
