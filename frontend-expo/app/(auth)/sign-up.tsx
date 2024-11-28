@@ -40,6 +40,7 @@ export default function SignUpScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [locations, setLocations] = useState<Location[]>([]);
   const [location, setLocation] = useState("");
+  const [locationCode, setLocationCode] = useState("");
   const [code, setCode] = useState("");
   const [metaData, setMetaData] = useState<{
     [key: string]: any;
@@ -75,17 +76,30 @@ export default function SignUpScreen() {
         setErrors({ location: "Location is required" });
         return;
       }
-      try {
-        await signUp.create({
-          emailAddress,
-          password,
-        });
-        await signUp.prepareEmailAddressVerification({
-          strategy: "email_code",
-        });
-        setScreen("verification");
-      } catch (err: any) {
-        console.error(JSON.stringify(err, null, 2));
+      if (locationCode === "") {
+        setErrors({ locationCode: "Location code is required" });
+      }
+
+      const selectedLocation = locations.find(
+        (loc) => loc.id === parseInt(location)
+      );
+
+      if (selectedLocation?.code !== locationCode) {
+        setErrors({ locationCode: "Invalid location code" });
+        return;
+      } else {
+        try {
+          await signUp.create({
+            emailAddress,
+            password,
+          });
+          await signUp.prepareEmailAddressVerification({
+            strategy: "email_code",
+          });
+          setScreen("verification");
+        } catch (err: any) {
+          console.error(JSON.stringify(err, null, 2));
+        }
       }
     }
   };
@@ -215,34 +229,49 @@ export default function SignUpScreen() {
               title="Select your location"
               subtitle="You're almost ready to get washed up!"
             />
-            <Label className="mb-2">Location</Label>
-            <Select
-              onValueChange={(value) => {
-                if (!value) return;
-                setLocation(value?.value);
-              }}>
-              <SelectTrigger>
-                <SelectValue
-                  className="text-foreground text-sm native:text-lg"
-                  placeholder="Choose your location"
+            <View className="gap-4">
+              <View>
+                <Label className="mb-2">Location</Label>
+                <Select
+                  onValueChange={(value) => {
+                    if (!value) return;
+                    setLocation(value?.value);
+                  }}>
+                  <SelectTrigger>
+                    <SelectValue
+                      className="text-foreground text-sm native:text-lg"
+                      placeholder="Choose your location"
+                    />
+                  </SelectTrigger>
+                  <SelectContent
+                    insets={contentInsets}
+                    className="flex w-[90%]">
+                    <ScrollView className="max-h-72">
+                      <SelectGroup>
+                        {locations.map((loc) => (
+                          <SelectItem
+                            key={loc.id}
+                            label={loc.name}
+                            value={`${loc.id}`}>
+                            {loc.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </ScrollView>
+                  </SelectContent>
+                </Select>
+                <InputError errors={errors} name="location" />
+              </View>
+              <View>
+                <Label className="mb-2">Location verification code</Label>
+                <Input
+                  value={locationCode}
+                  placeholder="Enter the location code..."
+                  onChangeText={setLocationCode}
                 />
-              </SelectTrigger>
-              <SelectContent insets={contentInsets} className="w-[250px]">
-                <ScrollView className="max-h-64">
-                  <SelectGroup>
-                    {locations.map((loc) => (
-                      <SelectItem
-                        key={loc.id}
-                        label={loc.name}
-                        value={`${loc.id}`}>
-                        {loc.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </ScrollView>
-              </SelectContent>
-            </Select>
-            <InputError errors={errors} name="location" />
+                <InputError errors={errors} name="locationCode" />
+              </View>
+            </View>
           </View>
           <Button size="high" onPress={onNextStep}>
             <Text>Next step</Text>
