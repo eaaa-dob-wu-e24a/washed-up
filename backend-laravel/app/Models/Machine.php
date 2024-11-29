@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Machine extends Model {
     protected $table = 'machines';
     protected $fillable = [
-        'model',
+        'type',
         'location_id',
         'status',
     ];

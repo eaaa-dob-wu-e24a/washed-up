@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('machines', function (Blueprint $table) {
             $table->id();
-            $table->string('model');
+            $table->enum('type', ['wash', 'dry']);
             $table->foreignId('location_id')->constrained('locations')->onDelete('cascade');
             $table->boolean('status');
             $table->timestamps();
