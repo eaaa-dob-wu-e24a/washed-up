@@ -33,7 +33,7 @@ export default function Dashboard() {
   return (
     <SafeAreaView className="h-screen justify-between">
       <ScrollView className="flex gap-4 p-6">
-        <Heading title={`Hello, ${user?.emailAddresses}`} />
+        <Heading title={`Hello, ${user?.publicMetadata?.name}`} />
         <Text className="text-2xl">Schedule</Text>
         {schedule ? (
           <ScrollView className="-mx-6 mt-4" horizontal>
@@ -73,7 +73,7 @@ export default function Dashboard() {
           <View className="gap-4 mb-20">
             {machines
               ?.filter((a) =>
-                selectedBadge === "all" ? true : a.model === selectedBadge,
+                selectedBadge === "all" ? true : a.model === selectedBadge
               )
               .map((machine) => (
                 <MachineCard key={machine.id} data={machine} />
