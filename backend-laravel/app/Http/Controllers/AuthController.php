@@ -76,6 +76,7 @@ class AuthController extends Controller {
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
+
         $token = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
@@ -84,4 +85,30 @@ class AuthController extends Controller {
             'role' => $user->role,
         ]);
     }
+
+    public function adminLogin(Request $request) {
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'message' => 'Invalid login details'
+            ], 401);
+        }
+
+        $user = User::where('email', $request->email)->firstOrFail();
+        
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'message' => 'Unauthorized. Admin access only'
+            ], 403);
+        }
+
+        $token = $user->createToken('authToken')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'role' => $user->role,
+        ]);
+    }
+
+    
 }

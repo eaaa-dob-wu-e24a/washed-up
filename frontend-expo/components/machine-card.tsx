@@ -13,7 +13,7 @@ export default function MachineCard({ data }: { data: Machine }) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="capitalize">{data.model}</CardTitle>
+        <CardTitle className="capitalize">{data.type}</CardTitle>
         <CardDescription>Machine #{data.id}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-start">
