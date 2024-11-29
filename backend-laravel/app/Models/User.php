@@ -49,10 +49,6 @@ class User extends Authenticatable {
         return $this->hasMany(Schedule::class);
     }
 
-    public function rentals() {
-        return $this->hasMany(Rental::class);
-    }
-
     public function location() {
         return $this->belongsTo(Location::class);
     }

@@ -23,8 +23,4 @@ class Machine extends Model {
     public function schedules() {
         return $this->hasMany(Schedule::class);
     }
-
-    public function rentals() {
-        return $this->hasMany(Rental::class);
-    }
 }

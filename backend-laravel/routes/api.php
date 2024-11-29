@@ -42,12 +42,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/qrcodes/{id}', [QRCodeController::class, 'update']);
     Route::delete('/qrcodes/{id}', [QRCodeController::class, 'destroy']);
 
-    Route::get('/rentals', [RentalController::class, 'index']);
-    Route::get('/rentals/{id}', [RentalController::class, 'show']);
-    Route::post('/rentals', [RentalController::class, 'store']);
-    Route::put('/rentals/{id}', [RentalController::class, 'update']);
-    Route::delete('/rentals/{id}', [RentalController::class, 'destroy']);
-
     Route::get('/schedules', [ScheduleController::class, 'index']);
     Route::get('/schedules/{id}', [ScheduleController::class, 'show']);
     Route::post('/schedules', [ScheduleController::class, 'store']);
