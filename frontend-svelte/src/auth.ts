@@ -1,28 +1,16 @@
 import { SvelteKitAuth, type DefaultSession, type SvelteKitAuthConfig } from '@auth/sveltekit';
 import Credentials from '@auth/sveltekit/providers/credentials';
-import { env } from '$env/dynamic/private';
-import { redirect } from '@sveltejs/kit';
-// Your own logic for dealing with plaintext password strings; be careful!
+import { api } from './utils/api';
 
 declare module '@auth/sveltekit' {
 	interface Session {
 		user: {
 			token: string;
-			/**
-			 * By default, TypeScript merges new interface properties and overwrites existing ones.
-			 * In this case, the default session user properties will be overwritten,
-			 * with the new ones defined above. To keep the default session user properties,
-			 * you need to add them back into the newly declared interface.
-			 */
 		} & DefaultSession['user'];
 	}
 }
 
 export const { signIn, signOut, handle } = SvelteKitAuth(async (event) => {
-	const error = event.url.searchParams.get('error');
-	if (error) {
-		redirect(302, '/sign-in');
-	}
 	const authOptions: SvelteKitAuthConfig = {
 		trustHost: true,
 		providers: [
@@ -35,47 +23,30 @@ export const { signIn, signOut, handle } = SvelteKitAuth(async (event) => {
 				},
 				authorize: async (credentials) => {
 					try {
-						let user = null;
-
-						const raw = JSON.stringify({
+						const { data } = await api.post('/admin-login', {
 							email: credentials.email,
 							password: credentials.password
 						});
 
-						const response = await fetch(`${env.API_URL}/api/login`, {
-							method: 'POST',
+						if (!data?.access_token) {
+							// Instead of throwing an error, return null with an error message
+							return null;
+						}
+
+						const { data: userData } = await api.get('/user', {
 							headers: {
-								'Content-Type': 'application/json'
-							},
-							body: raw
+								Authorization: `Bearer ${data.access_token}`
+							}
 						});
 
-						const data = await response.json();
-
-						const cred = data;
-
-						if (!cred?.access_token) {
-							// No user found, so this is their first attempt to login
-							// Optionally, this is also the place you could do a user registration
-							throw new Error('Invalid credentials.');
-						} else {
-							const response = await fetch(`${env.API_URL}/api/user`, {
-								headers: {
-									Authorization: `Bearer ${cred.access_token}`
-								}
-							});
-
-							const data = await response.json();
-
-							// return JSON object with the user data
-							return {
-								id: cred.access_token,
-								email: data.email,
-								name: data.name
-							};
-						}
+						return {
+							id: data.access_token,
+							email: userData.email,
+							name: userData.name
+						};
 					} catch (error) {
 						console.error(error);
+						// Return the error message
 						return null;
 					}
 				}
@@ -92,6 +63,9 @@ export const { signIn, signOut, handle } = SvelteKitAuth(async (event) => {
 					expires: session.expires
 				};
 			}
+		},
+		pages: {
+			signIn: '/sign-in'
 		}
 	};
 

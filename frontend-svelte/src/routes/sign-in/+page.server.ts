@@ -1,12 +1,16 @@
-import type { PageServerLoad, Actions } from './$types.js';
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import type { Actions, PageServerLoad } from './$types.js';
 import { formSchema } from './schema';
-import { api } from '../../utils/api.js';
-import { signIn } from '@auth/sveltekit/client';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async (event) => {
+	const session = await event.locals.auth();
+
+	if (session) {
+		throw redirect(302, '/');
+	}
+
 	return {
 		form: await superValidate(zod(formSchema))
 	};
