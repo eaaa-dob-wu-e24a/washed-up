@@ -34,7 +34,7 @@ export default function Dashboard() {
       <ScrollView
         className="flex gap-4 p-6"
         showsVerticalScrollIndicator={false}>
-        <Heading title={`Hello, ${user?.emailAddresses}`} />
+        <Heading title={`Hello, ${user?.publicMetadata?.name}`} />
         <Text className="text-2xl">Schedule</Text>
         {schedule ? (
           <ScrollView
