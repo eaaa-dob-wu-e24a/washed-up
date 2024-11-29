@@ -12,7 +12,7 @@ use App\Http\Controllers\LocationController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('validate', 'validate');
-    Route::post('register', 'regter');
+    Route::post('register', 'register');
     Route::post('login', 'login');
     Route::post('admin-login', 'adminLogin');
     Route::get('locations', [LocationController::class, 'index']);
