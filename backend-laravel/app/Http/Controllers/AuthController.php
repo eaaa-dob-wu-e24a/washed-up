@@ -36,6 +36,7 @@ class AuthController extends Controller {
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
+            'email_verified_at' => now(),
             'password' => Hash::make($request->password),
             'location_id' => $request->location_id,
             'role' => $request->role ?? 'user'

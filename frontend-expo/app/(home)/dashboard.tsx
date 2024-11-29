@@ -1,16 +1,15 @@
-import { Api } from "api";
-import { Machine } from "types";
 import { useUser } from "@clerk/clerk-expo";
+import { Api } from "api";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
-import { Text } from "~/components/ui/text";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Heading from "~/components/heading";
-import ScheduleCard from "~/components/schedule-card";
 import { ScrollView } from "react-native-gesture-handler";
-import { Button } from "~/components/ui/button";
-import { Separator } from "~/components/ui/separator";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Machine } from "types";
+import Heading from "~/components/heading";
 import MachineCard from "~/components/machine-card";
+import ScheduleCard from "~/components/schedule-card";
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
 
 export default function Dashboard() {
   const { user } = useUser();
@@ -32,11 +31,16 @@ export default function Dashboard() {
 
   return (
     <SafeAreaView className="h-screen justify-between">
-      <ScrollView className="flex gap-4 p-6">
+      <ScrollView
+        className="flex gap-4 p-6"
+        showsVerticalScrollIndicator={false}>
         <Heading title={`Hello, ${user?.emailAddresses}`} />
         <Text className="text-2xl">Schedule</Text>
         {schedule ? (
-          <ScrollView className="-mx-6 mt-4" horizontal>
+          <ScrollView
+            className="-mx-6 mt-4"
+            horizontal
+            showsHorizontalScrollIndicator={false}>
             <View className="px-6 flex flex-row gap-4 pb-4">
               <ScheduleCard />
               <ScheduleCard />
@@ -50,22 +54,19 @@ export default function Dashboard() {
           <Button
             className="py-3 px-6 rounded-full"
             variant={selectedBadge === "all" ? "default" : "outline"}
-            onPress={() => setSelectedBadge("all")}
-          >
+            onPress={() => setSelectedBadge("all")}>
             <Text className="text-sm">All</Text>
           </Button>
           <Button
             className="py-3 px-6 rounded-full"
             variant={selectedBadge === "wash" ? "default" : "outline"}
-            onPress={() => setSelectedBadge("wash")}
-          >
+            onPress={() => setSelectedBadge("wash")}>
             <Text className="text-sm">Washers</Text>
           </Button>
           <Button
             className="py-3 px-6 rounded-full"
             variant={selectedBadge === "dry" ? "default" : "outline"}
-            onPress={() => setSelectedBadge("dry")}
-          >
+            onPress={() => setSelectedBadge("dry")}>
             <Text className="text-sm">Dryers</Text>
           </Button>
         </View>
@@ -73,7 +74,7 @@ export default function Dashboard() {
           <View className="gap-4 mb-20">
             {machines
               ?.filter((a) =>
-                selectedBadge === "all" ? true : a.model === selectedBadge,
+                selectedBadge === "all" ? true : a.model === selectedBadge
               )
               .map((machine) => (
                 <MachineCard key={machine.id} data={machine} />
