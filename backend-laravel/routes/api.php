@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\QRCodeController;
-use App\Http\Controllers\RentalController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ClerkController;
 use App\Http\Controllers\AuthController;
@@ -18,18 +17,9 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('locations', [LocationController::class, 'index']);
 });
 
-
-
-Route::middleware('auth:sanctum')->group(function () {
-    Route::patch("/clerk-metadata/{id}", [ClerkController::class, 'updateMetadata']);
-
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'index']);
-
-    Route::get('/books', [BookController::class, 'index']);
-    Route::get('/books/{id}', [BookController::class, 'show']);
-    Route::post('/books', [BookController::class, 'store']);
-    Route::put('/books/{id}', [BookController::class, 'update']);
-    Route::delete('/books/{id}', [BookController::class, 'destroy']);
+    Route::patch("/clerk-metadata/{id}", [ClerkController::class, 'updateMetadata']);
 
     Route::get('/machines', [MachineController::class, 'index']);
     Route::get('/machines/{id}', [MachineController::class, 'show']);
@@ -48,4 +38,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/schedules', [ScheduleController::class, 'store']);
     Route::put('/schedules/{id}', [ScheduleController::class, 'update']);
     Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']);
+});
+
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/books', [BookController::class, 'index']);
+    Route::get('/books/{id}', [BookController::class, 'show']);
+    Route::post('/books', [BookController::class, 'store']);
+    Route::put('/books/{id}', [BookController::class, 'update']);
+    Route::delete('/books/{id}', [BookController::class, 'destroy']);
 });
