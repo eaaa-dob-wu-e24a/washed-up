@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -36,7 +37,7 @@ class AuthController extends Controller {
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
-            'email_verified_at' => now(),
+            'email_verified_at' => Carbon::now(),
             'password' => Hash::make($request->password),
             'location_id' => $request->location_id,
             'role' => $request->role ?? 'user'
@@ -94,7 +95,7 @@ class AuthController extends Controller {
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
-        
+
         if ($user->role !== 'admin') {
             return response()->json([
                 'message' => 'Unauthorized. Admin access only'
@@ -109,6 +110,4 @@ class AuthController extends Controller {
             'role' => $user->role,
         ]);
     }
-
-    
 }
