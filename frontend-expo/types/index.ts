@@ -1,6 +1,6 @@
 export type Machine = {
   id: number;
-  model: string;
+  type: string;
   location_id: number;
   status: number;
   created_at: string;

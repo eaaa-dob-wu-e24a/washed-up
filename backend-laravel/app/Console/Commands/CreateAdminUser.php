@@ -8,24 +8,21 @@ use Illuminate\Support\Facades\Hash;
 
 class CreateAdminUser extends Command
 {
-    protected $signature = 'admin:create {name} {password} {location_id}';
-    protected $description = 'Create a new admin user';
+    protected $signature = 'admin:create {user_id}';
+    protected $description = 'Convert an existing user to admin';
 
     public function handle()
     {
         try {
-            $user = User::create([
-                'name' => $this->argument('name'),
-                'password' => Hash::make($this->argument('password')),
-                'location_id' => $this->argument('location_id'),
-                'role' => 'admin',
-                'email' => strtolower(str_replace(' ', '.', $this->argument('name'))) . '@admin.com'
+            $user = User::findOrFail($this->argument('user_id'));
+            $user->update([
+                'role' => 'admin'
             ]);
 
-            $this->info("Admin user '{$user->name}' created successfully!");
+            $this->info("User '{$user->name}' has been converted to admin successfully!");
             $this->info("Email: {$user->email}");
         } catch (\Exception $e) {
-            $this->error('Failed to create admin user: ' . $e->getMessage());
+            $this->error('Failed to convert user to admin: ' . $e->getMessage());
         }
     }
 }
