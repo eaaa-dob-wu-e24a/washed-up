@@ -15,8 +15,7 @@ class LocationSeeder extends Seeder
         $faker = \Faker\Factory::create();
         for ($i = 0; $i < 10; $i++) {
             Location::create([
-                'name' => $faker->city(),
-                'code' => strtoupper($faker->lexify('????')),
+                'code' => strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 4)),
                 'address' => $faker->address(),
                 'latitude' => $faker->latitude(),
                 'longitude' => $faker->longitude()

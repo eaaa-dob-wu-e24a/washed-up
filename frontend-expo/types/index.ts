@@ -15,8 +15,10 @@ export type Machine = {
 
 export type Location = {
   id: number;
-  name: string;
   code: string;
+  address: string;
+  latitude: number;
+  longitude: number;
   created_at: string;
   updated_at: string;
 };

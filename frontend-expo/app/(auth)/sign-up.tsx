@@ -236,7 +236,8 @@ export default function SignUpScreen() {
                   onValueChange={(value) => {
                     if (!value) return;
                     setLocation(value?.value);
-                  }}>
+                  }}
+                >
                   <SelectTrigger>
                     <SelectValue
                       className="text-foreground text-sm native:text-lg"
@@ -245,15 +246,17 @@ export default function SignUpScreen() {
                   </SelectTrigger>
                   <SelectContent
                     insets={contentInsets}
-                    className="flex w-[90%]">
+                    className="flex w-[90%]"
+                  >
                     <ScrollView className="max-h-72">
                       <SelectGroup>
                         {locations.map((loc) => (
                           <SelectItem
                             key={loc.id}
-                            label={loc.name}
-                            value={`${loc.id}`}>
-                            {loc.name}
+                            label={loc.address}
+                            value={`${loc.id}`}
+                          >
+                            {loc.address}
                           </SelectItem>
                         ))}
                       </SelectGroup>

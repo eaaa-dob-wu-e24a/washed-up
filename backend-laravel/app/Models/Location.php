@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
-    protected $fillable = ['name', 'code', 'address', "latitude", "longitude"];
+    protected $fillable = ['code', 'address', "latitude", "longitude"];
 
     public function user()
     {
