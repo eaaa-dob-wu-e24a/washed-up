@@ -4,11 +4,11 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import '../app.css';
-	import { page } from '$app/stores';
+	import { page, navigating } from '$app/stores';
+	import { Skeleton } from '@/components/ui/skeleton';
 	let { children, data } = $props();
 
 	const pathname = $derived($page.url.pathname);
-
 	let breadcrumbs = $derived(pathname.split('/'));
 </script>
 
@@ -24,22 +24,31 @@
 				<div class="flex items-center gap-2 px-4">
 					<Sidebar.Trigger class="h-4 w-4" />
 					<Separator orientation="vertical" class="h-4" />
-					<Breadcrumb.Root>
-						<Breadcrumb.List>
-							{#each breadcrumbs as breadcrumb, index}
-								<Breadcrumb.Item class="hidden capitalize md:block">
-									<Breadcrumb.Link href="#">{breadcrumb}</Breadcrumb.Link>
-								</Breadcrumb.Item>
-								{#if index < breadcrumbs.length - 1}
-									<Breadcrumb.Separator class="hidden md:block" />
-								{/if}
-							{/each}
-						</Breadcrumb.List>
-					</Breadcrumb.Root>
+
+					{#if $navigating}
+						<Skeleton class="ml-3 h-4 w-24" />
+					{:else}
+						<Breadcrumb.Root>
+							<Breadcrumb.List>
+								{#each breadcrumbs as breadcrumb, index}
+									<Breadcrumb.Item class="hidden capitalize md:block">
+										<Breadcrumb.Link href="#">{breadcrumb}</Breadcrumb.Link>
+									</Breadcrumb.Item>
+									{#if index < breadcrumbs.length - 1}
+										<Breadcrumb.Separator class="hidden md:block" />
+									{/if}
+								{/each}
+							</Breadcrumb.List>
+						</Breadcrumb.Root>
+					{/if}
 				</div>
 			</header>
 			<main class="px-4">
-				{@render children()}
+				{#if $navigating}
+					<div>Loading...</div>
+				{:else}
+					{@render children()}
+				{/if}
 			</main>
 		</Sidebar.Inset>
 	</Sidebar.Provider>

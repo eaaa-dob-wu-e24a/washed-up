@@ -5,13 +5,14 @@
 	import Users from 'lucide-svelte/icons/users';
 
 	// This is sample data.
-	const data = {
+	const data: {
+		navMain: MenuItems[];
+	} = {
 		navMain: [
 			{
 				title: 'Machines',
 				url: '/machines',
-				icon: WashingMachine,
-				isActive: true
+				icon: WashingMachine
 			},
 			{
 				title: 'Rentals',
@@ -38,6 +39,7 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import type { ComponentProps } from 'svelte';
 	import type { Session } from '@auth/sveltekit';
+	import type { MenuItems } from '@/types';
 
 	let {
 		session,

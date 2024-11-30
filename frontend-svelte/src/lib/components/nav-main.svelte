@@ -2,23 +2,17 @@
 	import * as Collapsible from '$lib/components/ui/collapsible/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';
+	import { page } from '$app/stores';
+	import { cn } from '@/utils';
+	import type { MenuItems } from '@/types';
 
 	let {
 		items
 	}: {
-		items: {
-			title: string;
-			url: string;
-			// this should be `Component` after lucide-svelte updates types
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			icon?: any;
-			isActive?: boolean;
-			items?: {
-				title: string;
-				url: string;
-			}[];
-		}[];
+		items: MenuItems[];
 	} = $props();
+
+	const pathname = $derived($page.url.pathname);
 </script>
 
 <Sidebar.Group>
@@ -29,7 +23,7 @@
 				{#snippet child({ props })}
 					<Sidebar.MenuItem {...props}>
 						{#if mainItem.items}
-							<Collapsible.Trigger>
+							<Collapsible.Trigger class="hover:bg-muted">
 								{#snippet child({ props })}
 									<Sidebar.MenuButton {...props}>
 										{#snippet tooltipContent()}
@@ -38,7 +32,7 @@
 										{#if mainItem.icon}
 											<mainItem.icon />
 										{/if}
-										<span>{mainItem.title}</span>
+										<span>{mainItem.title} </span>
 										<ChevronRight
 											class="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
 										/>
@@ -46,8 +40,11 @@
 								{/snippet}
 							</Collapsible.Trigger>
 						{:else}
-							<a href={mainItem.url} {...props}>
-								<Sidebar.MenuButton {...props}>
+							<a href={mainItem.url}>
+								<Sidebar.MenuButton
+									{...props}
+									class={cn('hover:bg-muted', pathname === mainItem.url && 'bg-muted')}
+								>
 									{#snippet tooltipContent()}
 										{mainItem.title}
 									{/snippet}
@@ -62,7 +59,12 @@
 							{#if mainItem.items}
 								<Sidebar.MenuSub>
 									{#each mainItem.items as subItem (subItem.title)}
-										<Sidebar.MenuSubItem>
+										<Sidebar.MenuSubItem
+											class={cn(
+												'hover:bg-muted rounded-sm',
+												pathname === subItem.url && 'bg-muted'
+											)}
+										>
 											<Sidebar.MenuSubButton>
 												{#snippet child({ props })}
 													<a href={subItem.url} {...props}>
