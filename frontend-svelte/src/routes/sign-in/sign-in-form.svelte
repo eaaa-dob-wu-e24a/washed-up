@@ -1,55 +1,88 @@
 <script lang="ts">
-	import * as Form from '$lib/components/ui/form/index.js';
+	import { Button } from '$lib/components/ui/button/index.js';
+	import * as Card from '$lib/components/ui/card/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
-	import Button from '@/components/ui/button/button.svelte';
+	import { Label } from '$lib/components/ui/label/index.js';
 	import { signIn } from '@auth/sveltekit/client';
-	import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { formSchema, type FormSchema } from './schema';
+	import { z } from 'zod';
 
-	export let data: SuperValidated<Infer<FormSchema>>;
-
-	const form = superForm(data, {
-		validators: zodClient(formSchema),
-		onSubmit: async ({ formData }) => {
-			const something = await signIn('credentials', {
-				email: formData.get('email'),
-				password: formData.get('password')
-			});
-
-			console.log(something);
-		}
+	export const formSchema = z.object({
+		email: z.string().email(),
+		password: z.string().min(8)
 	});
 
-	const { form: formData, enhance, message } = form;
+	let errors: Record<string, string[]> | undefined = $state({});
+	let isSubmitted = $state(false);
+
+	let form = $state({
+		email: '',
+		password: ''
+	});
+
+	function handleSubmit(event: Event) {
+		event.preventDefault();
+
+		const result = formSchema.safeParse(form);
+
+		if (!result.success) {
+			isSubmitted = true;
+			errors = result.error.flatten().fieldErrors;
+			return;
+		}
+
+		signIn('credentials', form);
+	}
+
+	$effect(() => {
+		if (isSubmitted) {
+			const result = formSchema.safeParse(form);
+
+			if (!result.success) {
+				errors = result.error.flatten().fieldErrors;
+				return;
+			}
+
+			errors = {};
+		}
+	});
 </script>
 
-<form method="POST" use:enhance class="mx-auto max-w-md">
-	{#if $message}
-		<div class="mb-4 rounded-md bg-red-50 p-4 text-red-700">
-			{$message.text}
-		</div>
-	{/if}
+<Card.Root class="mx-auto max-w-sm">
+	<Card.Header>
+		<Card.Title class="text-2xl">Login</Card.Title>
+		<Card.Description>Enter your email below to login to your account</Card.Description>
+	</Card.Header>
+	<Card.Content>
+		<form onsubmit={handleSubmit} class="grid gap-4">
+			<div class="grid gap-2">
+				<Label for="email">Email</Label>
+				<Input
+					id="email"
+					type="text"
+					name="email"
+					bind:value={form.email}
+					placeholder="m@example.com"
+				/>
+				{#if errors?.email}
+					<p class="text-destructive text-[0.8rem] font-medium">{errors.email[0]}</p>
+				{/if}
+			</div>
 
-	<Form.Field {form} name="email">
-		<Form.Control>
-			{#snippet children({ props })}
-				<Form.Label>Email</Form.Label>
-				<Input {...props} bind:value={$formData.email} />
-			{/snippet}
-		</Form.Control>
-		<Form.FieldErrors />
-	</Form.Field>
+			<div class="grid gap-2">
+				<Label for="password">Password</Label>
+				<Input
+					id="password"
+					type="password"
+					name="password"
+					bind:value={form.password}
+					placeholder="Enter your password"
+				/>
+				{#if errors?.password}
+					<p class="text-destructive text-[0.8rem] font-medium">{errors.password[0]}</p>
+				{/if}
+			</div>
 
-	<Form.Field {form} name="password">
-		<Form.Control>
-			{#snippet children({ props })}
-				<Form.Label>Password</Form.Label>
-				<Input {...props} bind:value={$formData.password} type="password" />
-			{/snippet}
-		</Form.Control>
-		<Form.FieldErrors />
-	</Form.Field>
-
-	<Button type="submit">Hello</Button>
-</form>
+			<Button type="submit" class="w-full">Login</Button>
+		</form>
+	</Card.Content>
+</Card.Root>
