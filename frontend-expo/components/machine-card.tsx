@@ -26,9 +26,9 @@ export default function MachineCard({ data }: { data: Machine }) {
           <Text className="text-2xl mt-1">
             <Text
               className={`text-2xl mt-1 ${
-                data.status === 0 ? "text-green-500" : "text-red-500"
+                data.status === 0 ? "text-primary" : "text-destructive"
               }`}>
-              {data.status === 0 ? "Free" : "Occupied"}
+              {data.status === 0 ? "Available" : "In use"}
             </Text>
           </Text>
         </CardHeader>
