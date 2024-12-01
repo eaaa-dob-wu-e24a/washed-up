@@ -14,6 +14,7 @@
 	import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import Button from './ui/button/button.svelte';
+	import { Loader2 } from 'lucide-svelte';
 
 	function getLabel(type: string) {
 		return type === 'wash' ? 'Washer' : 'Dryer';
@@ -29,15 +30,23 @@
 		validators: zodClient(createMachineSchema),
 		onResult: ({ result }) => {
 			if (result.status === 200) {
+				formLoading = true;
 				toggleDialog();
+			} else {
+				formLoading = false;
 			}
+		},
+		onSubmit: () => {
+			formLoading = true;
 		}
 	});
+
+	let formLoading = $state(false);
 
 	const { form: formData, enhance } = form;
 </script>
 
-<form method="POST" class="space-y-6" use:enhance>
+<form method="POST" action="?/create_machine" class="space-y-6" use:enhance>
 	<Form.Field {form} name="type">
 		<Form.Control>
 			{#snippet children({ props })}
@@ -58,5 +67,11 @@
 		</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
-	<Button type="submit">Submit</Button>
+	<Button disabled={formLoading} type="submit">
+		{#if formLoading}
+			<Loader2 class="h-4 w-4 animate-spin" />
+		{:else}
+			Submit
+		{/if}
+	</Button>
 </form>

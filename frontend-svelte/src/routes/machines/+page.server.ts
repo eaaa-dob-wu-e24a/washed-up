@@ -21,7 +21,7 @@ export const load: PageServerLoad = async (event) => {
 };
 
 export const actions: Actions = {
-	default: async (event) => {
+	create_machine: async (event) => {
 		const form = await superValidate(event, zod(createMachineSchema));
 		if (!form.valid) {
 			return fail(400, {
@@ -56,5 +56,18 @@ export const actions: Actions = {
 		return {
 			form
 		};
+	},
+	delete_machine: async (event) => {
+		const session = await event.locals.auth();
+
+		const formdata = await event.request.formData();
+
+		const id = formdata.get('id');
+
+		await api.delete(`/machines/${id}`, {
+			headers: {
+				Authorization: `Bearer ${session?.user.token}`
+			}
+		});
 	}
 };
