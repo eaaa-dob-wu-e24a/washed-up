@@ -1,0 +1,62 @@
+<script module>
+	import { z } from 'zod';
+
+	export const createMachineSchema = z.object({
+		type: z
+			.string({ required_error: 'Please select a machine type' })
+			.min(1, 'Please select a machine type')
+	});
+</script>
+
+<script lang="ts">
+	import * as Form from '$lib/components/ui/form/index.js';
+	import * as Select from '$lib/components/ui/select/index.js';
+	import { type Infer, superForm, type SuperValidated } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+	import Button from './ui/button/button.svelte';
+
+	function getLabel(type: string) {
+		return type === 'wash' ? 'Washer' : 'Dryer';
+	}
+
+	let {
+		toggleDialog,
+		data
+	}: { toggleDialog: () => void; data: SuperValidated<Infer<typeof createMachineSchema>> } =
+		$props();
+
+	const form = superForm(data, {
+		validators: zodClient(createMachineSchema),
+		onResult: ({ result }) => {
+			if (result.status === 200) {
+				toggleDialog();
+			}
+		}
+	});
+
+	const { form: formData, enhance } = form;
+</script>
+
+<form method="POST" class="space-y-6" use:enhance>
+	<Form.Field {form} name="type">
+		<Form.Control>
+			{#snippet children({ props })}
+				<Form.Label>Type</Form.Label>
+				<Select.Root type="single" bind:value={$formData.type} name={props.name}>
+					<Select.Trigger {...props}>
+						{$formData.type ? getLabel($formData.type) : 'Select a machine type'}
+					</Select.Trigger>
+					<Select.Content>
+						<Select.Item value="wash" label="Washer" />
+						<Select.Item value="dry" label="Dryer" />
+					</Select.Content>
+				</Select.Root>
+			{/snippet}
+		</Form.Control>
+		<Form.Description>
+			You can manage machine types in your <a href="/machines">machine settings</a>.
+		</Form.Description>
+		<Form.FieldErrors />
+	</Form.Field>
+	<Button type="submit">Submit</Button>
+</form>

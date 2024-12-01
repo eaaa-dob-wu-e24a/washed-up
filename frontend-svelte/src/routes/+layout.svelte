@@ -10,6 +10,14 @@
 
 	const pathname = $derived($page.url.pathname);
 	let breadcrumbs = $derived(pathname.split('/'));
+
+	function getBreadcrumbSlug(path: string) {
+		// get the full path and make sure to split it where the slug is equal to the path so you'll get the correct slug for every breadcrumb
+
+		const beforeSlug = pathname.split(path)[0];
+
+		return beforeSlug + path;
+	}
 </script>
 
 {#if !data.session}
@@ -32,7 +40,9 @@
 							<Breadcrumb.List>
 								{#each breadcrumbs as breadcrumb, index}
 									<Breadcrumb.Item class="hidden capitalize md:block">
-										<Breadcrumb.Link href="#">{breadcrumb}</Breadcrumb.Link>
+										<Breadcrumb.Link href={getBreadcrumbSlug(breadcrumb)}
+											>{breadcrumb}</Breadcrumb.Link
+										>
 									</Breadcrumb.Item>
 									{#if index < breadcrumbs.length - 1}
 										<Breadcrumb.Separator class="hidden md:block" />
