@@ -1,29 +1,38 @@
+import { View } from "react-native";
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Text } from "~/components/ui/text";
 import { Machine } from "~/types";
+import { Text } from "./ui/text";
 
 export default function MachineCard({ data }: { data: Machine }) {
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="capitalize">{data.type}</CardTitle>
-        <CardDescription>Machine #{data.id}</CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col items-start">
-        <Text>Tuesday, 3 dec</Text>
-        <Text>12:00 - 15:00</Text>
-      </CardContent>
-      <CardFooter className="flex flex-col items-start">
-        <Text>Starts in: 12m 42s</Text>
-        <Text>Status in: Occupied</Text>
-      </CardFooter>
+      <View>
+        <CardHeader className="flex-row justify-between">
+          <View>
+            <CardTitle className="capitalize">
+              {data.type === "wash"
+                ? "Washer"
+                : data.type === "dry"
+                ? "Dryer"
+                : data.type}
+            </CardTitle>
+            <CardDescription>#{data.id}</CardDescription>
+          </View>
+          <Text className="text-2xl mt-1">
+            <Text
+              className={`text-2xl mt-1 ${
+                data.status === 0 ? "text-green-500" : "text-red-500"
+              }`}>
+              {data.status === 0 ? "Free" : "Occupied"}
+            </Text>
+          </Text>
+        </CardHeader>
+      </View>
     </Card>
   );
 }
