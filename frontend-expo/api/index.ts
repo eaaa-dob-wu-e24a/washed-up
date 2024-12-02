@@ -1,4 +1,4 @@
-import { Location, Machine } from "types";
+import { Location, Machine, Schedule } from "types";
 
 export class Api {
   private accessToken: unknown | undefined;
@@ -130,6 +130,26 @@ export class Api {
       return data;
     } catch (error) {
       console.error("Error getting machines", error);
+      return [];
+    }
+  }
+
+  public async getSchedules(): Promise<Schedule[]> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/schedules`, {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        return [];
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error getting schedules", error);
       return [];
     }
   }

@@ -62,10 +62,12 @@ export default function MachineCard({ data }: { data: Machine }) {
     (event) => toDateId(new Date(event.start_time)) === selectedDate
   );
 
+  function handleMachinePress() {}
+
   return (
     <>
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger onPress={handleMachinePress}>
           <Card className="w-full shadow shadow-slate-900">
             <CardHeader className="flex-row justify-between">
               <View>
