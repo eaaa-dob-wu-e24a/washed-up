@@ -11,7 +11,7 @@ import { Text } from "~/components/ui/text";
 export default function ScheduleCard() {
   return (
     <>
-      <Card className="w-72">
+      <Card className="w-72 shadow shadow-slate-900">
         <CardHeader>
           <CardTitle>Washer</CardTitle>
           <CardDescription>Machine #13</CardDescription>

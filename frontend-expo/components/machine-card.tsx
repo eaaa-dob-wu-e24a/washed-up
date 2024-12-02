@@ -66,7 +66,7 @@ export default function MachineCard({ data }: { data: Machine }) {
     <>
       <Dialog>
         <DialogTrigger>
-          <Card className="w-full">
+          <Card className="w-full shadow shadow-slate-900">
             <CardHeader className="flex-row justify-between">
               <View>
                 <CardTitle className="capitalize">
