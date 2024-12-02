@@ -74,9 +74,11 @@ export default function MachineCard({ data }: { data: Machine }) {
     setLoading(false);
   }
 
+  const rentalTime = data.type === "dry" ? 0 : data.type === "wash" ? 2 : 0;
+
   const handleBookingPress = (hour: number) => {
     const startHour = hour;
-    const endHour = hour + 2;
+    const endHour = hour + rentalTime;
     const newBookedHours = [];
     for (let i = startHour; i <= endHour; i++) {
       newBookedHours.push(i);
@@ -111,10 +113,10 @@ export default function MachineCard({ data }: { data: Machine }) {
       const eventStart = new Date(event.start_time).getHours();
       const currentHour = hourNumber;
 
-      return currentHour >= eventStart - 2 && currentHour < eventStart;
+      return currentHour >= eventStart - rentalTime && currentHour < eventStart;
     });
 
-    const isLastTwoHours = index >= hours.length - 2;
+    const isLastTwoHours = index >= hours.length - rentalTime;
 
     const isBooked = bookedHours.includes(hourNumber);
 
