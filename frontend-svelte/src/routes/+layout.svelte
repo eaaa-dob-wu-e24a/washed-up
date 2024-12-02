@@ -6,6 +6,7 @@
 	import '../app.css';
 	import { page, navigating } from '$app/stores';
 	import { Skeleton } from '@/components/ui/skeleton';
+	import { Loader2 } from 'lucide-svelte';
 	let { children, data } = $props();
 
 	const pathname = $derived($page.url.pathname);
@@ -24,7 +25,7 @@
 	{@render children()}
 {:else}
 	<Sidebar.Provider>
-		<SidebarLeft session={data.session} />
+		<SidebarLeft location={data.location} session={data.session} />
 		<Sidebar.Inset>
 			<header
 				class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
@@ -55,7 +56,11 @@
 			</header>
 			<main class="px-4">
 				{#if $navigating}
-					<div>Loading...</div>
+					<div
+						class="mx-auto flex h-[calc(100vh-64px)] max-w-7xl items-center justify-center p-4 sm:p-6 lg:p-8"
+					>
+						<Loader2 class="h-10 w-10 animate-spin" />
+					</div>
 				{:else}
 					{@render children()}
 				{/if}

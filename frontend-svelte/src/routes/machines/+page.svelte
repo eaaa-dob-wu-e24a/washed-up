@@ -10,6 +10,7 @@
 	import { navigating } from '$app/stores';
 	import { cn } from '@/utils';
 	import { buttonVariants } from '@/components/ui/button';
+	import { getMachineStatus } from '@/utils/machine-status';
 
 	let {
 		data
@@ -29,83 +30,90 @@
 	}
 </script>
 
-<div class="mb-6 flex justify-between gap-6">
-	<div>
-		<h2 class="mb-1 text-xl font-semibold">Machines</h2>
-		<p class="text-muted-foreground text-sm">
-			Machines are the core of your business. They are used to process orders and generate revenue.
-		</p>
+<div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+	<div class="mb-6 flex justify-between gap-6">
+		<div>
+			<h2 class="mb-1 text-xl font-semibold">Machines</h2>
+			<p class="text-muted-foreground text-sm">
+				Machines are the core of your business. They are used to process orders and generate
+				revenue.
+			</p>
+		</div>
+
+		<Dialog.Root {open} onOpenChange={(v) => (open = v)}>
+			<Dialog.Trigger class="h-max">
+				<Button>Add Machine <Plus class="ml-2 h-4 w-4" /></Button>
+			</Dialog.Trigger>
+			<Dialog.Content>
+				<Dialog.Header>
+					<Dialog.Title>Add Machine</Dialog.Title>
+					<Dialog.Description>
+						Add a new machine to your business. This will allow you to process orders and generate
+						revenue.
+					</Dialog.Description>
+				</Dialog.Header>
+
+				<CreateMachineForm {toggleDialog} data={data.form} />
+			</Dialog.Content>
+		</Dialog.Root>
 	</div>
 
-	<Dialog.Root {open} onOpenChange={(v) => (open = v)}>
-		<Dialog.Trigger class="h-max">
-			<Button>Add Machine <Plus class="ml-2 h-4 w-4" /></Button>
-		</Dialog.Trigger>
-		<Dialog.Content>
-			<Dialog.Header>
-				<Dialog.Title>Add Machine</Dialog.Title>
-				<Dialog.Description>
-					Add a new machine to your business. This will allow you to process orders and generate
-					revenue.
-				</Dialog.Description>
-			</Dialog.Header>
-
-			<CreateMachineForm {toggleDialog} data={data.form} />
-		</Dialog.Content>
-	</Dialog.Root>
-</div>
-
-<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-	{#each data.machines as machine}
-		<!-- <a href={`/machines/${machine.id}`}> -->
-		<Card.Root>
-			<Card.Header class="flex flex-row items-start justify-between space-y-0">
-				<div>
-					<Card.Title class="capitalize">{machine.type}</Card.Title>
-					<Card.Description>Status: {machine.status}</Card.Description>
-				</div>
-				<form
-					class="flex items-start justify-start"
-					use:enhance={() => {
-						formLoading = {
-							loading: true,
-							id: machine.id
-						};
-						return async ({ update }) => {
+	<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+		{#each data.machines as machine}
+			<Card.Root>
+				<Card.Header class="flex flex-row items-start justify-between space-y-0">
+					<div class="flex flex-col gap-1">
+						<Card.Title class="capitalize">{machine.type}</Card.Title>
+						<Card.Description>
+							<span
+								class={`${getMachineStatus(machine.status).class} rounded-full px-2 py-0.5 text-xs font-semibold text-white`}
+							>
+								{getMachineStatus(machine.status).text}
+							</span>
+						</Card.Description>
+					</div>
+					<form
+						class="flex items-start justify-start"
+						use:enhance={() => {
 							formLoading = {
-								loading: false,
-								id: null
+								loading: true,
+								id: machine.id
 							};
-							update();
-						};
-					}}
-					method="POST"
-					action={`?/delete_machine`}
-				>
-					<Button
-						disabled={formLoading.loading && formLoading.id === machine.id}
-						variant="destructive"
-						type="submit"
-						size="icon"
+							return async ({ update }) => {
+								formLoading = {
+									loading: false,
+									id: null
+								};
+								update();
+							};
+						}}
+						method="POST"
+						action={`?/delete_machine`}
 					>
-						{#if formLoading.loading && formLoading.id === machine.id}
-							<Loader2 class="h-4 w-4 animate-spin" />
-						{:else}
-							<Trash2 class="h-4 w-4" />
-						{/if}
-					</Button>
-					<input type="hidden" name="id" value={machine.id} />
-				</form>
-			</Card.Header>
-			<Card.Content>
-				<div class="flex flex-col gap-2">
-					<p class="text-sm">ID: #{machine.id}</p>
+						<Button
+							disabled={formLoading.loading && formLoading.id === machine.id}
+							variant="destructive"
+							type="submit"
+							size="icon"
+						>
+							{#if formLoading.loading && formLoading.id === machine.id}
+								<Loader2 class="h-4 w-4 animate-spin" />
+							{:else}
+								<Trash2 class="h-4 w-4" />
+							{/if}
+						</Button>
+						<input type="hidden" name="id" value={machine.id} />
+					</form>
+				</Card.Header>
+				<Card.Content>
+					<div class="flex flex-col gap-2">
+						<p class="text-sm">ID: #{machine.id}</p>
 
-					<a href={`/machines/${machine.id}`} class={cn(buttonVariants())}>View Machine</a>
-					<!-- Add more machine details based on your Machine type -->
-				</div>
-			</Card.Content>
-		</Card.Root>
-		<!-- </a> -->
-	{/each}
+						<a href={`/machines/${machine.id}`} class={cn(buttonVariants())}>View Machine</a>
+						<!-- Add more machine details based on your Machine type -->
+					</div>
+				</Card.Content>
+			</Card.Root>
+		{/each}
+	</div>
 </div>
