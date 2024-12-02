@@ -12,8 +12,10 @@ import {
 } from "~/components/ui/card";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -21,37 +23,7 @@ import {
 import { Text } from "~/components/ui/text";
 import { Machine, Schedule } from "~/types";
 import { Separator } from "./ui/separator";
-
-// const events = [
-//   {
-//     id: 1,
-//     user_id: 1,
-//     machine_id: 1,
-//     start_time: "2024-12-01 20:00:00",
-//     end_time: "2024-12-01 23:00:00",
-//   },
-//   {
-//     id: 2,
-//     user_id: 2,
-//     machine_id: 1,
-//     start_time: "2024-12-01 09:00:00",
-//     end_time: "2024-12-01 11:00:00",
-//   },
-//   {
-//     id: 3,
-//     user_id: 3,
-//     machine_id: 1,
-//     start_time: "2024-12-01 16:00:00",
-//     end_time: "2024-12-01 19:00:00",
-//   },
-//   {
-//     id: 4,
-//     user_id: 3,
-//     machine_id: 23,
-//     start_time: "2024-12-01 04:00:00",
-//     end_time: "2024-12-01 07:00:00",
-//   },
-// ];
+import { Button } from "./ui/button";
 
 const today = toDateId(new Date());
 
@@ -61,6 +33,8 @@ export default function MachineCard({ data }: { data: Machine }) {
   const [selectedDate, setSelectedDate] = useState(today);
   const [events, setEvents] = useState<Schedule[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [isBooking, setIsBooking] = useState(false);
+  const [bookedHours, setBookedHours] = useState<number[]>([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -77,9 +51,9 @@ export default function MachineCard({ data }: { data: Machine }) {
 
   const hours = Array.from({ length: 13 }, (_, i) => `${i + 8}:00`);
 
-  // const filteredEvents = events.filter(
-  //   (event) => toDateId(new Date(event.start_time)) === selectedDate
-  // );
+  useEffect(() => {
+    setBookedHours([]);
+  }, [selectedDate]);
 
   function handleMachinePress() {
     setLoading(true);
@@ -104,13 +78,19 @@ export default function MachineCard({ data }: { data: Machine }) {
     setLoading(false);
   }
 
-  const handleBookingPress = () => {
-    console.log("Book time pressed");
+  const handleBookingPress = (hour: number) => {
+    const startHour = hour;
+    const endHour = hour + 2;
+    const newBookedHours = [];
+    for (let i = startHour; i <= endHour; i++) {
+      newBookedHours.push(i);
+    }
+    setBookedHours(newBookedHours);
   };
 
   const renderHours = hours.map((hour, index) => {
-    const isCurrentTime =
-      selectedDate === today && currentHour === parseInt(hour);
+    const hourNumber = parseInt(hour);
+    const isCurrentTime = selectedDate === today && currentHour === hourNumber;
 
     const isEvent = events.some((event) => {
       const eventDate = toDateId(new Date(event.start_time));
@@ -119,26 +99,28 @@ export default function MachineCard({ data }: { data: Machine }) {
 
       const eventStart = new Date(event.start_time).getHours();
       const eventEnd = new Date(event.end_time).getHours();
-      const currentHour = parseInt(hour);
+      const currentHour = hourNumber;
 
       return currentHour >= eventStart && currentHour < eventEnd;
     });
 
     const isPastTime =
       selectedDate < today ||
-      (selectedDate === today && parseInt(hour) < currentHour);
+      (selectedDate === today && hourNumber < currentHour);
 
     const isWithinTwoHoursBeforeEvent = events.some((event) => {
       const eventDate = toDateId(new Date(event.start_time));
       if (eventDate !== selectedDate) return false;
 
       const eventStart = new Date(event.start_time).getHours();
-      const currentHour = parseInt(hour);
+      const currentHour = hourNumber;
 
       return currentHour >= eventStart - 2 && currentHour < eventStart;
     });
 
     const isLastTwoHours = index >= hours.length - 2;
+
+    const isBooked = bookedHours.includes(hourNumber);
 
     return (
       <View key={index} className="relative">
@@ -153,8 +135,8 @@ export default function MachineCard({ data }: { data: Machine }) {
         )}
         <View
           className={`flex-row ${isEvent ? "bg-secondary" : ""} ${
-            isPastTime ? "bg-gray-300" : ""
-          }`}>
+            isPastTime ? "bg-secondary" : ""
+          } ${isBooked ? "bg-accent" : ""}`}>
           <Text className="w-[15%] text-center p-2">{hour}</Text>
           <Separator orientation={"vertical"} />
 
@@ -164,7 +146,7 @@ export default function MachineCard({ data }: { data: Machine }) {
             !isWithinTwoHoursBeforeEvent &&
             !isLastTwoHours && (
               <Text
-                onPress={handleBookingPress}
+                onPress={() => handleBookingPress(hourNumber)}
                 className="py-2 px-4 flex self-end text-primary text-right ml-auto">
                 Book this time
               </Text>
@@ -231,13 +213,14 @@ export default function MachineCard({ data }: { data: Machine }) {
               </View>
             </View>
           </ScrollView>
-          {/* <DialogFooter>
+
+          <DialogFooter>
             <DialogClose asChild>
               <Button>
                 <Text>OK</Text>
               </Button>
             </DialogClose>
-          </DialogFooter> */}
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>
