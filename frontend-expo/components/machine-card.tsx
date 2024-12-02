@@ -19,9 +19,8 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { Text } from "~/components/ui/text";
-import { Machine } from "~/types";
+import { Machine, Schedule } from "~/types";
 import { Separator } from "./ui/separator";
-import { Schedule } from "~/types";
 
 // const events = [
 //   {
@@ -76,7 +75,7 @@ export default function MachineCard({ data }: { data: Machine }) {
   const currentMinutesPercentage = Math.round((currentMinutes / 60) * 100);
   console.log(currentMinutesPercentage);
 
-  const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+  const hours = Array.from({ length: 13 }, (_, i) => `${i + 8}:00`);
 
   // const filteredEvents = events.filter(
   //   (event) => toDateId(new Date(event.start_time)) === selectedDate
@@ -105,17 +104,42 @@ export default function MachineCard({ data }: { data: Machine }) {
     setLoading(false);
   }
 
+  const handleBookingPress = () => {
+    console.log("Book time pressed");
+  };
+
   const renderHours = hours.map((hour, index) => {
     const isCurrentTime =
       selectedDate === today && currentHour === parseInt(hour);
+
     const isEvent = events.some((event) => {
       const eventDate = toDateId(new Date(event.start_time));
+
       if (eventDate !== selectedDate) return false;
+
       const eventStart = new Date(event.start_time).getHours();
       const eventEnd = new Date(event.end_time).getHours();
       const currentHour = parseInt(hour);
+
       return currentHour >= eventStart && currentHour < eventEnd;
     });
+
+    const isPastTime =
+      selectedDate < today ||
+      (selectedDate === today && parseInt(hour) < currentHour);
+
+    const isWithinTwoHoursBeforeEvent = events.some((event) => {
+      const eventDate = toDateId(new Date(event.start_time));
+      if (eventDate !== selectedDate) return false;
+
+      const eventStart = new Date(event.start_time).getHours();
+      const currentHour = parseInt(hour);
+
+      return currentHour >= eventStart - 2 && currentHour < eventStart;
+    });
+
+    const isLastTwoHours = index >= hours.length - 2;
+
     return (
       <View key={index} className="relative">
         {isCurrentTime && (
@@ -127,10 +151,24 @@ export default function MachineCard({ data }: { data: Machine }) {
             }}
           />
         )}
-        <View className={`flex-row ${isEvent ? "bg-destructive" : ""}`}>
+        <View
+          className={`flex-row ${isEvent ? "bg-secondary" : ""} ${
+            isPastTime ? "bg-gray-300" : ""
+          }`}>
           <Text className="w-[15%] text-center p-2">{hour}</Text>
           <Separator orientation={"vertical"} />
+
           <Text className="p-2">{isEvent ? "Machine used by..." : ""}</Text>
+          {!isPastTime &&
+            !isEvent &&
+            !isWithinTwoHoursBeforeEvent &&
+            !isLastTwoHours && (
+              <Text
+                onPress={handleBookingPress}
+                className="py-2 px-4 flex self-end text-primary text-right ml-auto">
+                Book this time
+              </Text>
+            )}
         </View>
         <Separator />
       </View>
