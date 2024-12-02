@@ -1,6 +1,6 @@
 import { useUser } from "@clerk/clerk-expo";
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Api } from "~/api";
@@ -61,6 +61,20 @@ export default function MachineCard({ data }: { data: Machine }) {
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(today);
   const [events, setEvents] = useState<Schedule[]>([]);
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentHour = currentTime.getHours();
+  const currentMinutes = currentTime.getMinutes();
+  const currentMinutesPercentage = Math.round((currentMinutes / 60) * 100);
+  console.log(currentMinutesPercentage);
 
   const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
 
@@ -146,35 +160,51 @@ export default function MachineCard({ data }: { data: Machine }) {
                 {loading ? (
                   <Text>Loading...</Text>
                 ) : (
-                  hours.map((hour, index) => {
-                    const isEvent = events.some((event) => {
-                      const eventDate = toDateId(new Date(event.start_time));
-                      if (eventDate !== selectedDate) return false;
-                      const eventStart = new Date(event.start_time).getHours();
-                      const eventEnd = new Date(event.end_time).getHours();
-                      const currentHour = parseInt(hour);
+                  <>
+                    {hours.map((hour, index) => {
+                      const isCurrentTime =
+                        selectedDate === today &&
+                        currentHour === parseInt(hour);
+                      const isEvent = events.some((event) => {
+                        const eventDate = toDateId(new Date(event.start_time));
+                        if (eventDate !== selectedDate) return false;
+                        const eventStart = new Date(
+                          event.start_time
+                        ).getHours();
+                        const eventEnd = new Date(event.end_time).getHours();
+                        const currentHour = parseInt(hour);
+                        return (
+                          currentHour >= eventStart && currentHour < eventEnd
+                        );
+                      });
                       return (
-                        currentHour >= eventStart && currentHour < eventEnd
-                      );
-                    });
-                    return (
-                      <View key={index}>
-                        <View
-                          className={`flex-row ${
-                            isEvent ? "bg-destructive" : ""
-                          }`}>
-                          <Text className="w-[15%] text-center p-2">
-                            {hour}
-                          </Text>
-                          <Separator orientation={"vertical"} />
-                          <Text className="p-2">
-                            {isEvent ? "Machine used by..." : ""}
-                          </Text>
+                        <View key={index} className="relative">
+                          {isCurrentTime && (
+                            <View
+                              className="absolute left-0 right-0 bg-primary"
+                              style={{
+                                top: `${currentMinutesPercentage}%`,
+                                height: 2,
+                              }}
+                            />
+                          )}
+                          <View
+                            className={`flex-row ${
+                              isEvent ? "bg-destructive" : ""
+                            }`}>
+                            <Text className="w-[15%] text-center p-2">
+                              {hour}
+                            </Text>
+                            <Separator orientation={"vertical"} />
+                            <Text className="p-2">
+                              {isEvent ? "Machine used by..." : ""}
+                            </Text>
+                          </View>
+                          <Separator />
                         </View>
-                        <Separator />
-                      </View>
-                    );
-                  })
+                      );
+                    })}
+                  </>
                 )}
               </View>
             </View>
