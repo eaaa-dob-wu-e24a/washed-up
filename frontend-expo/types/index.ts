@@ -7,7 +7,10 @@ export type Machine = {
   updated_at: string;
   location: {
     id: number;
-    name: string;
+    code: string;
+    address: string;
+    latitude: number;
+    longitude: number;
     created_at: string;
     updated_at: string;
   };
@@ -19,6 +22,16 @@ export type Location = {
   address: string;
   latitude: number;
   longitude: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Schedule = {
+  id: number;
+  user_id: number;
+  machine_id: number;
+  start_time: string;
+  end_time: string;
   created_at: string;
   updated_at: string;
 };

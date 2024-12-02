@@ -11,9 +11,9 @@ class ScheduleController extends Controller {
         return response()->json($schedules);
     }
 
-    public function show($id) {
-        $schedule = Schedule::findOrFail($id);
-        return response()->json($schedule);
+    public function show($machine_id) {
+        $schedules = Schedule::where('machine_id', $machine_id)->get();
+        return response()->json($schedules);
     }
 
     public function store(Request $request) {
