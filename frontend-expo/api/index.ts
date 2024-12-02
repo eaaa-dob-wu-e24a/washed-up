@@ -154,6 +154,29 @@ export class Api {
     }
   }
 
+  public async getScheduleById(machine_id: number): Promise<Schedule[]> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/schedules/${machine_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${this.accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        return [];
+      }
+
+      const data = await response.json();
+      return Array.isArray(data) ? data : [data];
+    } catch (error) {
+      console.error("Error getting schedule by machine id", error);
+      return [];
+    }
+  }
+
   public async getLocations(): Promise<Location[]> {
     try {
       const response = await fetch(`${this.baseUrl}/api/locations`, {

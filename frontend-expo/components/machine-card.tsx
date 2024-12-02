@@ -1,7 +1,9 @@
+import { useUser } from "@clerk/clerk-expo";
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import { useState } from "react";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { Api } from "~/api";
 import {
   Card,
   CardDescription,
@@ -19,50 +21,75 @@ import {
 import { Text } from "~/components/ui/text";
 import { Machine } from "~/types";
 import { Separator } from "./ui/separator";
+import { Schedule } from "~/types";
 
-const events = [
-  {
-    id: 1,
-    user_id: 1,
-    machine_id: 1,
-    start_time: "2024-12-01 20:00:00",
-    end_time: "2024-12-01 23:00:00",
-  },
-  {
-    id: 2,
-    user_id: 2,
-    machine_id: 1,
-    start_time: "2024-12-01 09:00:00",
-    end_time: "2024-12-01 11:00:00",
-  },
-  {
-    id: 3,
-    user_id: 3,
-    machine_id: 1,
-    start_time: "2024-12-01 16:00:00",
-    end_time: "2024-12-01 19:00:00",
-  },
-  {
-    id: 4,
-    user_id: 3,
-    machine_id: 23,
-    start_time: "2024-12-01 04:00:00",
-    end_time: "2024-12-01 07:00:00",
-  },
-];
+// const events = [
+//   {
+//     id: 1,
+//     user_id: 1,
+//     machine_id: 1,
+//     start_time: "2024-12-01 20:00:00",
+//     end_time: "2024-12-01 23:00:00",
+//   },
+//   {
+//     id: 2,
+//     user_id: 2,
+//     machine_id: 1,
+//     start_time: "2024-12-01 09:00:00",
+//     end_time: "2024-12-01 11:00:00",
+//   },
+//   {
+//     id: 3,
+//     user_id: 3,
+//     machine_id: 1,
+//     start_time: "2024-12-01 16:00:00",
+//     end_time: "2024-12-01 19:00:00",
+//   },
+//   {
+//     id: 4,
+//     user_id: 3,
+//     machine_id: 23,
+//     start_time: "2024-12-01 04:00:00",
+//     end_time: "2024-12-01 07:00:00",
+//   },
+// ];
 
 const today = toDateId(new Date());
 
 export default function MachineCard({ data }: { data: Machine }) {
+  const { user } = useUser();
+  const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(today);
+  const [events, setEvents] = useState<Schedule[]>([]);
 
-  const hours = Array.from({ length: 13 }, (_, i) => `${i + 8}:00`);
+  const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
 
-  const filteredEvents = events.filter(
-    (event) => toDateId(new Date(event.start_time)) === selectedDate
-  );
+  // const filteredEvents = events.filter(
+  //   (event) => toDateId(new Date(event.start_time)) === selectedDate
+  // );
 
-  function handleMachinePress() {}
+  function handleMachinePress() {
+    setLoading(true);
+
+    const token = user?.publicMetadata?.access_token;
+    if (!token) {
+      console.error("No access token");
+      setLoading(false);
+      return;
+    }
+    const api = new Api(token);
+
+    console.log(`Machine ID pressed: ${data.id}`);
+
+    async function getData() {
+      const output = await api.getScheduleById(data.id);
+      setEvents(output);
+      console.log(output);
+    }
+    getData();
+
+    setLoading(false);
+  }
 
   return (
     <>
@@ -116,28 +143,37 @@ export default function MachineCard({ data }: { data: Machine }) {
               <Text className="text-center">Selected date: {selectedDate}</Text>
 
               <View>
-                {hours.map((hour, index) => {
-                  const isEvent = filteredEvents.some((event) => {
-                    const startHour = new Date(event.start_time).getHours();
-                    const endHour = new Date(event.end_time).getHours();
-                    return index >= startHour && index < endHour;
-                  });
-                  return (
-                    <View key={index}>
-                      <View
-                        className={`flex-row ${
-                          isEvent ? "bg-destructive" : ""
-                        }`}>
-                        <Text className="w-[15%] text-center p-2">{hour}</Text>
-                        <Separator orientation={"vertical"} />
-                        <Text className="p-2">
-                          {isEvent ? "Machine used by..." : ""}
-                        </Text>
+                {loading ? (
+                  <Text>Loading...</Text>
+                ) : (
+                  hours.map((hour, index) => {
+                    const isEvent = events.some((event) => {
+                      const eventStart = new Date(event.start_time).getHours();
+                      const eventEnd = new Date(event.end_time).getHours();
+                      const currentHour = parseInt(hour);
+                      return (
+                        currentHour >= eventStart && currentHour < eventEnd
+                      );
+                    });
+                    return (
+                      <View key={index}>
+                        <View
+                          className={`flex-row ${
+                            isEvent ? "bg-destructive" : ""
+                          }`}>
+                          <Text className="w-[15%] text-center p-2">
+                            {hour}
+                          </Text>
+                          <Separator orientation={"vertical"} />
+                          <Text className="p-2">
+                            {isEvent ? "Machine used by..." : ""}
+                          </Text>
+                        </View>
+                        <Separator />
                       </View>
-                      <Separator />
-                    </View>
-                  );
-                })}
+                    );
+                  })
+                )}
               </View>
             </View>
           </ScrollView>
