@@ -105,6 +105,38 @@ export default function MachineCard({ data }: { data: Machine }) {
     setLoading(false);
   }
 
+  const renderHours = hours.map((hour, index) => {
+    const isCurrentTime =
+      selectedDate === today && currentHour === parseInt(hour);
+    const isEvent = events.some((event) => {
+      const eventDate = toDateId(new Date(event.start_time));
+      if (eventDate !== selectedDate) return false;
+      const eventStart = new Date(event.start_time).getHours();
+      const eventEnd = new Date(event.end_time).getHours();
+      const currentHour = parseInt(hour);
+      return currentHour >= eventStart && currentHour < eventEnd;
+    });
+    return (
+      <View key={index} className="relative">
+        {isCurrentTime && (
+          <View
+            className="absolute left-0 right-0 bg-primary"
+            style={{
+              top: `${currentMinutesPercentage}%`,
+              height: 2,
+            }}
+          />
+        )}
+        <View className={`flex-row ${isEvent ? "bg-destructive" : ""}`}>
+          <Text className="w-[15%] text-center p-2">{hour}</Text>
+          <Separator orientation={"vertical"} />
+          <Text className="p-2">{isEvent ? "Machine used by..." : ""}</Text>
+        </View>
+        <Separator />
+      </View>
+    );
+  });
+
   return (
     <>
       <Dialog>
@@ -157,55 +189,7 @@ export default function MachineCard({ data }: { data: Machine }) {
               <Text className="text-center">Selected date: {selectedDate}</Text>
 
               <View>
-                {loading ? (
-                  <Text>Loading...</Text>
-                ) : (
-                  <>
-                    {hours.map((hour, index) => {
-                      const isCurrentTime =
-                        selectedDate === today &&
-                        currentHour === parseInt(hour);
-                      const isEvent = events.some((event) => {
-                        const eventDate = toDateId(new Date(event.start_time));
-                        if (eventDate !== selectedDate) return false;
-                        const eventStart = new Date(
-                          event.start_time
-                        ).getHours();
-                        const eventEnd = new Date(event.end_time).getHours();
-                        const currentHour = parseInt(hour);
-                        return (
-                          currentHour >= eventStart && currentHour < eventEnd
-                        );
-                      });
-                      return (
-                        <View key={index} className="relative">
-                          {isCurrentTime && (
-                            <View
-                              className="absolute left-0 right-0 bg-primary"
-                              style={{
-                                top: `${currentMinutesPercentage}%`,
-                                height: 2,
-                              }}
-                            />
-                          )}
-                          <View
-                            className={`flex-row ${
-                              isEvent ? "bg-destructive" : ""
-                            }`}>
-                            <Text className="w-[15%] text-center p-2">
-                              {hour}
-                            </Text>
-                            <Separator orientation={"vertical"} />
-                            <Text className="p-2">
-                              {isEvent ? "Machine used by..." : ""}
-                            </Text>
-                          </View>
-                          <Separator />
-                        </View>
-                      );
-                    })}
-                  </>
-                )}
+                {loading ? <Text>Loading...</Text> : <>{renderHours}</>}
               </View>
             </View>
           </ScrollView>
