@@ -148,6 +148,8 @@ export default function MachineCard({ data }: { data: Machine }) {
                 ) : (
                   hours.map((hour, index) => {
                     const isEvent = events.some((event) => {
+                      const eventDate = toDateId(new Date(event.start_time));
+                      if (eventDate !== selectedDate) return false;
                       const eventStart = new Date(event.start_time).getHours();
                       const eventEnd = new Date(event.end_time).getHours();
                       const currentHour = parseInt(hour);
