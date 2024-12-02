@@ -47,7 +47,6 @@ export default function MachineCard({ data }: { data: Machine }) {
   const currentHour = currentTime.getHours();
   const currentMinutes = currentTime.getMinutes();
   const currentMinutesPercentage = Math.round((currentMinutes / 60) * 100);
-  console.log(currentMinutesPercentage);
 
   const hours = Array.from({ length: 13 }, (_, i) => `${i + 8}:00`);
 
@@ -66,12 +65,9 @@ export default function MachineCard({ data }: { data: Machine }) {
     }
     const api = new Api(token);
 
-    console.log(`Machine ID pressed: ${data.id}`);
-
     async function getData() {
       const output = await api.getScheduleById(data.id);
       setEvents(output);
-      console.log(output);
     }
     getData();
 
