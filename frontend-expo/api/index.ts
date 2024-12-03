@@ -3,6 +3,7 @@ import { AuthApi } from "./auth";
 import { LocationApi } from "./location";
 import { MachineApi } from "./machine";
 import { ScheduleApi } from "./schedule";
+import { UserApi } from "./user";
 
 export class Api extends ApiBase {
   // API classes
@@ -10,6 +11,7 @@ export class Api extends ApiBase {
   private locationApi: LocationApi;
   private machineApi: MachineApi;
   private scheduleApi: ScheduleApi;
+  private userApi: UserApi;
 
   // Method declarations
   public signUp;
@@ -20,6 +22,8 @@ export class Api extends ApiBase {
   public getMachines;
   public getSchedules;
   public getScheduleById;
+  public setSchedule;
+  public getUser;
 
   constructor(accessToken?: unknown) {
     // Running the ApiBase constructor
@@ -30,6 +34,7 @@ export class Api extends ApiBase {
     this.locationApi = new LocationApi(accessToken);
     this.machineApi = new MachineApi(accessToken);
     this.scheduleApi = new ScheduleApi(accessToken);
+    this.userApi = new UserApi(accessToken);
 
     // Assign methods inside constructor
     this.signUp = this.authApi.signUp;
@@ -40,5 +45,7 @@ export class Api extends ApiBase {
     this.getMachines = this.machineApi.getMachines;
     this.getSchedules = this.scheduleApi.getSchedules;
     this.getScheduleById = this.scheduleApi.getScheduleById;
+    this.setSchedule = this.scheduleApi.setSchedule;
+    this.getUser = this.userApi.getUser;
   }
 }

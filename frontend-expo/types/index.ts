@@ -35,3 +35,14 @@ export type Schedule = {
   created_at: string;
   updated_at: string;
 };
+
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at: string;
+  role: string;
+  created_at: string;
+  updated_at: string;
+  location_id: number;
+};
