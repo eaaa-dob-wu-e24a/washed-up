@@ -6,8 +6,8 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const API_DIR = path.join(__dirname, "../api");
-const INDEX_FILE = path.join(API_DIR, "index.ts");
+const EXPO_API_DIR = path.join(__dirname, "../frontend-expo/api");
+const SVELTE_API_DIR = path.join(__dirname, "../frontend-svelte/src/lib/api");
 
 function getPublicMethods(filePath) {
   const fileContent = fs.readFileSync(filePath, "utf-8");
@@ -48,7 +48,8 @@ function getPublicMethods(filePath) {
   return methods;
 }
 
-function updateIndexFile(apiMethods) {
+function updateIndexFile(apiMethods, apiDir) {
+  const INDEX_FILE = path.join(apiDir, "index.ts");
   const indexContent = fs.readFileSync(INDEX_FILE, "utf-8");
   const sourceFile = ts.createSourceFile(
     INDEX_FILE,
@@ -110,7 +111,7 @@ ${classProperties}
   // Method declarations
 ${methodDeclarations}
 
-  constructor(accessToken?: unknown | undefined) {
+  constructor(accessToken?: unknown) {
     // Running the ApiBase constructor
     super(accessToken);
 
@@ -127,22 +128,37 @@ ${constructorMethodAssignments}
 }
 
 function main() {
-  const apiMethods = [];
-
-  // Read all .ts files in the API directory
-  fs.readdirSync(API_DIR)
+  // Handle Expo API
+  const expoApiMethods = [];
+  fs.readdirSync(EXPO_API_DIR)
     .filter(
       (file) =>
         file.endsWith(".ts") && file !== "index.ts" && file !== "base.ts"
     )
     .forEach((file) => {
-      const filePath = path.join(API_DIR, file);
+      const filePath = path.join(EXPO_API_DIR, file);
       const methods = getPublicMethods(filePath);
-      apiMethods.push(...methods);
+      expoApiMethods.push(...methods);
     });
 
-  updateIndexFile(apiMethods);
-  console.log("Successfully updated index.ts with all API methods");
+  // Handle Svelte API
+  const svelteApiMethods = [];
+  fs.readdirSync(SVELTE_API_DIR)
+    .filter(
+      (file) =>
+        file.endsWith(".ts") && file !== "index.ts" && file !== "base.ts"
+    )
+    .forEach((file) => {
+      const filePath = path.join(SVELTE_API_DIR, file);
+      const methods = getPublicMethods(filePath);
+      svelteApiMethods.push(...methods);
+    });
+
+  // Update both index files
+  updateIndexFile(expoApiMethods, EXPO_API_DIR);
+  updateIndexFile(svelteApiMethods, SVELTE_API_DIR);
+
+  console.log("Successfully updated index.ts files in both API directories");
 }
 
 main();

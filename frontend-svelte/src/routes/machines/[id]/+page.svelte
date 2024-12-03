@@ -50,13 +50,15 @@
 					};
 				}}
 			>
-				<input type="hidden" name="id" value={data.machine.id} />
-				<input type="hidden" name="status" value={data.machine.status === 1 ? 0 : 1} />
+				<input type="hidden" name="id" value={data?.machine?.id ?? ''} />
+				<input type="hidden" name="status" value={data?.machine?.status === 1 ? 0 : 1} />
 				<button
-					class={cn(badgeVariants({ variant: getMachineStatus(data.machine.status).variant }))}
+					class={cn(
+						badgeVariants({ variant: getMachineStatus(data?.machine?.status ?? 0).variant })
+					)}
 					type="submit"
 				>
-					{isLoading ? 'Updating...' : getMachineStatus(data.machine.status).text}
+					{isLoading ? 'Updating...' : getMachineStatus(data?.machine?.status ?? 0).text}
 				</button>
 			</form>
 		</div>
@@ -66,7 +68,7 @@
 			use:enhance={() => {
 				formLoading = {
 					loading: true,
-					id: data.machine.id
+					id: data?.machine?.id ?? null
 				};
 				return async ({ update }) => {
 					formLoading = {
@@ -80,18 +82,18 @@
 			action={`?/delete_machine`}
 		>
 			<Button
-				disabled={formLoading.loading && formLoading.id === data.machine.id}
+				disabled={formLoading.loading && formLoading.id === data?.machine?.id}
 				variant="destructive"
 				type="submit"
 				size="icon"
 			>
-				{#if formLoading.loading && formLoading.id === data.machine.id}
+				{#if formLoading.loading && formLoading.id === data?.machine?.id}
 					<Loader2 class="h-4 w-4 animate-spin" />
 				{:else}
 					<Trash2 class="h-4 w-4" />
 				{/if}
 			</Button>
-			<input type="hidden" name="id" value={data.machine.id} />
+			<input type="hidden" name="id" value={data?.machine?.id} />
 		</form>
 	</div>
 
@@ -105,11 +107,11 @@
 				<div class="space-y-3">
 					<div class="flex">
 						<span class="w-24 font-medium text-gray-600">ID:</span>
-						<span class="text-gray-800">{data.machine.id}</span>
+						<span class="text-gray-800">{data?.machine?.id}</span>
 					</div>
 					<div class="flex">
 						<span class="w-24 font-medium text-gray-600">Type:</span>
-						<span class="capitalize text-gray-800">{data.machine.type}</span>
+						<span class="capitalize text-gray-800">{data?.machine?.type}</span>
 					</div>
 				</div>
 			</Card.Content>
@@ -124,12 +126,12 @@
 				<div class="space-y-3">
 					<div class="flex flex-col">
 						<span class="mb-1 font-medium text-gray-600">Address:</span>
-						<span class="text-gray-800">{data.machine.location.address}</span>
+						<span class="text-gray-800">{data?.machine?.location.address}</span>
 					</div>
 					<div class="flex flex-col">
 						<span class="mb-1 font-medium text-gray-600">Coordinates:</span>
 						<span class="text-gray-800">
-							{data.machine.location.latitude}, {data.machine.location.longitude}
+							{data?.machine?.location.latitude}, {data?.machine?.location.longitude}
 						</span>
 					</div>
 				</div>
@@ -145,11 +147,11 @@
 				<div class="space-y-3">
 					<div class="flex flex-col">
 						<span class="mb-1 font-medium text-gray-600">Created:</span>
-						<span class="text-gray-800">{formatDate(data.machine.created_at)}</span>
+						<span class="text-gray-800">{formatDate(data?.machine?.created_at ?? '')}</span>
 					</div>
 					<div class="flex flex-col">
 						<span class="mb-1 font-medium text-gray-600">Last Updated:</span>
-						<span class="text-gray-800">{formatDate(data.machine.updated_at)}</span>
+						<span class="text-gray-800">{formatDate(data?.machine?.updated_at ?? '')}</span>
 					</div>
 				</div>
 			</Card.Content>
@@ -176,9 +178,9 @@
 					<div class="flex flex-col items-center">
 						<div id="printable-qr-machine">
 							<div class="flex flex-col items-center p-4">
-								<QrCode value={data.machine.qr_code.code} />
+								<QrCode value={data?.machine?.qr_code.code} />
 								<span class="mt-4 text-xl font-medium text-gray-800"
-									>{data.machine.qr_code.code}</span
+									>{data?.machine?.qr_code.code}</span
 								>
 							</div>
 						</div>
@@ -208,8 +210,8 @@
 					<div class="flex flex-col items-center">
 						<div id="printable-qr-location">
 							<div class="flex flex-col items-center p-4">
-								<QrCode value={data.location.code} />
-								<span class="mt-4 text-xl font-medium text-gray-800">{data.location.code}</span>
+								<QrCode value={data?.location?.code} />
+								<span class="mt-4 text-xl font-medium text-gray-800">{data?.location?.code}</span>
 							</div>
 						</div>
 					</div>

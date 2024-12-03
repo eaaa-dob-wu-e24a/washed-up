@@ -1,6 +1,6 @@
+import { Api } from '@/api';
 import { SvelteKitAuth, type DefaultSession, type SvelteKitAuthConfig } from '@auth/sveltekit';
 import Credentials from '@auth/sveltekit/providers/credentials';
-import { api } from './utils/api';
 
 declare module '@auth/sveltekit' {
 	interface Session {
@@ -23,9 +23,10 @@ export const { signIn, signOut, handle } = SvelteKitAuth(async (event) => {
 				},
 				authorize: async (credentials) => {
 					try {
-						const { data } = await api.post('/admin-login', {
-							email: credentials.email,
-							password: credentials.password
+						const authApi = new Api();
+						const data = await authApi.adminLogin({
+							email: credentials.email as string,
+							password: credentials.password as string
 						});
 
 						if (!data?.access_token) {
@@ -33,16 +34,13 @@ export const { signIn, signOut, handle } = SvelteKitAuth(async (event) => {
 							return null;
 						}
 
-						const { data: userData } = await api.get('/user', {
-							headers: {
-								Authorization: `Bearer ${data.access_token}`
-							}
-						});
+						const userApi = new Api(data.access_token);
+						const userData = await userApi.getUser();
 
 						return {
 							id: data.access_token,
-							email: userData.email,
-							name: userData.name
+							email: userData?.email,
+							name: userData?.name
 						};
 					} catch (error) {
 						console.error(error);

@@ -18,16 +18,16 @@ export class LocationApi extends ApiBase {
     }
   }
 
-  //   public async getLocationByCode(code: string): Promise<Location | null> {
-  //     try {
-  //       const response = await fetch(
-  //         `${this.baseUrl}/api/locations/code/${code}`
-  //       );
-  //       const data = await response.json();
-  //       return data;
-  //     } catch (error) {
-  //       console.error("Error getting location by code", error);
-  //       return null;
-  //     }
-  //   }
+  public async getLocationByCode(code: string): Promise<Location | null> {
+    try {
+      const response = await fetch(
+        `${this.baseUrl}/api/locations/code/${code}`
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error getting location by code", error);
+      return null;
+    }
+  }
 }
