@@ -19,6 +19,7 @@ export class Api extends ApiBase {
   public getMachines;
   public getSchedules;
   public getScheduleById;
+  public setSchedule;
 
   constructor(accessToken?: unknown | undefined) {
     // Running the ApiBase constructor
@@ -38,5 +39,6 @@ export class Api extends ApiBase {
     this.getMachines = this.machineApi.getMachines;
     this.getSchedules = this.scheduleApi.getSchedules;
     this.getScheduleById = this.scheduleApi.getScheduleById;
+    this.setSchedule = this.scheduleApi.setSchedule;
   }
 }

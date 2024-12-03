@@ -36,6 +36,13 @@ export default function MachineCard({ data }: { data: Machine }) {
   const [isBooking, setIsBooking] = useState(false);
   const [bookedHours, setBookedHours] = useState<number[]>([]);
 
+  const currentHour = currentTime.getHours();
+  const currentMinutes = currentTime.getMinutes();
+  const currentMinutesPercentage = Math.round((currentMinutes / 60) * 100);
+
+  const hours = Array.from({ length: 13 }, (_, i) => `${i + 8}:00`);
+  const rentalTime = data.type === "dry" ? 0 : data.type === "wash" ? 2 : 0;
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -44,17 +51,12 @@ export default function MachineCard({ data }: { data: Machine }) {
     return () => clearInterval(interval);
   }, []);
 
-  const currentHour = currentTime.getHours();
-  const currentMinutes = currentTime.getMinutes();
-  const currentMinutesPercentage = Math.round((currentMinutes / 60) * 100);
-
-  const hours = Array.from({ length: 13 }, (_, i) => `${i + 8}:00`);
-
   useEffect(() => {
     setBookedHours([]);
+    setIsBooking(false);
   }, [selectedDate]);
 
-  function handleMachinePress() {
+  async function handleMachinePress() {
     setLoading(true);
 
     const token = user?.publicMetadata?.access_token;
@@ -74,8 +76,6 @@ export default function MachineCard({ data }: { data: Machine }) {
     setLoading(false);
   }
 
-  const rentalTime = data.type === "dry" ? 0 : data.type === "wash" ? 2 : 0;
-
   const handleBookingPress = (hour: number) => {
     const startHour = hour;
     const endHour = hour + rentalTime;
@@ -83,6 +83,7 @@ export default function MachineCard({ data }: { data: Machine }) {
     for (let i = startHour; i <= endHour; i++) {
       newBookedHours.push(i);
     }
+    setIsBooking(true);
     setBookedHours(newBookedHours);
   };
 
@@ -90,31 +91,37 @@ export default function MachineCard({ data }: { data: Machine }) {
     const hourNumber = parseInt(hour);
     const isCurrentTime = selectedDate === today && currentHour === hourNumber;
 
-    const isEvent = events.some((event) => {
-      const eventDate = toDateId(new Date(event.start_time));
+    const isEvent =
+      Array.isArray(events) &&
+      events.some((event) => {
+        const eventDate = toDateId(new Date(event.start_time));
 
-      if (eventDate !== selectedDate) return false;
+        if (eventDate !== selectedDate) return false;
 
-      const eventStart = new Date(event.start_time).getHours();
-      const eventEnd = new Date(event.end_time).getHours();
-      const currentHour = hourNumber;
+        const eventStart = new Date(event.start_time).getHours();
+        const eventEnd = new Date(event.end_time).getHours();
+        const currentHour = hourNumber;
 
-      return currentHour >= eventStart && currentHour < eventEnd;
-    });
+        return currentHour >= eventStart && currentHour < eventEnd;
+      });
 
     const isPastTime =
       selectedDate < today ||
       (selectedDate === today && hourNumber < currentHour);
 
-    const isWithinTwoHoursBeforeEvent = events.some((event) => {
-      const eventDate = toDateId(new Date(event.start_time));
-      if (eventDate !== selectedDate) return false;
+    const isWithinTwoHoursBeforeEvent =
+      Array.isArray(events) &&
+      events.some((event) => {
+        const eventDate = toDateId(new Date(event.start_time));
+        if (eventDate !== selectedDate) return false;
 
-      const eventStart = new Date(event.start_time).getHours();
-      const currentHour = hourNumber;
+        const eventStart = new Date(event.start_time).getHours();
+        const currentHour = hourNumber;
 
-      return currentHour >= eventStart - rentalTime && currentHour < eventStart;
-    });
+        return (
+          currentHour >= eventStart - rentalTime && currentHour < eventStart
+        );
+      });
 
     const isLastTwoHours = index >= hours.length - rentalTime;
 
@@ -134,7 +141,8 @@ export default function MachineCard({ data }: { data: Machine }) {
         <View
           className={`flex-row ${isEvent ? "bg-secondary" : ""} ${
             isPastTime ? "bg-secondary" : ""
-          } ${isBooked ? "bg-accent" : ""}`}>
+          } ${isBooked ? "border border-primary" : ""}`}
+        >
           <Text className="w-[15%] text-center p-2">{hour}</Text>
           <Separator orientation={"vertical"} />
 
@@ -145,7 +153,8 @@ export default function MachineCard({ data }: { data: Machine }) {
             !isLastTwoHours && (
               <Text
                 onPress={() => handleBookingPress(hourNumber)}
-                className="py-2 px-4 flex self-end text-primary text-right ml-auto">
+                className="py-2 px-4 flex self-end text-primary text-right ml-auto"
+              >
                 Book this time
               </Text>
             )}
@@ -155,10 +164,66 @@ export default function MachineCard({ data }: { data: Machine }) {
     );
   });
 
+  const handleBookNow = async () => {
+    const startTime = new Date(selectedDate);
+    startTime.setHours(bookedHours[0], 0, 0);
+    const endTime = new Date(selectedDate);
+    endTime.setHours(bookedHours[bookedHours.length - 1] + 1, 0, 0);
+
+    const bookingData = {
+      user_id: 2,
+      machine_id: data.id,
+      start_time: startTime.toISOString().replace("T", " ").substring(0, 19),
+      end_time: endTime.toISOString().replace("T", " ").substring(0, 19),
+    };
+
+    const token = user?.publicMetadata?.access_token;
+    if (!token) {
+      console.error("No access token");
+      return;
+    }
+    const api = new Api(token);
+
+    async function setData() {
+      const output = await api.setSchedule(bookingData);
+      setEvents(output);
+    }
+    setData();
+
+    console.log(bookingData);
+    console.log(user?.id);
+  };
+
   return (
     <>
       <Dialog>
-        <DialogTrigger onPress={handleMachinePress}>
+        {data.status === 1 ? (
+          <DialogTrigger onPress={handleMachinePress}>
+            <Card className="w-full shadow shadow-slate-400">
+              <CardHeader className="flex-row justify-between">
+                <View>
+                  <CardTitle className="capitalize">
+                    {data.type === "wash"
+                      ? "Washer"
+                      : data.type === "dry"
+                      ? "Dryer"
+                      : data.type}
+                  </CardTitle>
+                  <CardDescription>#{data.id}</CardDescription>
+                </View>
+                <Text className="text-2xl mt-1">
+                  <Text
+                    className={`text-2xl mt-1 ${
+                      data.status === 1 ? "text-primary" : "text-destructive"
+                    }`}
+                  >
+                    {data.status === 1 ? "Available" : "Disabled"}
+                  </Text>
+                </Text>
+              </CardHeader>
+            </Card>
+          </DialogTrigger>
+        ) : (
           <Card className="w-full shadow shadow-slate-400">
             <CardHeader className="flex-row justify-between">
               <View>
@@ -172,16 +237,11 @@ export default function MachineCard({ data }: { data: Machine }) {
                 <CardDescription>#{data.id}</CardDescription>
               </View>
               <Text className="text-2xl mt-1">
-                <Text
-                  className={`text-2xl mt-1 ${
-                    data.status === 1 ? "text-primary" : "text-destructive"
-                  }`}>
-                  {data.status === 1 ? "Available" : "Disabled"}
-                </Text>
+                <Text className="text-2xl mt-1 text-destructive">Disabled</Text>
               </Text>
             </CardHeader>
           </Card>
-        </DialogTrigger>
+        )}
         {/* This is the dialog box */}
         <DialogContent className="sm:max-w-[425px] max-h-[90%]">
           <DialogHeader>
@@ -211,14 +271,15 @@ export default function MachineCard({ data }: { data: Machine }) {
               </View>
             </View>
           </ScrollView>
-
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button>
-                <Text>OK</Text>
-              </Button>
-            </DialogClose>
-          </DialogFooter>
+          {isBooking && (
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button onPress={handleBookNow}>
+                  <Text>Book now</Text>
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          )}
         </DialogContent>
       </Dialog>
     </>

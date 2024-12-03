@@ -41,4 +41,37 @@ export class ScheduleApi extends ApiBase {
       return [];
     }
   }
+
+  public async setSchedule({
+    user_id,
+    machine_id,
+    start_time,
+    end_time,
+  }: {
+    user_id: number;
+    machine_id: number;
+    start_time: string;
+    end_time: string;
+  }) {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/schedules`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id,
+          machine_id,
+          start_time,
+          end_time,
+        }),
+      });
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error saving booking", error);
+      return null;
+    }
+  }
 }
