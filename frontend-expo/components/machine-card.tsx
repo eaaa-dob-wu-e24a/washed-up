@@ -174,9 +174,9 @@ export default function MachineCard({ data }: { data: Machine }) {
               <Text className="text-2xl mt-1">
                 <Text
                   className={`text-2xl mt-1 ${
-                    data.status === 0 ? "text-primary" : "text-destructive"
+                    data.status === 1 ? "text-primary" : "text-destructive"
                   }`}>
-                  {data.status === 0 ? "Available" : "In use"}
+                  {data.status === 1 ? "Available" : "Disabled"}
                 </Text>
               </Text>
             </CardHeader>
