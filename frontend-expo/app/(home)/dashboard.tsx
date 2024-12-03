@@ -30,6 +30,14 @@ export default function Dashboard() {
     setSchedule(schedule_data);
   }
 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      await getData();
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
 
