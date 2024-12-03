@@ -40,13 +40,14 @@ class ListUsers extends Command
             return;
         }
 
-        $headers = ['ID', 'Name', 'Email', 'Created At'];
+        $headers = ['ID', 'Name', 'Email', 'Created At', 'Role'];
         $rows = $users->map(function ($user) {
             return [
                 $user->id,
                 $user->name,
                 $user->email,
                 $user->created_at->format('Y-m-d H:i:s'),
+                $user->role,
             ];
         });
 
