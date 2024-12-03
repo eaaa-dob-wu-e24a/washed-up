@@ -12,7 +12,7 @@ import { Schedule } from "~/types";
 export default function ScheduleCard({ data }: { data: Schedule }) {
   return (
     <>
-      <Card className="w-72 shadow shadow-slate-900">
+      <Card className="w-72 shadow shadow-slate-400">
         <CardHeader>
           <CardTitle>Washer</CardTitle>
           <CardDescription>Machine #13</CardDescription>

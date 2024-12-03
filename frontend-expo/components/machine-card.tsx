@@ -159,7 +159,7 @@ export default function MachineCard({ data }: { data: Machine }) {
     <>
       <Dialog>
         <DialogTrigger onPress={handleMachinePress}>
-          <Card className="w-full shadow shadow-slate-900">
+          <Card className="w-full shadow shadow-slate-400">
             <CardHeader className="flex-row justify-between">
               <View>
                 <CardTitle className="capitalize">
