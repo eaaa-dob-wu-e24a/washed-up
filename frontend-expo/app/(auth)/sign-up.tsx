@@ -96,30 +96,43 @@ export default function SignUpScreen() {
       }
     } else if (screen === "location") {
       if (!isLoaded) return;
+      console.log("is loaded");
       if (locationData.location === "") {
         setErrors({ location: "Location is required" });
         return;
       }
+      console.log("location is good");
       if (locationData.locationCode === "") {
         setErrors({ locationCode: "Location code is required" });
       }
+
+      console.log("location code is good");
 
       const selectedLocation = locations.find(
         (loc) => loc.id === parseInt(locationData.location)
       );
 
+      console.log("selected location", selectedLocation);
       if (selectedLocation?.code !== locationData.locationCode) {
+        console.log(
+          selectedLocation?.code,
+          locationData.locationCode,
+          "invalid"
+        );
         setErrors({ locationCode: "Invalid location code" });
         return;
       } else {
         try {
+          console.log("creating user");
           await signUp.create({
             emailAddress: userInfo.emailAddress,
             password: userInfo.password,
           });
+          console.log("preparing email");
           await signUp.prepareEmailAddressVerification({
             strategy: "email_code",
           });
+          console.log("verification screen");
           setScreen("verification");
         } catch (err: any) {
           console.error(JSON.stringify(err, null, 2));
