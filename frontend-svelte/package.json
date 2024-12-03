@@ -52,6 +52,7 @@
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/typography": "^0.5.15",
-		"axios": "^1.7.7"
+		"axios": "^1.7.7",
+		"svelte-qrcode": "^1.0.1"
 	}
 }

@@ -11,6 +11,7 @@
 	import { cn } from '@/utils';
 	import { buttonVariants } from '@/components/ui/button';
 	import { getMachineStatus } from '@/utils/machine-status';
+	import { Badge } from '@/components/ui/badge';
 
 	let {
 		data
@@ -65,11 +66,9 @@
 					<div class="flex flex-col gap-1">
 						<Card.Title class="capitalize">{machine.type}</Card.Title>
 						<Card.Description>
-							<span
-								class={`${getMachineStatus(machine.status).class} rounded-full px-2 py-0.5 text-xs font-semibold text-white`}
-							>
+							<Badge variant={getMachineStatus(machine.status).variant}>
 								{getMachineStatus(machine.status).text}
-							</span>
+							</Badge>
 						</Card.Description>
 					</div>
 					<form

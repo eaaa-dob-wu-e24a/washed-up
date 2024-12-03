@@ -21,7 +21,7 @@ class MachineController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $machine = Machine::with('location')
+        $machine = Machine::with(['location', 'qrCode'])
             ->where('id', $id)
             ->where('location_id', $user->location_id)
             ->first();

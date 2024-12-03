@@ -1,8 +1,13 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { Badge, badgeVariants } from '@/components/ui/badge';
 	import Button from '@/components/ui/button/button.svelte';
+	import * as Card from '@/components/ui/card';
+	import { cn } from '@/utils';
 	import { getMachineStatus } from '@/utils/machine-status.js';
-	import { Loader2, Trash2 } from 'lucide-svelte';
+	import { Loader2, Printer, Trash2 } from 'lucide-svelte';
+	// @ts-ignore
+	import QrCode from 'svelte-qrcode';
 
 	let { data } = $props();
 
@@ -17,17 +22,43 @@
 		loading: false,
 		id: null
 	});
+
+	const handlePrint = () => {
+		const printContent = document.getElementById('printable-qr');
+		const originalBody = document.body.innerHTML;
+
+		document.body.innerHTML = printContent!.innerHTML;
+		window.print();
+		document.body.innerHTML = originalBody;
+	};
+
+	let isLoading: boolean = $state(false);
 </script>
 
 <div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
 	<div class="mb-8 flex items-start justify-between gap-4">
 		<div>
 			<h1 class="text-3xl font-bold text-gray-900">Machine Details</h1>
-			<span
-				class={`${getMachineStatus(data.machine.status).class} rounded-full px-4 py-1 text-sm font-semibold text-white`}
+			<form
+				method="POST"
+				action={`?/toggle_status`}
+				use:enhance={() => {
+					isLoading = true;
+					return async ({ update }) => {
+						isLoading = false;
+						update();
+					};
+				}}
 			>
-				{getMachineStatus(data.machine.status).text}
-			</span>
+				<input type="hidden" name="id" value={data.machine.id} />
+				<input type="hidden" name="status" value={data.machine.status === 1 ? 0 : 1} />
+				<button
+					class={cn(badgeVariants({ variant: getMachineStatus(data.machine.status).variant }))}
+					type="submit"
+				>
+					{isLoading ? 'Updating...' : getMachineStatus(data.machine.status).text}
+				</button>
+			</form>
 		</div>
 
 		<form
@@ -66,54 +97,94 @@
 
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 		<!-- Basic Information -->
-		<div class="rounded-lg border bg-white p-6 shadow">
-			<h2 class="mb-4 text-xl font-semibold text-gray-800">Basic Information</h2>
-			<div class="space-y-3">
-				<div class="flex">
-					<span class="w-24 font-medium text-gray-600">ID:</span>
-					<span class="text-gray-800">{data.machine.id}</span>
+		<Card.Root>
+			<Card.Header>
+				<Card.Title>Basic Information</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="space-y-3">
+					<div class="flex">
+						<span class="w-24 font-medium text-gray-600">ID:</span>
+						<span class="text-gray-800">{data.machine.id}</span>
+					</div>
+					<div class="flex">
+						<span class="w-24 font-medium text-gray-600">Type:</span>
+						<span class="capitalize text-gray-800">{data.machine.type}</span>
+					</div>
 				</div>
-				<div class="flex">
-					<span class="w-24 font-medium text-gray-600">Type:</span>
-					<span class="capitalize text-gray-800">{data.machine.type}</span>
-				</div>
-			</div>
-		</div>
+			</Card.Content>
+		</Card.Root>
 
 		<!-- Location -->
-		<div class="rounded-lg border bg-white p-6 shadow">
-			<h2 class="mb-4 text-xl font-semibold text-gray-800">Location</h2>
-			<div class="space-y-3">
-				<div class="flex">
-					<span class="w-24 font-medium text-gray-600">Code:</span>
-					<span class="text-gray-800">{data.machine.location.code}</span>
+		<Card.Root>
+			<Card.Header>
+				<Card.Title>Location</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="space-y-3">
+					<div class="flex">
+						<span class="w-24 font-medium text-gray-600">Code:</span>
+						<span class="text-gray-800">{data.machine.location.code}</span>
+					</div>
+					<div class="flex flex-col">
+						<span class="mb-1 font-medium text-gray-600">Address:</span>
+						<span class="text-gray-800">{data.machine.location.address}</span>
+					</div>
+					<div class="flex flex-col">
+						<span class="mb-1 font-medium text-gray-600">Coordinates:</span>
+						<span class="text-gray-800">
+							{data.machine.location.latitude}, {data.machine.location.longitude}
+						</span>
+					</div>
 				</div>
-				<div class="flex flex-col">
-					<span class="mb-1 font-medium text-gray-600">Address:</span>
-					<span class="text-gray-800">{data.machine.location.address}</span>
-				</div>
-				<div class="flex flex-col">
-					<span class="mb-1 font-medium text-gray-600">Coordinates:</span>
-					<span class="text-gray-800">
-						{data.machine.location.latitude}, {data.machine.location.longitude}
-					</span>
-				</div>
-			</div>
-		</div>
+			</Card.Content>
+		</Card.Root>
 
 		<!-- Timestamps -->
-		<div class="rounded-lg border bg-white p-6 shadow">
-			<h2 class="mb-4 text-xl font-semibold text-gray-800">Timestamps</h2>
-			<div class="space-y-3">
-				<div class="flex flex-col">
-					<span class="mb-1 font-medium text-gray-600">Created:</span>
-					<span class="text-gray-800">{formatDate(data.machine.created_at)}</span>
+		<Card.Root>
+			<Card.Header>
+				<Card.Title>Timestamps</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="space-y-3">
+					<div class="flex flex-col">
+						<span class="mb-1 font-medium text-gray-600">Created:</span>
+						<span class="text-gray-800">{formatDate(data.machine.created_at)}</span>
+					</div>
+					<div class="flex flex-col">
+						<span class="mb-1 font-medium text-gray-600">Last Updated:</span>
+						<span class="text-gray-800">{formatDate(data.machine.updated_at)}</span>
+					</div>
 				</div>
-				<div class="flex flex-col">
-					<span class="mb-1 font-medium text-gray-600">Last Updated:</span>
-					<span class="text-gray-800">{formatDate(data.machine.updated_at)}</span>
+			</Card.Content>
+		</Card.Root>
+
+		<Card.Root>
+			<Card.Header>
+				<Card.Title>
+					<div class="flex items-center justify-between">
+						<span>QR Code</span>
+
+						<Button size="icon" variant="outline" onclick={handlePrint}>
+							<Printer class="h-4 w-4" />
+						</Button>
+					</div>
+				</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div>
+					<div class="flex flex-col items-center">
+						<div id="printable-qr">
+							<div class="flex flex-col items-center p-4">
+								<QrCode value={data.machine.qr_code.code} />
+								<span class="mt-4 text-xl font-medium text-gray-800"
+									>{data.machine.qr_code.code}</span
+								>
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
+			</Card.Content>
+		</Card.Root>
 	</div>
 </div>

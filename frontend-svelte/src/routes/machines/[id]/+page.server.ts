@@ -33,5 +33,25 @@ export const actions: Actions = {
 		});
 
 		redirect(302, '/machines');
+	},
+
+	toggle_status: async (event) => {
+		const session = await event.locals.auth();
+
+		const formdata = await event.request.formData();
+
+		const id = formdata.get('id');
+
+		await api.put(
+			`/machines/${id}`,
+			{
+				status: formdata.get('status')
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${session?.user.token}`
+				}
+			}
+		);
 	}
 };
