@@ -43,3 +43,10 @@
 ### Backend
 
 - Laravel -> MySQL database
+
+## CLI Commands
+
+- ```php artisan users:list```
+- ```php artisan admin:create {{user_id}}```
+- ```php artisan location:create "Ringvej Syd 104, 8260 Viby"```
+- ```php artisan db:nuke```

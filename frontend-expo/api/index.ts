@@ -154,16 +154,13 @@ export class Api {
     }
   }
 
-  public async getScheduleById(machine_id: number): Promise<Schedule[]> {
+  public async getScheduleById(id: number): Promise<Schedule[]> {
     try {
-      const response = await fetch(
-        `${this.baseUrl}/api/schedules/${machine_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${this.accessToken}`,
-          },
-        }
-      );
+      const response = await fetch(`${this.baseUrl}/api/schedules/${id}`, {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      });
 
       if (!response.ok) {
         return [];
