@@ -24,7 +24,7 @@ export default function SignUpScreen() {
 
   const [screen, setScreen] = useState<
     "userInfo" | "location" | "verification"
-  >("location");
+  >("userInfo");
   const [userInfo, setUserInfo] = useState<UserInfoFormData>({
     name: "",
     emailAddress: "",
