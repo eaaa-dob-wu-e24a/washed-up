@@ -7,8 +7,9 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
+import { Schedule } from "~/types";
 
-export default function ScheduleCard() {
+export default function ScheduleCard({ data }: { data: Schedule }) {
   return (
     <>
       <Card className="w-72 shadow shadow-slate-900">

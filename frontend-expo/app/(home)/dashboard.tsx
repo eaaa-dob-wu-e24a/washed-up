@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Machine } from "types";
+import { Machine, Schedule } from "types";
 import Heading from "~/components/heading";
 import MachineCard from "~/components/machine-card";
 import ScheduleCard from "~/components/schedule-card";
@@ -14,7 +14,7 @@ import { Text } from "~/components/ui/text";
 export default function Dashboard() {
   const { user } = useUser();
   const [machines, setMachines] = useState<Machine[]>([]);
-  const [schedule, setSchedule] = useState(true);
+  const [schedule, setSchedule] = useState<Schedule[]>([]);
   const [selectedBadge, setSelectedBadge] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
 
@@ -23,8 +23,11 @@ export default function Dashboard() {
     if (!token) return;
     const api = new Api(token);
 
-    const data = await api.getMachines();
-    setMachines(data);
+    const machine_data = await api.getMachines();
+    const schedule_data = await api.getSchedules();
+    console.log(schedule_data);
+    setMachines(machine_data);
+    setSchedule(schedule_data);
   }
 
   const onRefresh = useCallback(async () => {
@@ -49,14 +52,15 @@ export default function Dashboard() {
         }>
         <Heading title={`Hello, ${user?.publicMetadata?.name}`} />
         <Text className="text-2xl">Schedule</Text>
-        {schedule ? (
+        {schedule.length > 0 ? (
           <ScrollView
             className="-mx-6 mt-4"
             horizontal
             showsHorizontalScrollIndicator={false}>
             <View className="px-6 flex flex-row gap-4 pb-4">
-              <ScheduleCard />
-              <ScheduleCard />
+              {schedule?.map((schedule) => (
+                <ScheduleCard key={schedule.id} data={schedule} />
+              ))}
             </View>
           </ScrollView>
         ) : (
