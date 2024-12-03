@@ -1,5 +1,6 @@
 import { useUser } from "@clerk/clerk-expo";
 import { Redirect, Tabs } from "expo-router";
+import { ScanQrCode, User, WashingMachine } from "lucide-react-native";
 
 export default function Layout() {
   const { user } = useUser();
@@ -9,10 +10,33 @@ export default function Layout() {
   }
 
   return (
-    <Tabs screenOptions={{ headerShown: false }}>
-      <Tabs.Screen name="dashboard" />
-      <Tabs.Screen name="my-page" />
-      <Tabs.Screen name="qr" />
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: { height: 60, paddingTop: 4 },
+        tabBarActiveTintColor: "#479e96",
+      }}>
+      <Tabs.Screen
+        name="dashboard"
+        options={{
+          title: "Dashboard",
+          tabBarIcon: ({ color }) => <WashingMachine color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="my-page"
+        options={{
+          title: "My Page",
+          tabBarIcon: ({ color }) => <User color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="qr"
+        options={{
+          title: "Scan QR",
+          tabBarIcon: ({ color }) => <ScanQrCode color={color} />,
+        }}
+      />
     </Tabs>
   );
 }
