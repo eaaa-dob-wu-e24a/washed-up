@@ -2,6 +2,7 @@
   "name": "@rnr/starter-base",
   "main": "index.js",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "dev": "expo start -c --ios",
     "dev:web": "expo start -c --web",
@@ -11,7 +12,9 @@
     "web": "expo start -c --web",
     "go": "expo start -c --go",
     "clean": "rm -rf .expo node_modules",
-    "postinstall": "npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css"
+    "postinstall": "npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css",
+    "update-api": "echo 'Updating API...' && node scripts/update-api-index.js",
+    "watch-api": "nodemon --verbose --watch ./api --ignore './api/index.ts' --ext ts,js,json --exec \"node scripts/update-api-index.js\""
   },
   "dependencies": {
     "@clerk/clerk-expo": "^2.3.10",
@@ -65,6 +68,7 @@
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@types/react": "~18.3.12",
+    "nodemon": "^3.1.7",
     "typescript": "^5.3.3"
   },
   "private": true

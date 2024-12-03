@@ -1,16 +1,15 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as ts from "typescript";
+import { fileURLToPath } from "url";
 
-const API_DIR = path.join(__dirname, "../frontend-expo/api");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const API_DIR = path.join(__dirname, "../api");
 const INDEX_FILE = path.join(API_DIR, "index.ts");
 
-interface ApiMethod {
-  name: string;
-  className: string;
-}
-
-function getPublicMethods(filePath: string): ApiMethod[] {
+function getPublicMethods(filePath) {
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const sourceFile = ts.createSourceFile(
     filePath,
@@ -19,10 +18,10 @@ function getPublicMethods(filePath: string): ApiMethod[] {
     true
   );
 
-  const methods: ApiMethod[] = [];
+  const methods = [];
   let currentClassName = "";
 
-  function visit(node: ts.Node) {
+  function visit(node) {
     if (ts.isClassDeclaration(node) && node.name) {
       currentClassName = node.name.text;
       if (currentClassName.endsWith("Api")) {
@@ -33,7 +32,7 @@ function getPublicMethods(filePath: string): ApiMethod[] {
               (mod) => mod.kind === ts.SyntaxKind.PublicKeyword
             )
           ) {
-            const methodName = (member.name as ts.Identifier).text;
+            const methodName = member.name.text;
             methods.push({
               name: methodName,
               className: currentClassName,
@@ -49,7 +48,7 @@ function getPublicMethods(filePath: string): ApiMethod[] {
   return methods;
 }
 
-function updateIndexFile(apiMethods: ApiMethod[]) {
+function updateIndexFile(apiMethods) {
   const indexContent = fs.readFileSync(INDEX_FILE, "utf-8");
   const sourceFile = ts.createSourceFile(
     INDEX_FILE,
@@ -128,7 +127,7 @@ ${constructorMethodAssignments}
 }
 
 function main() {
-  const apiMethods: ApiMethod[] = [];
+  const apiMethods = [];
 
   // Read all .ts files in the API directory
   fs.readdirSync(API_DIR)
