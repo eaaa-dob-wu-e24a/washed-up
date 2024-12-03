@@ -1,197 +1,42 @@
-import { Location, Machine, Schedule } from "types";
+import { ApiBase } from "./base";
+import { AuthApi } from "./auth";
+import { LocationApi } from "./location";
+import { MachineApi } from "./machine";
+import { ScheduleApi } from "./schedule";
 
-export class Api {
-  private accessToken: unknown | undefined;
-  private baseUrl = process.env.EXPO_PUBLIC_API_URL;
+export class Api extends ApiBase {
+  // API classes
+  private authApi: AuthApi;
+  private locationApi: LocationApi;
+  private machineApi: MachineApi;
+  private scheduleApi: ScheduleApi;
+
+  // Method declarations
+  public signUp;
+  public validateCredentials;
+  public updateClerkMetadata;
+  public getLocations;
+  public getMachines;
+  public getSchedules;
+  public getScheduleById;
 
   constructor(accessToken?: unknown | undefined) {
-    this.accessToken = accessToken;
-  }
+    // Running the ApiBase constructor
+    super(accessToken);
 
-  public async signUp({
-    name,
-    email,
-    password,
-    location,
-  }: {
-    name: string;
-    email: string;
-    password: string;
-    location: string;
-  }) {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          c_password: password,
-          location_id: location,
-        }),
-      });
+    // API classes
+    this.authApi = new AuthApi(accessToken);
+    this.locationApi = new LocationApi(accessToken);
+    this.machineApi = new MachineApi(accessToken);
+    this.scheduleApi = new ScheduleApi(accessToken);
 
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error signing up", error);
-      return null;
-    }
-  }
-
-  public async validateCredentials({
-    name,
-    email,
-    password,
-    confirm_password,
-  }: {
-    name: string;
-    email: string;
-    password: string;
-    confirm_password: string;
-  }) {
-    try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/api/validate`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            password,
-            c_password: confirm_password,
-          }),
-        }
-      );
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error validating credentials", error);
-      return null;
-    }
-  }
-
-  public async updateClerkMetadata({
-    access_token,
-    metadata,
-    user_id,
-  }: {
-    access_token: string;
-    metadata: {
-      [key: string]: any;
-    };
-    user_id: string;
-  }) {
-    try {
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_API_URL}/api/clerk-metadata/${user_id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-          body: JSON.stringify({
-            public_metadata: metadata,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      console.log(data);
-    } catch (error) {
-      console.error("Error updating metadata", error);
-      return null;
-    }
-  }
-
-  public async getMachines(): Promise<Machine[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/machines`, {
-        headers: {
-          Authorization: `Bearer ${this.accessToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        return [];
-      }
-
-      const data = await response.json();
-
-      return data;
-    } catch (error) {
-      console.error("Error getting machines", error);
-      return [];
-    }
-  }
-
-  public async getSchedules(): Promise<Schedule[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/schedules`, {
-        headers: {
-          Authorization: `Bearer ${this.accessToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        return [];
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error getting schedules", error);
-      return [];
-    }
-  }
-
-  public async getScheduleById(id: number): Promise<Schedule[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/schedules/${id}`, {
-        headers: {
-          Authorization: `Bearer ${this.accessToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        return [];
-      }
-
-      const data = await response.json();
-      return Array.isArray(data) ? data : [data];
-    } catch (error) {
-      console.error("Error getting schedule by machine id", error);
-      return [];
-    }
-  }
-
-  public async getLocations(): Promise<Location[]> {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/locations`, {
-        headers: {
-          Authorization: `Bearer ${this.accessToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        return [];
-      }
-
-      const data = await response.json();
-
-      return data;
-    } catch (error) {
-      console.error("Error getting locations", error);
-      return [];
-    }
+    // Assign methods inside constructor
+    this.signUp = this.authApi.signUp;
+    this.validateCredentials = this.authApi.validateCredentials;
+    this.updateClerkMetadata = this.authApi.updateClerkMetadata;
+    this.getLocations = this.locationApi.getLocations;
+    this.getMachines = this.machineApi.getMachines;
+    this.getSchedules = this.scheduleApi.getSchedules;
+    this.getScheduleById = this.scheduleApi.getScheduleById;
   }
 }

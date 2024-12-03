@@ -20,4 +20,10 @@ class LocationController extends Controller
         $location = Location::find($user->location_id);
         return response()->json($location);
     }
+
+    public function getByCode(string $code)
+    {
+        $location = Location::where('code', $code)->firstOrFail();
+        return response()->json($location);
+    }
 }

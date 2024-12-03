@@ -23,8 +23,8 @@
 		id: null
 	});
 
-	const handlePrint = () => {
-		const printContent = document.getElementById('printable-qr');
+	const handlePrint = (id: string) => {
+		const printContent = document.getElementById(`${id}`);
 		const originalBody = document.body.innerHTML;
 
 		document.body.innerHTML = printContent!.innerHTML;
@@ -122,10 +122,6 @@
 			</Card.Header>
 			<Card.Content>
 				<div class="space-y-3">
-					<div class="flex">
-						<span class="w-24 font-medium text-gray-600">Code:</span>
-						<span class="text-gray-800">{data.machine.location.code}</span>
-					</div>
 					<div class="flex flex-col">
 						<span class="mb-1 font-medium text-gray-600">Address:</span>
 						<span class="text-gray-800">{data.machine.location.address}</span>
@@ -163,9 +159,13 @@
 			<Card.Header>
 				<Card.Title>
 					<div class="flex items-center justify-between">
-						<span>QR Code</span>
+						<span>QR Code - Machine</span>
 
-						<Button size="icon" variant="outline" onclick={handlePrint}>
+						<Button
+							size="icon"
+							variant="outline"
+							onclick={() => handlePrint('printable-qr-machine')}
+						>
 							<Printer class="h-4 w-4" />
 						</Button>
 					</div>
@@ -174,12 +174,42 @@
 			<Card.Content>
 				<div>
 					<div class="flex flex-col items-center">
-						<div id="printable-qr">
+						<div id="printable-qr-machine">
 							<div class="flex flex-col items-center p-4">
 								<QrCode value={data.machine.qr_code.code} />
 								<span class="mt-4 text-xl font-medium text-gray-800"
 									>{data.machine.qr_code.code}</span
 								>
+							</div>
+						</div>
+					</div>
+				</div>
+			</Card.Content>
+		</Card.Root>
+
+		<Card.Root>
+			<Card.Header>
+				<Card.Title>
+					<div class="flex items-center justify-between">
+						<span>QR Code - Location</span>
+
+						<Button
+							size="icon"
+							variant="outline"
+							onclick={() => handlePrint('printable-qr-location')}
+						>
+							<Printer class="h-4 w-4" />
+						</Button>
+					</div>
+				</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div>
+					<div class="flex flex-col items-center">
+						<div id="printable-qr-location">
+							<div class="flex flex-col items-center p-4">
+								<QrCode value={data.location.code} />
+								<span class="mt-4 text-xl font-medium text-gray-800">{data.location.code}</span>
 							</div>
 						</div>
 					</div>

@@ -15,6 +15,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'login');
     Route::post('admin-login', 'adminLogin');
     Route::get('locations', [LocationController::class, 'index']);
+    Route::get('locations/code/{code}', [LocationController::class, 'getByCode']);
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -26,6 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/machines', [MachineController::class, 'store']);
     Route::put('/machines/{id}', [MachineController::class, 'update']);
     Route::delete('/machines/{id}', [MachineController::class, 'destroy']);
+    Route::get('/machines/code/{code}', [MachineController::class, 'findByCode']);
 
     Route::get('/qrcodes', [QRCodeController::class, 'index']);
     Route::get('/qrcodes/{id}', [QRCodeController::class, 'show']);

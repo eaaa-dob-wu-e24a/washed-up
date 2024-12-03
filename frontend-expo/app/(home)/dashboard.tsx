@@ -25,7 +25,6 @@ export default function Dashboard() {
 
     const machine_data = await api.getMachines();
     const schedule_data = await api.getSchedules();
-    console.log(schedule_data);
     setMachines(machine_data);
     setSchedule(schedule_data);
   }
@@ -57,14 +56,16 @@ export default function Dashboard() {
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+        }
+      >
         <Heading title={`Hello, ${user?.publicMetadata?.name}`} />
         <Text className="text-2xl">Schedule</Text>
         {schedule.length > 0 ? (
           <ScrollView
             className="-mx-6 mt-4"
             horizontal
-            showsHorizontalScrollIndicator={false}>
+            showsHorizontalScrollIndicator={false}
+          >
             <View className="px-6 flex flex-row gap-4 pb-4">
               {schedule?.map((schedule) => (
                 <ScheduleCard key={schedule.id} data={schedule} />
@@ -79,19 +80,22 @@ export default function Dashboard() {
           <Button
             className="py-3 px-6 rounded-full shadow shadow-slate-400"
             variant={selectedBadge === "all" ? "default" : "outline"}
-            onPress={() => setSelectedBadge("all")}>
+            onPress={() => setSelectedBadge("all")}
+          >
             <Text className="text-sm">All</Text>
           </Button>
           <Button
             className="py-3 px-6 rounded-full shadow shadow-slate-400"
             variant={selectedBadge === "wash" ? "default" : "outline"}
-            onPress={() => setSelectedBadge("wash")}>
+            onPress={() => setSelectedBadge("wash")}
+          >
             <Text className="text-sm">Washers</Text>
           </Button>
           <Button
             className="py-3 px-6 rounded-full shadow shadow-slate-400"
             variant={selectedBadge === "dry" ? "default" : "outline"}
-            onPress={() => setSelectedBadge("dry")}>
+            onPress={() => setSelectedBadge("dry")}
+          >
             <Text className="text-sm">Dryers</Text>
           </Button>
         </View>
