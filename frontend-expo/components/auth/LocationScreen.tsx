@@ -17,12 +17,13 @@ import { Text } from "~/components/ui/text";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Location } from "~/types";
 import { LocationFormData, SignUpFormErrors } from "~/types/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BarcodeScanningResult,
   CameraView,
   useCameraPermissions,
 } from "expo-camera";
+import { Api } from "~/api";
 
 interface LocationScreenProps {
   data: LocationFormData;
@@ -64,7 +65,11 @@ export function LocationScreen({
             </TabsTrigger>
           </TabsList>
           <TabsContent value="qr">
-            <QRCodeLocationForm />
+            <QRCodeLocationForm
+              data={data}
+              onUpdate={onUpdate}
+              onNext={onNext}
+            />
           </TabsContent>
           <TabsContent value="manual">
             <ManualLocationForm
@@ -85,8 +90,23 @@ export function LocationScreen({
   );
 }
 
-function QRCodeLocationForm({}) {
+function QRCodeLocationForm({
+  data,
+  onUpdate,
+  onNext,
+}: {
+  data: LocationFormData;
+  onUpdate: (field: keyof LocationFormData, value: string) => void;
+  onNext: () => void;
+}) {
   const [permission, requestPermission] = useCameraPermissions();
+  const [isScanning, setIsScanning] = useState(false);
+
+  useEffect(() => {
+    if (data.location && data.locationCode) {
+      onNext();
+    }
+  }, [data.location, data.locationCode]);
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -105,8 +125,19 @@ function QRCodeLocationForm({}) {
     );
   }
 
-  function handleBarcodeScanned(scanningResult: BarcodeScanningResult) {
-    console.log(scanningResult);
+  async function handleBarcodeScanned(scanningResult: BarcodeScanningResult) {
+    if (isScanning) return;
+    setIsScanning(true);
+    const api = new Api();
+    const location = await api.getLocationByCode(scanningResult.data);
+
+    if (location) {
+      onUpdate("location", location.id.toString());
+      onUpdate("locationCode", location.code);
+
+      return;
+    }
+    setIsScanning(false);
   }
 
   return (
