@@ -57,6 +57,7 @@ export class ScheduleApi extends ApiBase {
       const response = await fetch(`${this.baseUrl}/api/schedules`, {
         method: "POST",
         headers: {
+          Authorization: `Bearer ${this.accessToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
