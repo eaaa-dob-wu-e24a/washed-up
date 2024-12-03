@@ -10,23 +10,49 @@ export type Location = {
 
 export type Machine = {
 	id: number;
-	type: 'wash' | 'dry';
+	type: string;
 	location_id: number;
 	status: number;
 	created_at: string;
 	updated_at: string;
 	location: Location;
+	qr_code: {
+		id: number;
+		machine_id: number;
+		code: string;
+		created_at: string;
+		updated_at: string;
+	};
+};
+
+export type Schedule = {
+	id: number;
+	user_id: number;
+	machine_id: number;
+	start_time: string;
+	end_time: string;
+	created_at: string;
+	updated_at: string;
 };
 
 export type MenuItems = {
 	title: string;
 	url: string;
-	// this should be `Component` after lucide-svelte updates types
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	icon?: any;
 	isActive?: boolean;
 	items?: {
 		title: string;
 		url: string;
 	}[];
+};
+
+export type User = {
+	id: number;
+	name: string;
+	email: string;
+	email_verified_at: string;
+	role: string;
+	created_at: string;
+	updated_at: string;
+	location_id: number;
 };
