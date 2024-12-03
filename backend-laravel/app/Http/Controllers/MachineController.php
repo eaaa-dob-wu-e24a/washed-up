@@ -87,4 +87,21 @@ class MachineController extends Controller
             return response()->json(['success' => 'Machine was deleted'], 200);
         }
     }
+
+    public function findByCode($code)
+    {
+        $user = Auth::user();
+        $machine = Machine::with(['location', 'qrCode'])
+            ->whereHas('qrCode', function ($query) use ($code) {
+                $query->where('code', $code);
+            })
+            ->where('location_id', $user->location_id)
+            ->first();
+
+        if (!$machine) {
+            return response()->json(['error' => 'Machine not found'], 404);
+        }
+
+        return response()->json($machine);
+    }
 }
