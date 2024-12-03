@@ -58,6 +58,9 @@ export default function MachineCard({ data }: { data: Machine }) {
 
   async function handleMachinePress() {
     setLoading(true);
+    if (events.length > 0) {
+      setEvents([]);
+    }
 
     const token = user?.publicMetadata?.access_token;
     if (!token) {
@@ -123,7 +126,7 @@ export default function MachineCard({ data }: { data: Machine }) {
         );
       });
 
-    const isLastTwoHours = index >= hours.length - rentalTime;
+    const isLastHours = index >= hours.length - rentalTime;
 
     const isBooked = bookedHours.includes(hourNumber);
 
@@ -150,7 +153,7 @@ export default function MachineCard({ data }: { data: Machine }) {
           {!isPastTime &&
             !isEvent &&
             !isWithinTwoHoursBeforeEvent &&
-            !isLastTwoHours && (
+            !isLastHours && (
               <Text
                 onPress={() => handleBookingPress(hourNumber)}
                 className="py-2 px-4 flex self-end text-primary text-right ml-auto"
@@ -170,6 +173,10 @@ export default function MachineCard({ data }: { data: Machine }) {
     const endTime = new Date(selectedDate);
     endTime.setHours(bookedHours[bookedHours.length - 1] + 1, 0, 0);
 
+    console.log(selectedDate);
+    console.log("UTC Start Time:", startTime.toUTCString());
+    console.log("UTC End Time:", endTime.toUTCString());
+
     const bookingData = {
       user_id: 2,
       machine_id: data.id,
@@ -177,21 +184,25 @@ export default function MachineCard({ data }: { data: Machine }) {
       end_time: endTime.toISOString().replace("T", " ").substring(0, 19),
     };
 
+    console.log(bookingData);
+
     const token = user?.publicMetadata?.access_token;
     if (!token) {
       console.error("No access token");
       return;
     }
+
     const api = new Api(token);
 
     async function setData() {
-      const output = await api.setSchedule(bookingData);
-      setEvents(output);
+      try {
+        const output = await api.setSchedule(bookingData);
+        console.log(output);
+      } catch (error) {
+        console.error("Error setting schedule:", error);
+      }
     }
     setData();
-
-    console.log(bookingData);
-    console.log(user?.id);
   };
 
   return (
