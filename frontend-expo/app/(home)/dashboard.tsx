@@ -1,8 +1,8 @@
 import { useUser } from "@clerk/clerk-expo";
 import { Api } from "api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Machine } from "types";
 import Heading from "~/components/heading";
@@ -16,16 +16,26 @@ export default function Dashboard() {
   const [machines, setMachines] = useState<Machine[]>([]);
   const [schedule, setSchedule] = useState(true);
   const [selectedBadge, setSelectedBadge] = useState("all");
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
+  async function getData() {
     const token = user?.publicMetadata?.access_token;
     if (!token) return;
     const api = new Api(token);
 
-    async function getData() {
-      const data = await api.getMachines();
-      setMachines(data);
-    }
+    const data = await api.getMachines();
+    setMachines(data);
+  }
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+
+    await getData();
+
+    setRefreshing(false);
+  }, []);
+
+  useEffect(() => {
     getData();
   }, [user]);
 
@@ -33,7 +43,10 @@ export default function Dashboard() {
     <SafeAreaView className="h-screen justify-between">
       <ScrollView
         className="flex gap-4 p-6"
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
         <Heading title={`Hello, ${user?.publicMetadata?.name}`} />
         <Text className="text-2xl">Schedule</Text>
         {schedule ? (
