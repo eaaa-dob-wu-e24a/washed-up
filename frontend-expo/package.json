@@ -11,9 +11,7 @@
     "web": "expo start -c --web",
     "go": "expo start -c --go",
     "clean": "rm -rf .expo node_modules",
-    "postinstall": "npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css",
-    "update-api": "echo 'Updating API...' && node scripts/update-api-index.js",
-    "watch-api": "nodemon --verbose --watch ./api --ignore './api/index.ts' --ext ts,js,json --exec \"node scripts/update-api-index.js\""
+    "postinstall": "npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css"
   },
   "dependencies": {
     "@clerk/clerk-expo": "^2.3.10",

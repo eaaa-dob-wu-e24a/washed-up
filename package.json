@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "scripts": {
+    "update-api": "echo 'Updating API...' && node scripts/update-api-index.js",
+    "watch-api": "nodemon --verbose --watch ./frontend-expo/api --watch ./frontend-svelte/src/lib/api --ignore './frontend-expo/api/index.ts' --ignore './frontend-svelte/src/lib/api/index.ts' --ext ts,js,json --exec \"node scripts/update-api-index.js\""
+  },
+  "dependencies": {
+    "nodemon": "^3.1.7",
+    "typescript": "^5.0.0"
+  }
+}

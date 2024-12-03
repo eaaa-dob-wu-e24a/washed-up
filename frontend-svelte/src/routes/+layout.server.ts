@@ -1,6 +1,6 @@
+import { Api } from '@/api';
 import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { api } from '../utils/api';
 
 export const load: LayoutServerLoad = async (event) => {
 	const session = await event.locals.auth();
@@ -16,11 +16,8 @@ export const load: LayoutServerLoad = async (event) => {
 	}
 
 	if (session) {
-		const { data } = await api.get('/location', {
-			headers: {
-				Authorization: `Bearer ${session?.user.token}`
-			}
-		});
+		const api = new Api(session?.user.token);
+		const data = await api.getLocation();
 
 		location = data;
 	}

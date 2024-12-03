@@ -1,21 +1,18 @@
 import { fail, superValidate } from 'sveltekit-superforms';
 import type { PageServerLoad } from '../$types';
-import { api } from '../../utils/api';
 import { createMachineSchema } from '@/components/create-machine-form.svelte';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions } from '@sveltejs/kit';
+import { Api } from '@/api';
 
 export const load: PageServerLoad = async (event) => {
 	const session = await event.locals.auth();
 
-	const { data } = await api.get('/machines', {
-		headers: {
-			Authorization: `Bearer ${session?.user.token}`
-		}
-	});
+	const api = new Api(session?.user.token);
 
+	const machines = await api.getMachines();
 	return {
-		machines: data,
+		machines,
 		form: await superValidate(zod(createMachineSchema))
 	};
 };
@@ -31,43 +28,30 @@ export const actions: Actions = {
 
 		const session = await event.locals.auth();
 
-		console.log(session);
+		const api = new Api(session?.user.token);
 
-		const { data: user } = await api.get('/user', {
-			headers: {
-				Authorization: `Bearer ${session?.user.token}`
-			}
+		const user = await api.getUser();
+
+		await api.createMachine({
+			type: form.data.type,
+			location_id: user?.location_id ?? 1,
+			status: 1
 		});
-
-		await api.post(
-			'/machines',
-			{
-				type: form.data.type,
-				location_id: user.location_id,
-				status: 1
-			},
-			{
-				headers: {
-					Authorization: `Bearer ${session?.user.token}`
-				}
-			}
-		);
 
 		return {
 			form
 		};
 	},
+
 	delete_machine: async (event) => {
 		const session = await event.locals.auth();
+
+		const api = new Api(session?.user.token);
 
 		const formdata = await event.request.formData();
 
 		const id = formdata.get('id');
 
-		await api.delete(`/machines/${id}`, {
-			headers: {
-				Authorization: `Bearer ${session?.user.token}`
-			}
-		});
+		await api.deleteMachine(Number(id));
 	}
 };
