@@ -1,5 +1,6 @@
 import { useUser } from "@clerk/clerk-expo";
 import { Api } from "api";
+import { useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const [schedule, setSchedule] = useState<Schedule[]>([]);
   const [selectedBadge, setSelectedBadge] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
+  const router = useRouter();
 
   async function getData() {
     const token = user?.publicMetadata?.access_token;
@@ -59,6 +61,9 @@ export default function Dashboard() {
         }
       >
         <Heading title={`Hello, ${user?.publicMetadata?.name}`} />
+        <Button onPress={() => router.push(`./dashboard/schedule/123`)}>
+          Hello!
+        </Button>
         <Text className="text-2xl">Schedule</Text>
         {schedule.length > 0 ? (
           <ScrollView
