@@ -64,7 +64,7 @@ class CreditController extends Controller
         ]);
 
         $credit = Credits::where('user_id', $user->id)->first();
-        $credit->amount += $request->price;
+        $credit->amount += $request->amount;
         $credit->save();
 
         CreditPurchase::create([
