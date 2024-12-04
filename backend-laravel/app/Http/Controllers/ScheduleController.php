@@ -52,6 +52,10 @@ class ScheduleController extends Controller
             'balance_after' => $credits->amount - ($duration_in_hours),
         ]);
 
+        Credits::where('user_id', $user->id)->update([
+            'amount' => $credits->amount - ($duration_in_hours),
+        ]);
+
         return response()->json($schedule, 201);
     }
 

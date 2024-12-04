@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\CreditPurchase;
 use App\Models\Credits;
-use App\Models\Transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,6 +28,9 @@ class CreditController extends Controller
 
         $request->validate([
             'amount' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'currency' => 'required|string',
+            'payment_method' => 'required|string',
         ]);
 
         $credit = Credits::create([
@@ -53,9 +55,25 @@ class CreditController extends Controller
     public function update(Request $request)
     {
         $user = Auth::user();
+
+        $request->validate([
+            'amount' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'currency' => 'required|string',
+            'payment_method' => 'required|string',
+        ]);
+
         $credit = Credits::where('user_id', $user->id)->first();
         $credit->amount += $request->price;
         $credit->save();
+
+        CreditPurchase::create([
+            'user_id' => $user->id,
+            'credits_bought' => $request->amount,
+            'price' => $request->price,
+            'currency' => $request->currency,
+            'payment_method' => $request->payment_method,
+        ]);
 
         return response()->json($credit);
     }
