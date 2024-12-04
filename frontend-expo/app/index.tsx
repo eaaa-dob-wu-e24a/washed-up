@@ -7,6 +7,6 @@ export default function HomeScreen() {
   if (!user) {
     return <Redirect href={"/welcome"} />;
   } else {
-    return <Redirect href={"/dashboard"} />;
+    return <Redirect href={"/dashboard/(tabs)"} />;
   }
 }

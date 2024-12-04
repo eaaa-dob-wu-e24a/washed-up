@@ -24,7 +24,7 @@ export default function Layout() {
       }}
     >
       <Tabs.Screen
-        name="dashboard"
+        name="index"
         options={{
           title: "Dashboard",
           tabBarIcon: ({ color }) => <WashingMachine color={color} />,

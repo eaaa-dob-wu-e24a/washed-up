@@ -20,6 +20,7 @@ export class Api extends ApiBase {
   public validateCredentials;
   public updateClerkMetadata;
   public getCredits;
+  public buyCredits;
   public getLocations;
   public getLocationByCode;
   public getMachines;
@@ -45,6 +46,7 @@ export class Api extends ApiBase {
     this.validateCredentials = this.authApi.validateCredentials;
     this.updateClerkMetadata = this.authApi.updateClerkMetadata;
     this.getCredits = this.creditsApi.getCredits;
+    this.buyCredits = this.creditsApi.buyCredits;
     this.getLocations = this.locationApi.getLocations;
     this.getLocationByCode = this.locationApi.getLocationByCode;
     this.getMachines = this.machineApi.getMachines;

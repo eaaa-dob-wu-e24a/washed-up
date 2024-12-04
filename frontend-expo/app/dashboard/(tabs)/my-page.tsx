@@ -1,6 +1,6 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { Redirect } from "expo-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
@@ -8,20 +8,32 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { Credits as CreditsType } from "~/types";
 import Credits from "~/components/my-page/credits";
+import Heading from "~/components/heading";
+import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 
 export default function MyPage() {
   const { signOut } = useAuth();
   const { user } = useUser();
   const [credits, setCredits] = useState<CreditsType | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  async function fetchCredits() {
+    const api = new Api(user?.publicMetadata.access_token);
+    const credits = await api.getCredits();
+    setCredits(credits);
+  }
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+
+    await fetchCredits();
+
+    setRefreshing(false);
+  }, []);
 
   useEffect(() => {
     if (!user) {
       return;
-    }
-    async function fetchCredits() {
-      const api = new Api(user?.publicMetadata.access_token);
-      const credits = await api.getCredits();
-      setCredits(credits);
     }
     fetchCredits();
   }, [user]);
@@ -30,16 +42,22 @@ export default function MyPage() {
     return <Redirect href={"/"} />;
   }
 
-  console.log(credits);
-
   return (
-    <SafeAreaView className="p-6 h-screen justify-between">
-      <View>
+    <SafeAreaView className="flex-1">
+      <ScrollView
+        className="flex-1 p-6"
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <Heading title="My Page" subtitle="Manage your account" />
+
         {credits && <Credits credits={credits} />}
         <Button onPress={() => signOut()}>
           <Text>Sign Out</Text>
         </Button>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

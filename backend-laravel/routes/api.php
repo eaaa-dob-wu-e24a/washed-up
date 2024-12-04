@@ -25,16 +25,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/machines', [MachineController::class, 'index']);
     Route::get('/machines/{id}', [MachineController::class, 'show']);
-    Route::post('/machines', [MachineController::class, 'store']);
-    Route::put('/machines/{id}', [MachineController::class, 'update']);
-    Route::delete('/machines/{id}', [MachineController::class, 'destroy']);
     Route::get('/machines/code/{code}', [MachineController::class, 'findByCode']);
-
-    Route::get('/qrcodes', [QRCodeController::class, 'index']);
-    Route::get('/qrcodes/{id}', [QRCodeController::class, 'show']);
-    Route::post('/qrcodes', [QRCodeController::class, 'store']);
-    Route::put('/qrcodes/{id}', [QRCodeController::class, 'update']);
-    Route::delete('/qrcodes/{id}', [QRCodeController::class, 'destroy']);
 
     Route::get('/schedules', [ScheduleController::class, 'index']);
     Route::get('/schedules/{id}', [ScheduleController::class, 'show']);
@@ -44,11 +35,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/credits', [CreditController::class, 'index']);
     Route::put('/credits', [CreditController::class, 'update']);
+
+    Route::get('/location', [LocationController::class, 'show']);
 });
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::get('/users', [AuthController::class, 'list']);
     Route::get('/users/{id}', [AuthController::class, 'adminShow']);
 
-    Route::get('/location', [LocationController::class, 'show']);
+    Route::post('/machines', [MachineController::class, 'store']);
+    Route::put('/machines/{id}', [MachineController::class, 'update']);
+    Route::delete('/machines/{id}', [MachineController::class, 'destroy']);
+
+    Route::get('/qrcodes', [QRCodeController::class, 'index']);
+    Route::get('/qrcodes/{id}', [QRCodeController::class, 'show']);
+    Route::post('/qrcodes', [QRCodeController::class, 'store']);
+    Route::put('/qrcodes/{id}', [QRCodeController::class, 'update']);
+    Route::delete('/qrcodes/{id}', [QRCodeController::class, 'destroy']);
 });
