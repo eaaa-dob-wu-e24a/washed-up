@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
+use App\Models\Credits;
 
 class AuthController extends Controller
 {
@@ -23,6 +24,19 @@ class AuthController extends Controller
             ], 401);
         }
     }
+
+    public function list()
+    {
+        $users = User::all();
+        return response()->json($users);
+    }
+
+    public function adminShow($id)
+    {
+        $user = User::with(['credits', 'schedules'])->find($id);
+        return response()->json($user);
+    }
+
     public function register(Request $request)
     {
         $validate = Validator::make($request->all(), [
@@ -48,6 +62,12 @@ class AuthController extends Controller
         ]);
 
         $user->save();
+
+        // Create initial credits for the user
+        Credits::create([
+            'user_id' => $user->id,
+            'amount' => 0  // Set initial credit amount to 0
+        ]);
 
         $token = $user->createToken('authToken')->plainTextToken;
 

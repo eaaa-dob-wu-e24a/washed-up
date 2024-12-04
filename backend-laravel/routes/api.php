@@ -7,6 +7,7 @@ use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ClerkController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CreditController;
 use App\Http\Controllers\LocationController;
 
 Route::controller(AuthController::class)->group(function () {
@@ -40,9 +41,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/schedules', [ScheduleController::class, 'store']);
     Route::put('/schedules/{id}', [ScheduleController::class, 'update']);
     Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']);
+
+    Route::get('/credits', [CreditController::class, 'index']);
+    Route::post('/credits', [CreditController::class, 'store']);
+    Route::put('/credits', [CreditController::class, 'update']);
+    Route::delete('/credits', [CreditController::class, 'destroy']);
 });
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/users', [AuthController::class, 'list']);
+    Route::get('/users/{id}', [AuthController::class, 'adminShow']);
+
     Route::get('/location', [LocationController::class, 'show']);
     Route::get('/books', [BookController::class, 'index']);
     Route::get('/books/{id}', [BookController::class, 'show']);
