@@ -91,6 +91,45 @@ export default function MachineCard({ data }: { data: Machine }) {
     setBookedHours(newBookedHours);
   };
 
+  const handleBookNow = async () => {
+    const startTime = new Date(selectedDate);
+    startTime.setHours(bookedHours[0], 0, 0);
+    const endTime = new Date(selectedDate);
+    endTime.setHours(bookedHours[bookedHours.length - 1] + 1, 0, 0);
+
+    // Add 1 hour to convert from UTC to UTC+1
+    startTime.setHours(startTime.getHours() + 1);
+    endTime.setHours(endTime.getHours() + 1);
+
+    console.log("UTC+1 Start Time:", startTime.toISOString());
+    console.log("UTC+1 End Time:", endTime.toISOString());
+
+    const token = user?.publicMetadata?.access_token;
+    if (!token) {
+      console.error("No access token");
+      return;
+    }
+
+    const api = new Api(token);
+
+    const userResponse = await api.getUser();
+    const userId = userResponse[0]?.id;
+
+    const bookingData = {
+      user_id: userId,
+      machine_id: data.id,
+      start_time: startTime.toISOString().replace("T", " ").substring(0, 19),
+      end_time: endTime.toISOString().replace("T", " ").substring(0, 19),
+    };
+
+    try {
+      const output = await api.setSchedule(bookingData);
+      console.log(output);
+    } catch (error) {
+      console.error("Error setting schedule:", error);
+    }
+  };
+
   const renderHours = hours.map((hour, index) => {
     const hourNumber = parseInt(hour);
     const isCurrentTime = selectedDate === today && currentHour === hourNumber;
@@ -167,45 +206,6 @@ export default function MachineCard({ data }: { data: Machine }) {
       </View>
     );
   });
-
-  const handleBookNow = async () => {
-    const startTime = new Date(selectedDate);
-    startTime.setHours(bookedHours[0], 0, 0);
-    const endTime = new Date(selectedDate);
-    endTime.setHours(bookedHours[bookedHours.length - 1] + 1, 0, 0);
-
-    // Add 1 hour to convert from UTC to UTC+1
-    startTime.setHours(startTime.getHours() + 1);
-    endTime.setHours(endTime.getHours() + 1);
-
-    console.log("UTC+1 Start Time:", startTime.toISOString());
-    console.log("UTC+1 End Time:", endTime.toISOString());
-
-    const token = user?.publicMetadata?.access_token;
-    if (!token) {
-      console.error("No access token");
-      return;
-    }
-
-    const api = new Api(token);
-
-    const userResponse = await api.getUser();
-    const userId = userResponse[0]?.id;
-
-    const bookingData = {
-      user_id: userId,
-      machine_id: data.id,
-      start_time: startTime.toISOString().replace("T", " ").substring(0, 19),
-      end_time: endTime.toISOString().replace("T", " ").substring(0, 19),
-    };
-
-    try {
-      const output = await api.setSchedule(bookingData);
-      console.log(output);
-    } catch (error) {
-      console.error("Error setting schedule:", error);
-    }
-  };
 
   return (
     <>
