@@ -13,7 +13,9 @@ class CreditUsageController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $creditUsages = CreditUsage::where('user_id', $user->id)->get();
+        $creditUsages = CreditUsage::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
         if (!$creditUsages) {
             return response()->json(['message' => 'No credit usages found'], 404);
         }

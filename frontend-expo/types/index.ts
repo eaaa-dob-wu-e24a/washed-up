@@ -1,3 +1,23 @@
+export interface SignUpFormErrors {
+  [key: string]: string;
+}
+
+export interface SignUpMetadata {
+  [key: string]: any;
+}
+
+export interface UserInfoFormData {
+  name: string;
+  emailAddress: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface LocationFormData {
+  location: string;
+  locationCode: string;
+}
+
 export type Machine = {
   id: number;
   type: string;
@@ -53,4 +73,27 @@ export type Credits = {
   updated_at: string;
   user_id: number;
   amount: number;
+};
+
+export type CreditUsage = {
+  id: number;
+  user_id: number;
+  machine_id: number;
+  machine_type: string;
+  duration_minutes: number;
+  cost_credits: string;
+  balance_after: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CreditPurchase = {
+  id: number;
+  user_id: number;
+  credits_bought: string;
+  price: string;
+  currency: string;
+  payment_method: string;
+  created_at: string;
+  updated_at: string;
 };

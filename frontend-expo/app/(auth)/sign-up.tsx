@@ -5,16 +5,16 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { LocationScreen } from "~/components/auth/LocationScreen";
-import { UserInfoScreen } from "~/components/auth/UserInfoScreen";
-import { VerificationScreen } from "~/components/auth/VerificationScreen";
+import { LocationScreen } from "~/components/auth/location-screen";
+import { UserInfoScreen } from "~/components/auth/user-info-screen";
+import { VerificationScreen } from "~/components/auth/verification-screen";
 import { Location } from "~/types";
 import {
   LocationFormData,
   SignUpFormErrors,
   SignUpMetadata,
   UserInfoFormData,
-} from "~/types/auth";
+} from "~/types";
 
 export default function SignUpScreen() {
   const api = new Api();

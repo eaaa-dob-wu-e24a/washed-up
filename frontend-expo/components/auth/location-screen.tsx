@@ -16,7 +16,7 @@ import {
 import { Text } from "~/components/ui/text";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Location } from "~/types";
-import { LocationFormData, SignUpFormErrors } from "~/types/auth";
+import { LocationFormData, SignUpFormErrors } from "~/types";
 import { useEffect, useState } from "react";
 import {
   BarcodeScanningResult,

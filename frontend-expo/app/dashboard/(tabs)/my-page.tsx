@@ -6,7 +6,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { Credits as CreditsType, Location } from "~/types";
+import {
+  Credits as CreditsType,
+  CreditPurchase,
+  CreditUsage,
+  Location,
+} from "~/types";
 import Credits from "~/components/my-page/credits";
 import Heading from "~/components/heading";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
@@ -19,14 +24,20 @@ export default function MyPage() {
   const { user } = useUser();
   const [credits, setCredits] = useState<CreditsType | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
+  const [creditPurchases, setCreditPurchases] = useState<CreditPurchase[]>([]);
+  const [creditUsages, setCreditUsages] = useState<CreditUsage[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   async function getData() {
     const api = new Api(user?.publicMetadata.access_token);
     const credits = await api.getCredits();
     const location = await api.getLocation();
+    const creditPurchases = await api.getCreditPurchases();
+    const creditUsages = await api.getCreditUsages();
     setCredits(credits);
     setLocation(location);
+    setCreditPurchases(creditPurchases);
+    setCreditUsages(creditUsages);
   }
 
   const onRefresh = useCallback(async () => {
@@ -67,7 +78,10 @@ export default function MyPage() {
           <Credits credits={credits} />
 
           <Label>Transactions</Label>
-          <Transactions />
+          <Transactions
+            creditPurchases={creditPurchases}
+            creditUsages={creditUsages}
+          />
         </View>
 
         <Button

@@ -13,7 +13,9 @@ class CreditPurchaseController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $creditPurchases = CreditPurchase::where('user_id', $user->id)->get();
+        $creditPurchases = CreditPurchase::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
         if (!$creditPurchases) {
             return response()->json(['message' => 'No credit purchases found'], 404);
         }

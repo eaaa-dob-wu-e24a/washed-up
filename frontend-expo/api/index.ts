@@ -4,6 +4,7 @@ import { CreditsApi } from "./credits";
 import { LocationApi } from "./location";
 import { MachineApi } from "./machine";
 import { ScheduleApi } from "./schedule";
+import { TransactionsApi } from "./transactions";
 import { UserApi } from "./user";
 
 export class Api extends ApiBase {
@@ -13,6 +14,7 @@ export class Api extends ApiBase {
   private locationApi: LocationApi;
   private machineApi: MachineApi;
   private scheduleApi: ScheduleApi;
+  private transactionsApi: TransactionsApi;
   private userApi: UserApi;
 
   // Method declarations
@@ -28,6 +30,10 @@ export class Api extends ApiBase {
   public getSchedules;
   public getScheduleById;
   public setSchedule;
+  public getCreditPurchases;
+  public getCreditPurchase;
+  public getCreditUsages;
+  public getCreditUsage;
   public getUser;
 
   constructor(accessToken?: unknown) {
@@ -40,6 +46,7 @@ export class Api extends ApiBase {
     this.locationApi = new LocationApi(accessToken);
     this.machineApi = new MachineApi(accessToken);
     this.scheduleApi = new ScheduleApi(accessToken);
+    this.transactionsApi = new TransactionsApi(accessToken);
     this.userApi = new UserApi(accessToken);
 
     // Assign methods inside constructor
@@ -55,6 +62,10 @@ export class Api extends ApiBase {
     this.getSchedules = this.scheduleApi.getSchedules;
     this.getScheduleById = this.scheduleApi.getScheduleById;
     this.setSchedule = this.scheduleApi.setSchedule;
+    this.getCreditPurchases = this.transactionsApi.getCreditPurchases;
+    this.getCreditPurchase = this.transactionsApi.getCreditPurchase;
+    this.getCreditUsages = this.transactionsApi.getCreditUsages;
+    this.getCreditUsage = this.transactionsApi.getCreditUsage;
     this.getUser = this.userApi.getUser;
   }
 }
