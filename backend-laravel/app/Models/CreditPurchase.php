@@ -9,6 +9,7 @@ class CreditPurchase extends Model
     protected $fillable = [
         'user_id',
         'credits_bought',
+        'balance_after',
         'price',
         'currency',
         'payment_method',
