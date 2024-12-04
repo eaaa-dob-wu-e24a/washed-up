@@ -6,27 +6,33 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { Credits as CreditsType } from "~/types";
+import { Credits as CreditsType, Location } from "~/types";
 import Credits from "~/components/my-page/credits";
 import Heading from "~/components/heading";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
+import UserInfo from "~/components/my-page/user-info";
+import { Label } from "~/components/ui/label";
+import Transactions from "~/components/my-page/transactions";
 
 export default function MyPage() {
   const { signOut } = useAuth();
   const { user } = useUser();
   const [credits, setCredits] = useState<CreditsType | null>(null);
+  const [location, setLocation] = useState<Location | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  async function fetchCredits() {
+  async function getData() {
     const api = new Api(user?.publicMetadata.access_token);
     const credits = await api.getCredits();
+    const location = await api.getLocation();
     setCredits(credits);
+    setLocation(location);
   }
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
 
-    await fetchCredits();
+    await getData();
 
     setRefreshing(false);
   }, []);
@@ -35,7 +41,7 @@ export default function MyPage() {
     if (!user) {
       return;
     }
-    fetchCredits();
+    getData();
   }, [user]);
 
   if (!user) {
@@ -53,8 +59,22 @@ export default function MyPage() {
       >
         <Heading title="My Page" subtitle="Manage your account" />
 
-        {credits && <Credits credits={credits} />}
-        <Button onPress={() => signOut()}>
+        <View className="flex gap-4">
+          <Label>Account</Label>
+          <UserInfo location={location} />
+
+          <Label>Credits</Label>
+          <Credits credits={credits} />
+
+          <Label>Transactions</Label>
+          <Transactions />
+        </View>
+
+        <Button
+          className="mt-8"
+          variant={"destructive"}
+          onPress={() => signOut()}
+        >
           <Text>Sign Out</Text>
         </Button>
       </ScrollView>

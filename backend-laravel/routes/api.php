@@ -8,6 +8,8 @@ use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\ClerkController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CreditController;
+use App\Http\Controllers\CreditPurchaseController;
+use App\Http\Controllers\CreditUsageController;
 use App\Http\Controllers\LocationController;
 
 Route::controller(AuthController::class)->group(function () {
@@ -37,6 +39,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('/credits', [CreditController::class, 'update']);
 
     Route::get('/location', [LocationController::class, 'show']);
+
+    Route::get('/credit-purchases', [CreditPurchaseController::class, 'index']);
+    Route::get('/credit-purchases/{id}', [CreditPurchaseController::class, 'show']);
+
+    Route::get('/credit-usages', [CreditUsageController::class, 'index']);
+    Route::get('/credit-usages/{id}', [CreditUsageController::class, 'show']);
 });
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {

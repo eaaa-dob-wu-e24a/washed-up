@@ -22,6 +22,7 @@ export class Api extends ApiBase {
   public getCredits;
   public buyCredits;
   public getLocations;
+  public getLocation;
   public getLocationByCode;
   public getMachines;
   public getSchedules;
@@ -48,6 +49,7 @@ export class Api extends ApiBase {
     this.getCredits = this.creditsApi.getCredits;
     this.buyCredits = this.creditsApi.buyCredits;
     this.getLocations = this.locationApi.getLocations;
+    this.getLocation = this.locationApi.getLocation;
     this.getLocationByCode = this.locationApi.getLocationByCode;
     this.getMachines = this.machineApi.getMachines;
     this.getSchedules = this.scheduleApi.getSchedules;

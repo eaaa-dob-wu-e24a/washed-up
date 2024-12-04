@@ -6,7 +6,11 @@ const Layout = () => {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen
         name="pay-modal"
-        options={{ presentation: "modal", title: "Buy Credits" }}
+        options={{
+          presentation: "modal",
+          title: "Buy Credits",
+          headerShown: false,
+        }}
       />
     </Stack>
   );

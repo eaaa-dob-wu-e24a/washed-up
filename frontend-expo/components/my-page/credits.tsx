@@ -12,12 +12,12 @@ import { Credits as CreditsType } from "~/types";
 import { buttonVariants } from "../ui/button";
 import { cn } from "~/lib/utils";
 
-export default function Credits({ credits }: { credits: CreditsType }) {
+export default function Credits({ credits }: { credits: CreditsType | null }) {
   return (
     <>
-      <Card className="w-full mb-8">
+      <Card className="w-full">
         <CardHeader>
-          <CardTitle>{credits.amount} Credits</CardTitle>
+          <CardTitle>{credits?.amount} Credits</CardTitle>
         </CardHeader>
         <CardContent>
           <Text>Your credits will be used for booking.</Text>
