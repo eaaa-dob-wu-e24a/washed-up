@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CreditPurchase;
 use App\Models\Credits;
+use App\Models\Transactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,6 +35,15 @@ class CreditController extends Controller
             'user_id' => $user->id,
             'amount' => $request->amount,
         ]);
+
+        CreditPurchase::create([
+            'user_id' => $user->id,
+            'credits_bought' => $request->amount,
+            'price' => $request->price,
+            'currency' => $request->currency,
+            'payment_method' => $request->payment_method,
+        ]);
+
         return response()->json($credit);
     }
 
@@ -43,8 +54,9 @@ class CreditController extends Controller
     {
         $user = Auth::user();
         $credit = Credits::where('user_id', $user->id)->first();
-        $credit->amount += $request->amount;
+        $credit->amount += $request->price;
         $credit->save();
+
         return response()->json($credit);
     }
 

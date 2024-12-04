@@ -43,12 +43,12 @@ export class ScheduleApi extends ApiBase {
   }
 
   public async setSchedule({
-    user_id,
+    machine_type,
     machine_id,
     start_time,
     end_time,
   }: {
-    user_id: number;
+    machine_type: string;
     machine_id: number;
     start_time: string;
     end_time: string;
@@ -61,7 +61,7 @@ export class ScheduleApi extends ApiBase {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_id,
+          machine_type,
           machine_id,
           start_time,
           end_time,

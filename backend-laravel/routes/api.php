@@ -43,9 +43,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']);
 
     Route::get('/credits', [CreditController::class, 'index']);
-    Route::post('/credits', [CreditController::class, 'store']);
     Route::put('/credits', [CreditController::class, 'update']);
-    Route::delete('/credits', [CreditController::class, 'destroy']);
 });
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
@@ -53,9 +51,4 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::get('/users/{id}', [AuthController::class, 'adminShow']);
 
     Route::get('/location', [LocationController::class, 'show']);
-    Route::get('/books', [BookController::class, 'index']);
-    Route::get('/books/{id}', [BookController::class, 'show']);
-    Route::post('/books', [BookController::class, 'store']);
-    Route::put('/books/{id}', [BookController::class, 'update']);
-    Route::delete('/books/{id}', [BookController::class, 'destroy']);
 });

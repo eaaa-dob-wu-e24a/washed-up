@@ -112,11 +112,8 @@ export default function MachineCard({ data }: { data: Machine }) {
 
     const api = new Api(token);
 
-    const userResponse = await api.getUser();
-    const userId = userResponse[0]?.id;
-
     const bookingData = {
-      user_id: userId,
+      machine_type: data.type,
       machine_id: data.id,
       start_time: startTime.toISOString().replace("T", " ").substring(0, 19),
       end_time: endTime.toISOString().replace("T", " ").substring(0, 19),
