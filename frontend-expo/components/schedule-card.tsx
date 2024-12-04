@@ -39,7 +39,7 @@ export default function ScheduleCard({ data }: { data: Schedule }) {
 
   return (
     <>
-      <Card className="w-72 shadow shadow-slate-400">
+      <Card className="w-72 shadow shadow-slate-400 ios:shadow-black/5">
         <CardHeader>
           <CardTitle>Washer</CardTitle>
           <CardDescription>Machine #{data.machine_id}</CardDescription>

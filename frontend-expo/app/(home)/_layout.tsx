@@ -1,6 +1,7 @@
 import { useUser } from "@clerk/clerk-expo";
 import { Redirect, Tabs } from "expo-router";
 import { ScanQrCode, User, WashingMachine } from "lucide-react-native";
+import { Platform } from "react-native";
 
 export default function Layout() {
   const { user } = useUser();
@@ -13,9 +14,15 @@ export default function Layout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: { height: 60, paddingTop: 4 },
         tabBarActiveTintColor: "#479e96",
-      }}>
+        ...(Platform.OS === "android" && {
+          tabBarStyle: {
+            height: 60,
+            paddingTop: 4,
+          },
+        }),
+      }}
+    >
       <Tabs.Screen
         name="dashboard"
         options={{

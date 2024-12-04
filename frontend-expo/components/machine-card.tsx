@@ -212,7 +212,7 @@ export default function MachineCard({ data }: { data: Machine }) {
       <Dialog>
         {data.status === 1 ? (
           <DialogTrigger onPress={handleMachinePress}>
-            <Card className="w-full shadow shadow-slate-400">
+            <Card className="w-full shadow shadow-slate-400 ios:shadow-black/5">
               <CardHeader className="flex-row justify-between">
                 <View>
                   <CardTitle className="capitalize">
@@ -237,7 +237,7 @@ export default function MachineCard({ data }: { data: Machine }) {
             </Card>
           </DialogTrigger>
         ) : (
-          <Card className="w-full shadow shadow-slate-400">
+          <Card className="w-full shadow shadow-slate-400 ios:shadow-black/5">
             <CardHeader className="flex-row justify-between">
               <View>
                 <CardTitle className="capitalize">

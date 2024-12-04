@@ -9,11 +9,9 @@ export class LocationApi extends ApiBase {
 					Authorization: `Bearer ${this.accessToken}`
 				}
 			});
-
 			if (!response.ok) {
 				return null;
 			}
-
 			const data = await response.json();
 			return data;
 		} catch (error) {

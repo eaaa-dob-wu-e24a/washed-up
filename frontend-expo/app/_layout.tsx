@@ -143,7 +143,8 @@ export default function RootLayoutNav() {
               <Stack
                 screenOptions={{
                   headerShown: false,
-                }}>
+                }}
+              >
                 <Stack.Screen name="index" />
               </Stack>
               <PortalHost />
