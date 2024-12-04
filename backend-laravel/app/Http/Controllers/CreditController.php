@@ -15,7 +15,7 @@ class CreditController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $credits = Credits::where('user_id', $user->id)->get();
+        $credits = Credits::where('user_id', $user->id)->get()->first();
         return response()->json($credits);
     }
 

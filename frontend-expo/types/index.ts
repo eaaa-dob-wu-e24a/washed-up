@@ -46,3 +46,11 @@ export type User = {
   updated_at: string;
   location_id: number;
 };
+
+export type Credits = {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  user_id: number;
+  amount: number;
+};
