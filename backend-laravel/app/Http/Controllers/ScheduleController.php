@@ -52,6 +52,10 @@ class ScheduleController extends Controller
             'balance_after' => $credits->amount - ($duration_in_hours),
         ]);
 
+        if ($credits->amount - ($duration_in_hours) < 0) {
+            return response()->json(['error' => 'Insufficient credits'], 400);
+        }
+
         Credits::where('user_id', $user->id)->update([
             'amount' => $credits->amount - ($duration_in_hours),
         ]);
