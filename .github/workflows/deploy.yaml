@@ -39,6 +39,7 @@ jobs:
               # Reset the Git remote URL to prevent using cached data
               git remote set-url origin $REPO_URL
               git fetch origin main
+              git clean -fd # Remove untracked files and directories
               git reset --hard origin/main
             else
               echo "Directory $APP_DIR does not exist. Cloning repository..."
