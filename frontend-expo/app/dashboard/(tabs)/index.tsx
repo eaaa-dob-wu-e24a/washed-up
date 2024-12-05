@@ -24,10 +24,18 @@ export default function Dashboard() {
     if (!token) return;
     const api = new Api(token);
 
+    const user_id = (await api.getUser())[0].id;
+
+    console.log(user_id);
+
     const machine_data = await api.getMachines();
     const schedule_data = await api.getSchedules();
+    const filtered_schedule_data = schedule_data.filter(
+      (schedule) => schedule.user_id === user_id
+    );
+
     setMachines(machine_data);
-    setSchedule(schedule_data);
+    setSchedule(filtered_schedule_data);
   }
 
   useEffect(() => {

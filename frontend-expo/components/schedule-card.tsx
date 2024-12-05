@@ -14,7 +14,10 @@ import { Schedule } from "~/types";
 export default function ScheduleCard({ data }: { data: Schedule }) {
   const startTime = new Date(data.start_time);
   const endTime = new Date(data.end_time);
-  const createdAt = new Date(data.created_at);
+
+  if (startTime.getTime() <= Date.now()) {
+    return null;
+  }
 
   const formattedStartTime = startTime.toLocaleDateString("en-UK", {
     weekday: "long",
@@ -37,6 +40,16 @@ export default function ScheduleCard({ data }: { data: Schedule }) {
   const minutes = timeUntilStartInMinutes % 60;
   const timeUntilStart = `${hours}h ${minutes}m`;
 
+  const getStatus = () => {
+    const now = new Date();
+    if (now >= startTime && now <= endTime) {
+      return "In progress";
+    }
+    return "Ready";
+  };
+
+  const status = getStatus();
+
   return (
     <>
       <Card className="w-72 shadow shadow-slate-400 ios:shadow-black/5">
@@ -58,7 +71,16 @@ export default function ScheduleCard({ data }: { data: Schedule }) {
           <WashingMachine color={"#479e96"} size={40} />
           <View className="ml-2">
             <Text>Starts in: {timeUntilStart}</Text>
-            <Text>Status: %status%</Text>
+            <Text>
+              Status:{" "}
+              <Text
+                className={
+                  status === "Ready" ? "text-primary" : "text-destructive"
+                }
+              >
+                {status}
+              </Text>
+            </Text>
           </View>
         </CardFooter>
       </Card>

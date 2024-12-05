@@ -186,7 +186,7 @@ export default function MachineCard({ data }: { data: Machine }) {
           <Text className="w-[15%] text-center p-2">{hour}</Text>
           <Separator orientation={"vertical"} />
 
-          <Text className="p-2">{isEvent ? "Machine used by..." : ""}</Text>
+          <Text className="p-2">{isEvent ? "This time is reserved" : ""}</Text>
           {!isPastTime &&
             !isEvent &&
             !isWithinTwoHoursBeforeEvent &&
