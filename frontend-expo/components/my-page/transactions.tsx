@@ -99,7 +99,7 @@ function PurchaseTransactions({
             </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600 flex-1">
+            <Text className="text-gray-600 flex-1 capitalize">
               {purchase.payment_method}
             </Text>
             <Text className="text-gray-600 flex-1 text-right">
