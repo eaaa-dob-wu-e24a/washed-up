@@ -60,7 +60,7 @@ export default function MyPage() {
   }
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1" edges={["top"]}>
       <ScrollView
         className="flex-1 p-6"
         showsVerticalScrollIndicator={false}
@@ -85,7 +85,7 @@ export default function MyPage() {
         </View>
 
         <Button
-          className="mt-16"
+          className="mt-16 mb-6"
           variant={"destructive"}
           onPress={() => signOut()}
         >

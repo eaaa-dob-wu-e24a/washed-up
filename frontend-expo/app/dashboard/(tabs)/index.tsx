@@ -50,7 +50,7 @@ export default function Dashboard() {
   }, [user]);
 
   return (
-    <SafeAreaView className="h-screen justify-between">
+    <SafeAreaView className="flex-1 justify-between" edges={["top"]}>
       <ScrollView
         className="flex gap-4 p-6"
         showsVerticalScrollIndicator={false}

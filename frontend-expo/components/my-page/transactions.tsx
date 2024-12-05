@@ -49,7 +49,10 @@ function UsageTransactions({ creditUsages }: { creditUsages: CreditUsage[] }) {
       {creditUsages.map((usage) => (
         <View key={usage.id} className="flex-col p-3 bg-gray-100 rounded-lg">
           <View className="flex-row justify-between mb-1">
-            <Text className="font-medium">{usage.machine_type}</Text>
+            <Text className="font-medium">
+              {usage.machine_type === "wash" ? "Washer" : "Dryer"} #
+              {usage.machine_id}
+            </Text>
             <Text className="text-red-600">-{usage.cost_credits} credits</Text>
           </View>
           <View className="flex-row justify-between">
@@ -61,7 +64,13 @@ function UsageTransactions({ creditUsages }: { creditUsages: CreditUsage[] }) {
             </Text>
           </View>
           <Text className="text-gray-500 text-sm mt-1">
-            {new Date(usage.created_at).toLocaleDateString()}
+            {new Date(usage.created_at).toLocaleString(undefined, {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+            })}
           </Text>
         </View>
       ))}
@@ -92,12 +101,23 @@ function PurchaseTransactions({
           <View className="flex-row justify-between">
             <Text className="text-gray-600">{purchase.payment_method}</Text>
             <Text className="text-gray-600">
+              Balance: {purchase.balance_after}
+            </Text>
+          </View>
+          <View className="flex-row justify-between">
+            <Text className="text-gray-500 text-sm mt-1">
+              {new Date(purchase.created_at).toLocaleString(undefined, {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                hour: "numeric",
+                minute: "numeric",
+              })}
+            </Text>
+            <Text className="text-gray-600">
               {purchase.price} {purchase.currency}
             </Text>
           </View>
-          <Text className="text-gray-500 text-sm mt-1">
-            {new Date(purchase.created_at).toLocaleDateString()}
-          </Text>
         </View>
       ))}
     </View>

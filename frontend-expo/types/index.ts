@@ -91,6 +91,7 @@ export type CreditPurchase = {
   id: number;
   user_id: number;
   credits_bought: string;
+  balance_after: string;
   price: string;
   currency: string;
   payment_method: string;
