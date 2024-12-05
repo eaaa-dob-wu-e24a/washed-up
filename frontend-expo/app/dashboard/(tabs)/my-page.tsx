@@ -85,7 +85,7 @@ export default function MyPage() {
         </View>
 
         <Button
-          className="mt-8"
+          className="mt-16"
           variant={"destructive"}
           onPress={() => signOut()}
         >

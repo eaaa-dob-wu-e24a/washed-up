@@ -69,7 +69,7 @@ class CreditController extends Controller
 
         CreditPurchase::create([
             'user_id' => $user->id,
-            'balance_after' => $credit->amount + $request->amount,
+            'balance_after' => $credit->amount,
             'credits_bought' => $request->amount,
             'price' => $request->price,
             'currency' => $request->currency,

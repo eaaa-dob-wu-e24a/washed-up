@@ -41,6 +41,11 @@ export default function Transactions({
 function UsageTransactions({ creditUsages }: { creditUsages: CreditUsage[] }) {
   return (
     <View className="flex-col gap-3">
+      {creditUsages.length === 0 && (
+        <Text className="text-gray-500 text-sm mt-1 text-center">
+          No usage transactions yet.
+        </Text>
+      )}
       {creditUsages.map((usage) => (
         <View key={usage.id} className="flex-col p-3 bg-gray-100 rounded-lg">
           <View className="flex-row justify-between mb-1">
@@ -71,6 +76,11 @@ function PurchaseTransactions({
 }) {
   return (
     <View className="flex-col gap-3">
+      {creditPurchases.length === 0 && (
+        <Text className="text-gray-500 text-sm mt-1 text-center">
+          No purchase transactions yet.
+        </Text>
+      )}
       {creditPurchases.map((purchase) => (
         <View key={purchase.id} className="flex-col p-3 bg-gray-100 rounded-lg">
           <View className="flex-row justify-between mb-1">
