@@ -25,7 +25,8 @@ export default function UserInfo({ location }: { location: Location | null }) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Text>{location?.address}</Text>
+          <CardTitle>Location</CardTitle>
+          <CardDescription>{location?.address}</CardDescription>
         </CardContent>
       </Card>
     </>
