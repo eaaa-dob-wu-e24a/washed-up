@@ -93,19 +93,21 @@ function PurchaseTransactions({
       {creditPurchases.map((purchase) => (
         <View key={purchase.id} className="flex-col p-3 bg-gray-100 rounded-lg">
           <View className="flex-row justify-between mb-1">
-            <Text className="font-medium">Credit Purchase</Text>
-            <Text className="text-green-600">
+            <Text className="font-medium flex-1">Credit Purchase</Text>
+            <Text className="text-green-600 flex-1 text-right">
               +{purchase.credits_bought} credits
             </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-600">{purchase.payment_method}</Text>
-            <Text className="text-gray-600">
+            <Text className="text-gray-600 flex-1">
+              {purchase.payment_method}
+            </Text>
+            <Text className="text-gray-600 flex-1 text-right">
               Balance: {purchase.balance_after}
             </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-gray-500 text-sm mt-1">
+            <Text className="text-gray-500 text-sm mt-1 flex-1">
               {new Date(purchase.created_at).toLocaleString(undefined, {
                 year: "numeric",
                 month: "numeric",
@@ -114,7 +116,7 @@ function PurchaseTransactions({
                 minute: "numeric",
               })}
             </Text>
-            <Text className="text-gray-600">
+            <Text className="text-gray-600 flex-1 text-right">
               {purchase.price} {purchase.currency}
             </Text>
           </View>
