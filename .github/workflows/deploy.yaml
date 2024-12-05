@@ -36,11 +36,16 @@ jobs:
               echo "Directory $APP_DIR exists. Resetting remote repository..."
               cd $APP_DIR
 
+              # Save untracked files (like .env)
+              git stash --include-untracked
+
               # Reset the Git remote URL to prevent using cached data
               git remote set-url origin $REPO_URL
               git fetch origin main
-              git clean -fd # Remove untracked files and directories
               git reset --hard origin/main
+
+              # Restore untracked files
+              git stash pop || true  # '|| true' ensures script continues even if stash is empty
             else
               echo "Directory $APP_DIR does not exist. Cloning repository..."
               git clone $REPO_URL $APP_DIR
