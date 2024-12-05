@@ -1,5 +1,5 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
-import { Redirect } from "expo-router";
+import { Redirect, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -54,6 +54,15 @@ export default function MyPage() {
     }
     getData();
   }, [user]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!user) {
+        return;
+      }
+      getData();
+    }, [])
+  );
 
   if (!user) {
     return <Redirect href={"/"} />;
