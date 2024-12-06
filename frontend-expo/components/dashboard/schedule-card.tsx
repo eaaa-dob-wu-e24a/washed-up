@@ -30,10 +30,10 @@ export default function ScheduleCard({
     month: "short",
     day: "numeric",
   });
-  const formattedTimeRange = `${startTime.toLocaleTimeString("en-UK", {
+  const formattedTimeRange = `${startTime.toLocaleTimeString("da-DK", {
     hour: "2-digit",
     minute: "2-digit",
-  })} - ${endTime.toLocaleTimeString("en-UK", {
+  })} - ${endTime.toLocaleTimeString("da-DK", {
     hour: "2-digit",
     minute: "2-digit",
   })}`;

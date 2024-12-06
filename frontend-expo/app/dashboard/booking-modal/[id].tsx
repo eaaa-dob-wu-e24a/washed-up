@@ -14,42 +14,6 @@ import { Text } from "~/components/ui/text";
 import { Machine, Schedule } from "~/types";
 
 const today = toDateId(new Date());
-// const data = [
-//   {
-//     id: 1,
-//     type: "dry",
-//     location_id: 1,
-//     status: 1,
-//     created_at: "2024-12-05T00:05:06.000000Z",
-//     updated_at: "2024-12-05T00:05:06.000000Z",
-//     location: {
-//       id: 1,
-//       code: "IRDS",
-//       address: "Læssøesgade 53, 8000 Aarhus C",
-//       latitude: "56.1473380",
-//       longitude: "10.1911860",
-//       created_at: "2024-12-04T23:59:26.000000Z",
-//       updated_at: "2024-12-04T23:59:26.000000Z",
-//     },
-//   },
-//   {
-//     id: 2,
-//     type: "wash",
-//     location_id: 1,
-//     status: 1,
-//     created_at: "2024-12-05T00:05:09.000000Z",
-//     updated_at: "2024-12-05T00:05:09.000000Z",
-//     location: {
-//       id: 1,
-//       code: "IRDS",
-//       address: "Læssøesgade 53, 8000 Aarhus C",
-//       latitude: "56.1473380",
-//       longitude: "10.1911860",
-//       created_at: "2024-12-04T23:59:26.000000Z",
-//       updated_at: "2024-12-04T23:59:26.000000Z",
-//     },
-//   },
-// ];
 
 export default function BookingModal() {
   const router = useRouter();
