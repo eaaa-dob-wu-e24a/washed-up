@@ -9,9 +9,15 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
-import { Schedule } from "~/types";
+import { Machine, Schedule } from "~/types";
 
-export default function ScheduleCard({ data }: { data: Schedule }) {
+export default function ScheduleCard({
+  data,
+  machine,
+}: {
+  data: Schedule;
+  machine: Machine;
+}) {
   const startTime = new Date(data.start_time);
   const endTime = new Date(data.end_time);
 
@@ -54,8 +60,8 @@ export default function ScheduleCard({ data }: { data: Schedule }) {
     <>
       <Card className="w-72 shadow shadow-slate-400 ios:shadow-black/5">
         <CardHeader>
-          <CardTitle>Washer</CardTitle>
-          <CardDescription>Machine #{data.machine_id}</CardDescription>
+          <CardTitle>{machine?.type === "dry" ? "Dryer" : "Washer"}</CardTitle>
+          <CardDescription>Machine #{machine?.id}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2 pl-5">
           <View className="flex flex-row">

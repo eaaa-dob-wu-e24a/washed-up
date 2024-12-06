@@ -80,9 +80,18 @@ export default function Dashboard() {
             showsHorizontalScrollIndicator={false}
           >
             <View className="px-6 flex flex-row gap-4 pb-4">
-              {schedule?.map((schedule) => (
-                <ScheduleCard key={schedule.id} data={schedule} />
-              ))}
+              {schedule?.map((schedule) => {
+                const machine = machines.find(
+                  (m) => m.id === schedule.machine_id
+                );
+                return machine ? (
+                  <ScheduleCard
+                    key={schedule.id}
+                    data={schedule}
+                    machine={machine}
+                  />
+                ) : null;
+              })}
             </View>
           </ScrollView>
         ) : (
