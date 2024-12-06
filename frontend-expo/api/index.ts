@@ -27,6 +27,7 @@ export class Api extends ApiBase {
   public getLocation;
   public getLocationByCode;
   public getMachines;
+  public getMachineByCode;
   public getSchedules;
   public getScheduleById;
   public setSchedule;
@@ -59,6 +60,7 @@ export class Api extends ApiBase {
     this.getLocation = this.locationApi.getLocation;
     this.getLocationByCode = this.locationApi.getLocationByCode;
     this.getMachines = this.machineApi.getMachines;
+    this.getMachineByCode = this.machineApi.getMachineByCode;
     this.getSchedules = this.scheduleApi.getSchedules;
     this.getScheduleById = this.scheduleApi.getScheduleById;
     this.setSchedule = this.scheduleApi.setSchedule;
