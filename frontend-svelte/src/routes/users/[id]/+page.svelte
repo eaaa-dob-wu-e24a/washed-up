@@ -3,6 +3,8 @@
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
+	import { Loader2 } from 'lucide-svelte';
+	import { enhance } from '$app/forms';
 
 	let { data } = $props();
 	const { user } = data;
@@ -24,7 +26,8 @@
 	};
 
 	const now = new Date();
-	const sortedSchedules = $derived(
+
+	let sortedSchedules = $state(
 		[...(user?.schedules || [])].sort(
 			(a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
 		)
@@ -37,16 +40,20 @@
 	);
 
 	const upcomingSessions = $derived(
-		sortedSchedules
-			.filter((schedule) => new Date(schedule.start_time) > now)
-			.sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
+		sortedSchedules.filter((schedule) => new Date(schedule.start_time) > now)
 	);
 
 	const pastSessions = $derived(
-		sortedSchedules
-			.filter((schedule) => new Date(schedule.end_time) <= now)
-			.sort((a, b) => new Date(b.start_time).getTime() - new Date(a.start_time).getTime())
+		sortedSchedules.filter((schedule) => new Date(schedule.end_time) <= now)
 	);
+
+	let formLoading: {
+		loading: boolean;
+		id: string | null;
+	} = $state({
+		loading: false,
+		id: null
+	});
 </script>
 
 <div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
@@ -104,7 +111,38 @@
 								})}
 							</p>
 						</div>
-						<Button variant="outline" size="sm">Cancel</Button>
+						<form
+							method="POST"
+							action="?/cancel"
+							use:enhance={() => {
+								formLoading = {
+									loading: true,
+									id: schedule.id.toString()
+								};
+								return async ({ update }) => {
+									await update();
+									formLoading = {
+										loading: false,
+										id: null
+									};
+									sortedSchedules = sortedSchedules.filter((s) => s.id !== schedule.id);
+								};
+							}}
+						>
+							<input type="hidden" name="id" value={schedule.id} />
+							<Button
+								variant="outline"
+								type="submit"
+								size="sm"
+								disabled={formLoading.loading && formLoading.id === schedule.id.toString()}
+							>
+								{#if formLoading.loading && formLoading.id === schedule.id.toString()}
+									<Loader2 class="h-4 w-4 animate-spin" />
+								{:else}
+									Cancel
+								{/if}
+							</Button>
+						</form>
 					</div>
 				{/each}
 			</div>
@@ -130,7 +168,38 @@
 								})}
 							</p>
 						</div>
-						<Button variant="outline" size="sm">Cancel</Button>
+						<form
+							method="POST"
+							action="?/cancel"
+							use:enhance={() => {
+								formLoading = {
+									loading: true,
+									id: schedule.id.toString()
+								};
+								return async ({ update }) => {
+									await update();
+									formLoading = {
+										loading: false,
+										id: null
+									};
+									sortedSchedules = sortedSchedules.filter((s) => s.id !== schedule.id);
+								};
+							}}
+						>
+							<input type="hidden" name="id" value={schedule.id} />
+							<Button
+								variant="outline"
+								type="submit"
+								size="sm"
+								disabled={formLoading.loading && formLoading.id === schedule.id.toString()}
+							>
+								{#if formLoading.loading && formLoading.id === schedule.id.toString()}
+									<Loader2 class="h-4 w-4 animate-spin" />
+								{:else}
+									Cancel
+								{/if}
+							</Button>
+						</form>
 					</div>
 				{/each}
 			</div>
