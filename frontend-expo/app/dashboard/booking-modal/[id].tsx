@@ -191,20 +191,20 @@ export default function BookingModal() {
 
     return (
       <ScrollView key={index} className="relative">
-        {isCurrentTime && (
-          <View
-            className="absolute left-0 right-0 bg-primary"
-            style={{
-              top: `${currentMinutesPercentage}%`,
-              height: 2,
-            }}
-          />
-        )}
         <View
           className={`flex-row ${isEvent ? "bg-secondary" : ""} ${
             isPastTime ? "bg-secondary" : ""
           }`}
         >
+          {isCurrentTime && (
+            <View
+              className="absolute left-0 right-0 bg-primary"
+              style={{
+                top: `${currentMinutesPercentage}%`,
+                height: 2,
+              }}
+            />
+          )}
           <Text className="w-[15%] text-center p-2">{hour}</Text>
           <Separator orientation={"vertical"} />
 
@@ -256,12 +256,12 @@ export default function BookingModal() {
           <Text className="text-center">Selected date: {selectedDate}</Text>
           {renderHours}
         </ScrollView>
+        {isBooking && (
+          <Button className="flex-col self-center" onPress={handleBookNow}>
+            <Text>Book now</Text>
+          </Button>
+        )}
       </SafeAreaView>
-      {isBooking && (
-        <Button className="flex-col self-center" onPress={handleBookNow}>
-          <Text>Book now</Text>
-        </Button>
-      )}
     </>
   );
 }
