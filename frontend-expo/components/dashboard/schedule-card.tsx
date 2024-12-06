@@ -21,7 +21,7 @@ export default function ScheduleCard({
   const startTime = new Date(data.start_time);
   const endTime = new Date(data.end_time);
 
-  if (startTime.getTime() <= Date.now()) {
+  if (endTime.getTime() <= Date.now()) {
     return null;
   }
 

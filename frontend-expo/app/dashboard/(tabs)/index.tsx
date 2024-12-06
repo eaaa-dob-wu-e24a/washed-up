@@ -30,9 +30,12 @@ export default function Dashboard() {
 
     const machine_data = await api.getMachines();
     const schedule_data = await api.getSchedules();
-    const filtered_schedule_data = schedule_data.filter(
-      (schedule) => schedule.user_id === user_id
-    );
+    const filtered_schedule_data = schedule_data
+      .filter((schedule) => schedule.user_id === user_id)
+      .sort(
+        (a, b) =>
+          new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
+      );
 
     setMachines(machine_data);
     setSchedule(filtered_schedule_data);
