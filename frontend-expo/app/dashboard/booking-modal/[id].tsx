@@ -238,33 +238,33 @@ export default function BookingModal() {
 
   return (
     <>
-      <SafeAreaView className="p-6 sm:max-w-[425px] max-h-[90%]">
-        <Heading title={`Details`} subtitle={`Machine #${events[0]?.id} `} />
-        <Calendar
-          calendarActiveDateRanges={[
-            {
-              startId: selectedDate,
-              endId: selectedDate,
-            },
-          ]}
-          calendarMonthId={today}
-          calendarFirstDayOfWeek={"monday"}
-          calendarDayHeight={30}
-          onCalendarDayPress={setSelectedDate}
-        />
-        <Text className="text-center">Selected date: {selectedDate}</Text>
-        <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <SafeAreaView className="p-6 sm:max-w-[425px]">
+          <Heading title={`Details`} subtitle={`Machine #${events[0]?.id} `} />
+          <Calendar
+            calendarActiveDateRanges={[
+              {
+                startId: selectedDate,
+                endId: selectedDate,
+              },
+            ]}
+            calendarMonthId={today}
+            calendarFirstDayOfWeek={"monday"}
+            calendarDayHeight={30}
+            onCalendarDayPress={setSelectedDate}
+          />
+          <Text className="text-center">Selected date: {selectedDate}</Text>
           {renderHours}
-        </ScrollView>
-      </SafeAreaView>
-      {isBooking && (
-        <Button
-          className="flex-col self-center w-fit mx-6"
-          onPress={handleBookNow}
-        >
-          <Text>Book now</Text>
-        </Button>
-      )}
+          {isBooking && (
+            <Button
+              className="flex-col mt-4 self-center w-fit mx-6"
+              onPress={handleBookNow}
+            >
+              <Text>Book now</Text>
+            </Button>
+          )}
+        </SafeAreaView>
+      </ScrollView>
     </>
   );
 }
