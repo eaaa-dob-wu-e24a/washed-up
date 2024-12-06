@@ -1,6 +1,7 @@
 import { useUser } from "@clerk/clerk-expo";
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import { useLocalSearchParams } from "expo-router";
+import { Check } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -13,6 +14,42 @@ import { Text } from "~/components/ui/text";
 import { Machine, Schedule } from "~/types";
 
 const today = toDateId(new Date());
+// const data = [
+//   {
+//     id: 1,
+//     type: "dry",
+//     location_id: 1,
+//     status: 1,
+//     created_at: "2024-12-05T00:05:06.000000Z",
+//     updated_at: "2024-12-05T00:05:06.000000Z",
+//     location: {
+//       id: 1,
+//       code: "IRDS",
+//       address: "Læssøesgade 53, 8000 Aarhus C",
+//       latitude: "56.1473380",
+//       longitude: "10.1911860",
+//       created_at: "2024-12-04T23:59:26.000000Z",
+//       updated_at: "2024-12-04T23:59:26.000000Z",
+//     },
+//   },
+//   {
+//     id: 2,
+//     type: "wash",
+//     location_id: 1,
+//     status: 1,
+//     created_at: "2024-12-05T00:05:09.000000Z",
+//     updated_at: "2024-12-05T00:05:09.000000Z",
+//     location: {
+//       id: 1,
+//       code: "IRDS",
+//       address: "Læssøesgade 53, 8000 Aarhus C",
+//       latitude: "56.1473380",
+//       longitude: "10.1911860",
+//       created_at: "2024-12-04T23:59:26.000000Z",
+//       updated_at: "2024-12-04T23:59:26.000000Z",
+//     },
+//   },
+// ];
 
 export default function BookingModal() {
   // const router = useRouter();
@@ -25,9 +62,8 @@ export default function BookingModal() {
     return;
   }
 
-  const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(today);
-  const [machines, setMachines] = useState<Machine[]>([]);
+  const [data, setMachines] = useState<Machine[]>([]);
   const [events, setEvents] = useState<Schedule[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isBooking, setIsBooking] = useState(false);
@@ -38,14 +74,17 @@ export default function BookingModal() {
   const currentMinutesPercentage = Math.round((currentMinutes / 60) * 100);
 
   const hours = Array.from({ length: 16 }, (_, i) => `${i + 8}:00`);
-  const rentalTime = data.type === "dry" ? 0 : data.type === "wash" ? 2 : 0;
+  const rentalTimes = data.map((item) => (item.type === "wash" ? 2 : 0));
 
   const api = new Api(token);
 
   async function getData() {
     const machine_data = await api.getMachines();
     const schedule_data = await api.getScheduleById(Number(id));
-    setMachines(machine_data);
+    const filteredMachines = machine_data.filter(
+      (machine) => machine.id === Number(id)
+    );
+    setMachines(filteredMachines);
     setEvents(schedule_data);
   }
   getData();
@@ -64,7 +103,7 @@ export default function BookingModal() {
 
   const handleBookingPress = (hour: number) => {
     const startHour = hour;
-    const endHour = hour + rentalTime;
+    const endHour = hour + Math.max(...rentalTimes);
     const newBookedHours = [];
     for (let i = startHour; i <= endHour; i++) {
       newBookedHours.push(i);
@@ -94,15 +133,17 @@ export default function BookingModal() {
 
     const api = new Api(token);
 
-    const bookingData = {
-      machine_type: data.type,
-      machine_id: data.id,
+    const bookingData = data.map((item) => ({
+      machine_type: item.type,
+      machine_id: item.id,
       start_time: startTime.toISOString().replace("T", " ").substring(0, 19),
       end_time: endTime.toISOString().replace("T", " ").substring(0, 19),
-    };
+    }));
 
     try {
-      const output = await api.setSchedule(bookingData);
+      const output = await Promise.all(
+        bookingData.map((data) => api.setSchedule(data))
+      );
       console.log(output);
     } catch (error) {
       console.error("Error setting schedule:", error);
@@ -141,11 +182,12 @@ export default function BookingModal() {
         const currentHour = hourNumber;
 
         return (
-          currentHour >= eventStart - rentalTime && currentHour < eventStart
+          currentHour >= eventStart - Math.max(...rentalTimes) &&
+          currentHour < eventStart
         );
       });
 
-    const isLastHours = index >= hours.length - rentalTime;
+    const isLastHours = index >= hours.length - Math.max(...rentalTimes);
 
     const isBooked = bookedHours.includes(hourNumber);
 
@@ -163,12 +205,22 @@ export default function BookingModal() {
         <View
           className={`flex-row ${isEvent ? "bg-secondary" : ""} ${
             isPastTime ? "bg-secondary" : ""
-          } ${isBooked ? "border border-primary" : ""}`}
+          }`}
         >
           <Text className="w-[15%] text-center p-2">{hour}</Text>
           <Separator orientation={"vertical"} />
 
-          <Text className="p-2">{isEvent ? "This time is reserved" : ""}</Text>
+          <Text className="p-2">
+            {isEvent ? (
+              "This time is reserved"
+            ) : isBooked ? (
+              <>
+                <Check color={"#479e96"} size={20} />
+              </>
+            ) : (
+              ""
+            )}
+          </Text>
           {!isPastTime &&
             !isEvent &&
             !isWithinTwoHoursBeforeEvent &&
@@ -204,8 +256,7 @@ export default function BookingModal() {
             onCalendarDayPress={setSelectedDate}
           />
           <Text className="text-center">Selected date: {selectedDate}</Text>
-
-          {loading ? <Text>Loading...</Text> : <>{renderHours}</>}
+          {renderHours}
         </ScrollView>
       </SafeAreaView>
       {isBooking && (
