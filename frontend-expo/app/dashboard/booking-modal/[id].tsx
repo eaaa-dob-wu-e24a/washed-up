@@ -240,28 +240,31 @@ export default function BookingModal() {
     <>
       <SafeAreaView className="p-6 sm:max-w-[425px] max-h-[90%]">
         <Heading title={`Details`} subtitle={`Machine #${events[0]?.id} `} />
-        <ScrollView>
-          <Calendar
-            calendarActiveDateRanges={[
-              {
-                startId: selectedDate,
-                endId: selectedDate,
-              },
-            ]}
-            calendarMonthId={today}
-            calendarFirstDayOfWeek={"monday"}
-            calendarDayHeight={30}
-            onCalendarDayPress={setSelectedDate}
-          />
-          <Text className="text-center">Selected date: {selectedDate}</Text>
+        <Calendar
+          calendarActiveDateRanges={[
+            {
+              startId: selectedDate,
+              endId: selectedDate,
+            },
+          ]}
+          calendarMonthId={today}
+          calendarFirstDayOfWeek={"monday"}
+          calendarDayHeight={30}
+          onCalendarDayPress={setSelectedDate}
+        />
+        <Text className="text-center">Selected date: {selectedDate}</Text>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {renderHours}
         </ScrollView>
-        {isBooking && (
-          <Button className="flex-col self-center" onPress={handleBookNow}>
-            <Text>Book now</Text>
-          </Button>
-        )}
       </SafeAreaView>
+      {isBooking && (
+        <Button
+          className="flex-col self-center w-fit mx-6"
+          onPress={handleBookNow}
+        >
+          <Text>Book now</Text>
+        </Button>
+      )}
     </>
   );
 }
