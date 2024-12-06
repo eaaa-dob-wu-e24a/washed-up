@@ -7,7 +7,7 @@ const Layout = () => {
         name="[id]"
         options={{
           presentation: "modal",
-          title: "Buy Credits",
+          title: "Booking Details",
           headerShown: false,
         }}
       />
