@@ -68,9 +68,5 @@
 	<Sidebar.Content>
 		<NavMain items={data.navMain} />
 	</Sidebar.Content>
-	<Sidebar.Footer>
-		<Sidebar.GroupLabel>Your Location</Sidebar.GroupLabel>
-		<p class="text-muted-foreground px-2 pb-2 text-sm">{location.address}</p>
-	</Sidebar.Footer>
 	<Sidebar.Rail />
 </Sidebar.Root>

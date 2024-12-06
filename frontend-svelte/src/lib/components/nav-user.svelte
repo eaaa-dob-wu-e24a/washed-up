@@ -2,11 +2,13 @@
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import LogOut from 'lucide-svelte/icons/log-out';
 
+	import { goto } from '$app/navigation';
 	import * as Avatar from '$lib/components/ui/avatar/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { useSidebar } from '$lib/components/ui/sidebar/index.js';
 	import { signOut } from '@auth/sveltekit/client';
+	import { MapPin } from 'lucide-svelte';
 
 	let { user }: { user: { name: string; email: string; avatar: string } } = $props();
 	const sidebar = useSidebar();
@@ -55,6 +57,10 @@
 					</div>
 				</DropdownMenu.Label>
 
+				<DropdownMenu.Item onclick={() => goto('/location')}>
+					<MapPin />
+					Location
+				</DropdownMenu.Item>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item onclick={() => signOut()}>
 					<LogOut />

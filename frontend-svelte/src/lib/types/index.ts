@@ -56,3 +56,14 @@ export type User = {
 	updated_at: string;
 	location_id: number;
 };
+
+export type ExtendedUser = User & {
+	credits: {
+		id: number;
+		created_at: string;
+		updated_at: string;
+		user_id: number;
+		amount: number;
+	};
+	schedules: Schedule[];
+};
