@@ -26,7 +26,7 @@
 	const now = new Date();
 	const sortedSchedules = $derived(
 		[...(user?.schedules || [])].sort(
-			(a, b) => new Date(b.start_time).getTime() - new Date(a.start_time).getTime()
+			(a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
 		)
 	);
 
@@ -37,10 +37,15 @@
 	);
 
 	const upcomingSessions = $derived(
-		sortedSchedules.filter((schedule) => new Date(schedule.start_time) > now)
+		sortedSchedules
+			.filter((schedule) => new Date(schedule.start_time) > now)
+			.sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime())
 	);
+
 	const pastSessions = $derived(
-		sortedSchedules.filter((schedule) => new Date(schedule.start_time) <= now)
+		sortedSchedules
+			.filter((schedule) => new Date(schedule.end_time) <= now)
+			.sort((a, b) => new Date(b.start_time).getTime() - new Date(a.start_time).getTime())
 	);
 </script>
 

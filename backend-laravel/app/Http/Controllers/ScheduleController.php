@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Credits;
 use App\Models\CreditUsage;
+use App\Models\Machine;
 use Illuminate\Http\Request;
 use App\Models\Schedule;
 use Illuminate\Support\Facades\Auth;
@@ -53,6 +54,7 @@ class ScheduleController extends Controller
             'machine_type' => $request->machine_type,
             'duration_minutes' => $duration,
             'cost_credits' => $duration_in_hours,
+            'type' => 'purchase',
             'balance_after' => $credits->amount - ($duration_in_hours),
         ]);
 
@@ -76,7 +78,33 @@ class ScheduleController extends Controller
 
     public function destroy($id)
     {
-        Schedule::destroy($id);
+        $schedule = Schedule::findOrFail($id);
+        $machine = Machine::findOrFail($schedule->machine_id);
+        $duration = (strtotime($schedule->end_time) - strtotime($schedule->start_time)) / 60;
+        $duration_in_hours = $duration / 60;
+
+        $user = Auth::user();
+        $credits = Credits::where('user_id', $user->id)->first();
+
+        // Create credit usage record for refund
+        CreditUsage::create([
+            'user_id' => $user->id,
+            'machine_id' => $schedule->machine_id,
+            'machine_type' => $machine->type,
+            'duration_minutes' => $duration,
+            'cost_credits' => $duration_in_hours,
+            'type' => 'refund',
+            'balance_after' => $credits->amount + $duration_in_hours,
+        ]);
+
+        // Update user's credits
+        Credits::where('user_id', $user->id)->update([
+            'amount' => $credits->amount + $duration_in_hours,
+        ]);
+
+        // Delete the schedule
+        $schedule->delete();
+
         return response()->json(null, 204);
     }
 
