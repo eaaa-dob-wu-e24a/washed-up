@@ -3,6 +3,7 @@ import { Text } from "../ui/text";
 import { CreditPurchase, CreditUsage } from "~/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useState } from "react";
+import { cn } from "~/lib/utils";
 
 export default function Transactions({
   creditPurchases,
@@ -53,7 +54,15 @@ function UsageTransactions({ creditUsages }: { creditUsages: CreditUsage[] }) {
               {usage.machine_type === "wash" ? "Washer" : "Dryer"} #
               {usage.machine_id}
             </Text>
-            <Text className="text-red-600">-{usage.cost_credits} credits</Text>
+            <Text
+              className={cn(
+                "text-red-600",
+                usage.type === "refund" && "text-green-600"
+              )}
+            >
+              {usage.type === "refund" ? "+" : "-"}
+              {usage.cost_credits} credits
+            </Text>
           </View>
           <View className="flex-row justify-between">
             <Text className="text-gray-600">

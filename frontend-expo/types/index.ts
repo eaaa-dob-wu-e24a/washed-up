@@ -85,6 +85,7 @@ export type CreditUsage = {
   balance_after: string;
   created_at: string;
   updated_at: string;
+  type: "purchase" | "refund";
 };
 
 export type CreditPurchase = {
