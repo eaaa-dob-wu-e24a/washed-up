@@ -116,7 +116,7 @@ export default function BookingModal() {
         bookingData.map((data) => api.setSchedule(data))
       );
       console.log(output);
-      router.back();
+      router.replace("/");
     } catch (error) {
       console.error("Error setting schedule:", error);
     }
