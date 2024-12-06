@@ -16,6 +16,7 @@ export default function Dashboard() {
   const { user } = useUser();
   const [machines, setMachines] = useState<Machine[]>([]);
   const [schedule, setSchedule] = useState<Schedule[]>([]);
+  const [unfilteredSchedule, setUnfilteredSchedule] = useState<Schedule[]>([]);
   const [selectedBadge, setSelectedBadge] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
 
@@ -25,8 +26,6 @@ export default function Dashboard() {
     const api = new Api(token);
 
     const user_id = (await api.getUser())[0].id;
-
-    console.log(user_id);
 
     const machine_data = await api.getMachines();
     const schedule_data = await api.getSchedules();
@@ -39,6 +38,7 @@ export default function Dashboard() {
 
     setMachines(machine_data);
     setSchedule(filtered_schedule_data);
+    setUnfilteredSchedule(schedule_data);
   }
 
   useEffect(() => {
@@ -87,13 +87,13 @@ export default function Dashboard() {
                 const machine = machines.find(
                   (m) => m.id === schedule.machine_id
                 );
-                return machine ? (
+                return (
                   <ScheduleCard
                     key={schedule.id}
                     data={schedule}
-                    machine={machine}
+                    machine={machine as Machine}
                   />
-                ) : null;
+                );
               })}
             </View>
           </ScrollView>
@@ -130,9 +130,18 @@ export default function Dashboard() {
               ?.filter((a) =>
                 selectedBadge === "all" ? true : a.type === selectedBadge
               )
-              .map((machine) => (
-                <MachineCard key={machine.id} data={machine} />
-              ))}
+              .map((machine) => {
+                const scheduleItem = unfilteredSchedule.find(
+                  (s) => s.machine_id === machine.id
+                );
+                return (
+                  <MachineCard
+                    key={machine.id}
+                    data={machine}
+                    schedule={scheduleItem as Schedule}
+                  />
+                );
+              })}
           </View>
         ) : (
           <Text>Your location has no machines!</Text>

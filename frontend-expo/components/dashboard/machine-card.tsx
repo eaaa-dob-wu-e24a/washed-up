@@ -7,9 +7,24 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
-import { Machine } from "~/types";
+import { Machine, Schedule } from "~/types";
 
-export default function MachineCard({ data }: { data: Machine }) {
+export default function MachineCard({
+  data,
+  schedule,
+}: {
+  data: Machine;
+  schedule: Schedule;
+}) {
+  const isInProgress = schedule
+    ? (() => {
+        const currentTime = new Date();
+        const startTime = new Date(schedule.start_time);
+        const endTime = new Date(schedule.end_time);
+        return currentTime >= startTime && currentTime <= endTime;
+      })()
+    : false;
+
   return (
     <>
       <Link href={`/dashboard/booking-modal/${data.id}`}>
@@ -23,15 +38,23 @@ export default function MachineCard({ data }: { data: Machine }) {
                   ? "Dryer"
                   : data.type}
               </CardTitle>
-              <CardDescription>#{data.id}</CardDescription>
+              <CardDescription>Machine #{data.id}</CardDescription>
             </View>
             <Text className="text-2xl mt-1">
               <Text
                 className={`text-2xl mt-1 ${
-                  data.status === 1 ? "text-primary" : "text-destructive"
+                  isInProgress
+                    ? "text-destructive"
+                    : data.status === 1
+                    ? "text-primary"
+                    : "text-destructive"
                 }`}
               >
-                {data.status === 1 ? "Available" : "Disabled"}
+                {isInProgress
+                  ? "In progress"
+                  : data.status === 1
+                  ? "Available"
+                  : "Disabled"}
               </Text>
             </Text>
           </CardHeader>

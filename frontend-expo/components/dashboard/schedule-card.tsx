@@ -44,7 +44,6 @@ export default function ScheduleCard({
 
   const hours = Math.floor(timeUntilStartInMinutes / 60);
   const minutes = timeUntilStartInMinutes % 60;
-  const timeUntilStart = `${hours}h ${minutes}m`;
 
   const getStatus = () => {
     const now = new Date();
