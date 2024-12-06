@@ -1,12 +1,9 @@
 <script lang="ts">
-	import type { PageData } from './$types';
-	import { Badge } from '@/components/ui/badge';
+	import Button from '@/components/ui/button/button.svelte';
 	import * as Card from '@/components/ui/card';
 	import { Printer } from 'lucide-svelte';
-	import Button from '@/components/ui/button/button.svelte';
 	// @ts-ignore
 	import QrCode from 'svelte-qrcode';
-	import { onMount } from 'svelte';
 
 	let { data } = $props();
 
@@ -16,7 +13,7 @@
 
 	let map: any;
 
-	onMount(() => {
+	$effect(() => {
 		// Initialize the map after component mounts
 		//@ts-ignore
 		const L = window.L;
