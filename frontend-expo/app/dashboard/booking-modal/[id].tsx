@@ -216,7 +216,13 @@ export default function BookingModal() {
         <SafeAreaView className="p-6 sm:max-w-[425px]">
           <Heading
             title={`Details`}
-            subtitle={loading ? undefined : `Machine #${events[0]?.id}`}
+            subtitle={
+              loading
+                ? undefined
+                : `You're now booking ${
+                    data[0]?.type === "dry" ? "Dryer" : "Washer"
+                  } #${data[0]?.id}`
+            }
           />
           {loading ? (
             <ActivityIndicator
