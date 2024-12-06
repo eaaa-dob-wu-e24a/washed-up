@@ -4,7 +4,10 @@ const Layout = () => {
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="booking-modal" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="booking-modal"
+        options={{ presentation: "modal", headerShown: false }}
+      />
       <Stack.Screen
         name="pay-modal"
         options={{
