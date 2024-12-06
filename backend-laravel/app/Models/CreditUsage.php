@@ -13,6 +13,7 @@ class CreditUsage extends Model
         'duration_minutes',
         'cost_credits',
         'balance_after',
+        'type',
     ];
 
     public function user()

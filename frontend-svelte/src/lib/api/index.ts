@@ -20,6 +20,8 @@ export class Api extends ApiBase {
   public updateMachine;
   public deleteMachine;
   public getUser;
+  public getUsers;
+  public getUserById;
 
   constructor(accessToken?: unknown) {
     // Running the ApiBase constructor
@@ -40,5 +42,7 @@ export class Api extends ApiBase {
     this.updateMachine = this.machineApi.updateMachine;
     this.deleteMachine = this.machineApi.deleteMachine;
     this.getUser = this.userApi.getUser;
+    this.getUsers = this.userApi.getUsers;
+    this.getUserById = this.userApi.getUserById;
   }
 }

@@ -161,7 +161,7 @@
 			<Card.Header>
 				<Card.Title>
 					<div class="flex items-center justify-between">
-						<span>QR Code - Machine</span>
+						<span>QR Code</span>
 
 						<Button
 							size="icon"
@@ -182,36 +182,6 @@
 								<span class="mt-4 text-xl font-medium text-gray-800"
 									>{data?.machine?.qr_code.code}</span
 								>
-							</div>
-						</div>
-					</div>
-				</div>
-			</Card.Content>
-		</Card.Root>
-
-		<Card.Root>
-			<Card.Header>
-				<Card.Title>
-					<div class="flex items-center justify-between">
-						<span>QR Code - Location</span>
-
-						<Button
-							size="icon"
-							variant="outline"
-							onclick={() => handlePrint('printable-qr-location')}
-						>
-							<Printer class="h-4 w-4" />
-						</Button>
-					</div>
-				</Card.Title>
-			</Card.Header>
-			<Card.Content>
-				<div>
-					<div class="flex flex-col items-center">
-						<div id="printable-qr-location">
-							<div class="flex flex-col items-center p-4">
-								<QrCode value={data?.location?.code} />
-								<span class="mt-4 text-xl font-medium text-gray-800">{data?.location?.code}</span>
 							</div>
 						</div>
 					</div>

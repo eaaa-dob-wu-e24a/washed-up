@@ -16,6 +16,7 @@ class CreateCreditUsagesTable extends Migration
             $table->integer('duration_minutes'); // Duration of machine usage
             $table->decimal('cost_credits', 10, 2); // Cost in credits
             $table->decimal('balance_after', 10, 2); // Balance after the transaction
+            $table->string('type')->default('purchase'); // Whether the transaction was a purchase or a refund
             $table->timestamps(); // Created and updated timestamps
         });
     }
