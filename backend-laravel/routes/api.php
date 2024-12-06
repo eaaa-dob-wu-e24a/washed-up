@@ -11,6 +11,7 @@ use App\Http\Controllers\CreditController;
 use App\Http\Controllers\CreditPurchaseController;
 use App\Http\Controllers\CreditUsageController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\StripeController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('validate', 'validate');
@@ -45,6 +46,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/credit-usages', [CreditUsageController::class, 'index']);
     Route::get('/credit-usages/{id}', [CreditUsageController::class, 'show']);
+
+    Route::post('/payment/init', [StripeController::class, 'initializePayment']);
 });
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
