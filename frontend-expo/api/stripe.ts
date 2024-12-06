@@ -8,6 +8,7 @@ export class StripeApi extends ApiBase {
     const response = await fetch(`${this.baseUrl}/api/payment/init`, {
       method: "POST",
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${this.accessToken}`,
       },
       body: JSON.stringify({

@@ -25,6 +25,7 @@ import {
 } from "@expo-google-fonts/poppins";
 import { PortalHost } from "@rn-primitives/portal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import StripeProvider from "~/components/stripe-provider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -132,23 +133,28 @@ export default function RootLayoutNav() {
 
   return (
     <>
-      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-        <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-          <ClerkLoaded>
-            <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                }}
-              >
-                <Stack.Screen name="index" />
-              </Stack>
-              <PortalHost />
-            </GestureHandlerRootView>
-          </ClerkLoaded>
-        </ClerkProvider>
-      </ThemeProvider>
+      <StripeProvider>
+        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+          <ClerkProvider
+            tokenCache={tokenCache}
+            publishableKey={publishableKey}
+          >
+            <ClerkLoaded>
+              <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+              <GestureHandlerRootView style={{ flex: 1 }}>
+                <Stack
+                  screenOptions={{
+                    headerShown: false,
+                  }}
+                >
+                  <Stack.Screen name="index" />
+                </Stack>
+                <PortalHost />
+              </GestureHandlerRootView>
+            </ClerkLoaded>
+          </ClerkProvider>
+        </ThemeProvider>
+      </StripeProvider>
     </>
   );
 }

@@ -21,31 +21,21 @@ export default function PayModal() {
   const router = useRouter();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
-  const fetchPaymentSheetParams = async () => {
-    const api = new Api(user?.publicMetadata.access_token);
-    const response = await api.createPaymentIntent({
-      amount: Number(credits) * 100,
-      currency: "DKK",
-    });
-
-    return {
-      paymentIntent: response.paymentIntent,
-      ephemeralKey: response.ephemeralKey,
-      customer: response.customer,
-    };
-  };
-
-  const initializePaymentSheet = async () => {
+  async function initializePaymentSheet() {
     setLoading(true);
     try {
-      const { paymentIntent, ephemeralKey, customer } =
-        await fetchPaymentSheetParams();
+      const api = new Api(user?.publicMetadata.access_token);
+
+      const data = await api.createPaymentIntent({
+        amount: Number(credits) * 1000,
+        currency: "DKK",
+      });
 
       const { error } = await initPaymentSheet({
         merchantDisplayName: "Your App Name",
-        customerId: customer,
-        customerEphemeralKeySecret: ephemeralKey,
-        paymentIntentClientSecret: paymentIntent,
+        customerId: data.customer,
+        customerEphemeralKeySecret: data.ephemeralKey,
+        paymentIntentClientSecret: data.paymentIntent,
         allowsDelayedPaymentMethods: true,
       });
 
@@ -58,28 +48,39 @@ export default function PayModal() {
       setError("Failed to initialize payment sheet");
     }
     setLoading(false);
-  };
+  }
 
-  const openPaymentSheet = async () => {
+  async function openPaymentSheet() {
     const { error } = await presentPaymentSheet();
+    const api = new Api(user?.publicMetadata.access_token);
 
     if (error) {
       Alert.alert(`Error code: ${error.code}`, error.message);
       setError(error.message);
     } else {
-      Alert.alert("Success", "Payment successful!");
-      router.back();
+      const result = await api.buyCredits({
+        amount: Number(credits),
+        price: price,
+        currency: "DKK",
+        payment_method: "card",
+      });
+
+      if (result === "success") {
+        router.back();
+      }
     }
-  };
+  }
 
   useEffect(() => {
-    initializePaymentSheet();
-  }, []);
+    if (credits !== "" && Number(credits) > 0) {
+      initializePaymentSheet();
+    }
+  }, [credits]);
 
-  const handlePayment = async () => {
+  async function handlePayment() {
     if (!credits || Number(credits) <= 0) return;
     await openPaymentSheet();
-  };
+  }
 
   return (
     <SafeAreaView className="flex-1">
