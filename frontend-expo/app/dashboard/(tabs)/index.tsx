@@ -7,8 +7,8 @@ import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Machine, Schedule } from "types";
 import Heading from "~/components/heading";
-import MachineCard from "~/components/machine-card";
-import ScheduleCard from "~/components/schedule-card";
+import MachineCard from "~/components/dashboard/machine-card";
+import ScheduleCard from "~/components/dashboard/schedule-card";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 

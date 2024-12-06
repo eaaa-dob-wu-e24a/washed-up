@@ -1,36 +1,33 @@
 import { useUser } from "@clerk/clerk-expo";
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "~/components/ui/dialog";
+import Heading from "~/components/heading";
+import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
 import { Text } from "~/components/ui/text";
 import { Machine, Schedule } from "~/types";
-import { Separator } from "./ui/separator";
-import { Button } from "./ui/button";
 
 const today = toDateId(new Date());
 
-export default function MachineCard({ data }: { data: Machine }) {
+export default function BookingModal() {
+  // const router = useRouter();
+  const { id } = useLocalSearchParams();
   const { user } = useUser();
+
+  const token = user?.publicMetadata?.access_token;
+  if (!token) {
+    console.error("No access token");
+    return;
+  }
+
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(today);
+  const [machines, setMachines] = useState<Machine[]>([]);
   const [events, setEvents] = useState<Schedule[]>([]);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isBooking, setIsBooking] = useState(false);
@@ -40,14 +37,23 @@ export default function MachineCard({ data }: { data: Machine }) {
   const currentMinutes = currentTime.getMinutes();
   const currentMinutesPercentage = Math.round((currentMinutes / 60) * 100);
 
-  const hours = Array.from({ length: 13 }, (_, i) => `${i + 8}:00`);
+  const hours = Array.from({ length: 16 }, (_, i) => `${i + 8}:00`);
   const rentalTime = data.type === "dry" ? 0 : data.type === "wash" ? 2 : 0;
+
+  const api = new Api(token);
+
+  async function getData() {
+    const machine_data = await api.getMachines();
+    const schedule_data = await api.getScheduleById(Number(id));
+    setMachines(machine_data);
+    setEvents(schedule_data);
+  }
+  getData();
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
-    }, 60000); // Update every minute
-
+    }, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -55,30 +61,6 @@ export default function MachineCard({ data }: { data: Machine }) {
     setBookedHours([]);
     setIsBooking(false);
   }, [selectedDate]);
-
-  async function handleMachinePress() {
-    setLoading(true);
-    if (events.length > 0) {
-      setEvents([]);
-      setBookedHours([]);
-    }
-
-    const token = user?.publicMetadata?.access_token;
-    if (!token) {
-      console.error("No access token");
-      setLoading(false);
-      return;
-    }
-    const api = new Api(token);
-
-    async function getData() {
-      const output = await api.getScheduleById(data.id);
-      setEvents(output);
-    }
-    getData();
-
-    setLoading(false);
-  }
 
   const handleBookingPress = (hour: number) => {
     const startHour = hour;
@@ -168,7 +150,7 @@ export default function MachineCard({ data }: { data: Machine }) {
     const isBooked = bookedHours.includes(hourNumber);
 
     return (
-      <View key={index} className="relative">
+      <ScrollView key={index} className="relative">
         {isCurrentTime && (
           <View
             className="absolute left-0 right-0 bg-primary"
@@ -200,98 +182,37 @@ export default function MachineCard({ data }: { data: Machine }) {
             )}
         </View>
         <Separator />
-      </View>
+      </ScrollView>
     );
   });
 
   return (
     <>
-      <Dialog>
-        {data.status === 1 ? (
-          <DialogTrigger onPress={handleMachinePress}>
-            <Card className="w-full shadow shadow-slate-400 ios:shadow-black/5">
-              <CardHeader className="flex-row justify-between">
-                <View>
-                  <CardTitle className="capitalize">
-                    {data.type === "wash"
-                      ? "Washer"
-                      : data.type === "dry"
-                      ? "Dryer"
-                      : data.type}
-                  </CardTitle>
-                  <CardDescription>#{data.id}</CardDescription>
-                </View>
-                <Text className="text-2xl mt-1">
-                  <Text
-                    className={`text-2xl mt-1 ${
-                      data.status === 1 ? "text-primary" : "text-destructive"
-                    }`}
-                  >
-                    {data.status === 1 ? "Available" : "Disabled"}
-                  </Text>
-                </Text>
-              </CardHeader>
-            </Card>
-          </DialogTrigger>
-        ) : (
-          <Card className="w-full shadow shadow-slate-400 ios:shadow-black/5">
-            <CardHeader className="flex-row justify-between">
-              <View>
-                <CardTitle className="capitalize">
-                  {data.type === "wash"
-                    ? "Washer"
-                    : data.type === "dry"
-                    ? "Dryer"
-                    : data.type}
-                </CardTitle>
-                <CardDescription>#{data.id}</CardDescription>
-              </View>
-              <Text className="text-2xl mt-1">
-                <Text className="text-2xl mt-1 text-destructive">Disabled</Text>
-              </Text>
-            </CardHeader>
-          </Card>
-        )}
-        {/* This is the dialog box */}
-        <DialogContent className="sm:max-w-[425px] max-h-[90%]">
-          <DialogHeader>
-            <DialogTitle>Details</DialogTitle>
-            <DialogDescription>
-              This is machine #{data.id} and it is a {data.type} machine.
-            </DialogDescription>
-          </DialogHeader>
-          <ScrollView>
-            <View className="gap-2">
-              <Calendar
-                calendarActiveDateRanges={[
-                  {
-                    startId: selectedDate,
-                    endId: selectedDate,
-                  },
-                ]}
-                calendarMonthId={today}
-                calendarFirstDayOfWeek={"monday"}
-                calendarDayHeight={30}
-                onCalendarDayPress={setSelectedDate}
-              />
-              <Text className="text-center">Selected date: {selectedDate}</Text>
+      <SafeAreaView className="p-6 sm:max-w-[425px] max-h-[90%]">
+        <Heading title={`Details`} subtitle={`Machine #${events[0]?.id} `} />
+        <ScrollView>
+          <Calendar
+            calendarActiveDateRanges={[
+              {
+                startId: selectedDate,
+                endId: selectedDate,
+              },
+            ]}
+            calendarMonthId={today}
+            calendarFirstDayOfWeek={"monday"}
+            calendarDayHeight={30}
+            onCalendarDayPress={setSelectedDate}
+          />
+          <Text className="text-center">Selected date: {selectedDate}</Text>
 
-              <View>
-                {loading ? <Text>Loading...</Text> : <>{renderHours}</>}
-              </View>
-            </View>
-          </ScrollView>
-          {isBooking && (
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button onPress={handleBookNow}>
-                  <Text>Book now</Text>
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          )}
-        </DialogContent>
-      </Dialog>
+          {loading ? <Text>Loading...</Text> : <>{renderHours}</>}
+        </ScrollView>
+      </SafeAreaView>
+      {isBooking && (
+        <Button className="flex-col self-center" onPress={handleBookNow}>
+          <Text>Book now</Text>
+        </Button>
+      )}
     </>
   );
 }
