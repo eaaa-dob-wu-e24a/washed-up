@@ -179,7 +179,7 @@ export default function BookingModal() {
               }}
             />
           )}
-          <Text className="w-[15%] text-center p-2">{hour}</Text>
+          <Text className="w-[20%] text-center p-2">{hour}</Text>
           <Separator orientation={"vertical"} />
 
           <Text className="p-2">
