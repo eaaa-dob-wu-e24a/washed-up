@@ -54,6 +54,31 @@ export default function ScheduleCard({
     return "Ready";
   };
 
+  const getTimeDisplay = () => {
+    const now = new Date();
+
+    if (now < startTime) {
+      // Time until start
+      const timeUntilStartInMinutes = Math.floor(
+        (startTime.getTime() - now.getTime()) / 1000 / 60
+      );
+      const hours = Math.floor(timeUntilStartInMinutes / 60);
+      const minutes = timeUntilStartInMinutes % 60;
+      return `Starts in: ${hours}h ${minutes}m`;
+    } else if (now <= endTime) {
+      // Time until end
+      const timeUntilEndInMinutes = Math.floor(
+        (endTime.getTime() - now.getTime()) / 1000 / 60
+      );
+      const hours = Math.floor(timeUntilEndInMinutes / 60);
+      const minutes = timeUntilEndInMinutes % 60;
+      return `Ends in: ${hours}h ${minutes}m`;
+    }
+    return "Completed";
+  };
+
+  const timeDisplay = getTimeDisplay();
+
   const status = getStatus();
 
   return (
@@ -76,7 +101,7 @@ export default function ScheduleCard({
         <CardFooter className="flex-row pl-5">
           <WashingMachine color={"#479e96"} size={40} />
           <View className="ml-2">
-            <Text>Starts in: {timeUntilStart}</Text>
+            <Text>{timeDisplay}</Text>
             <Text>
               Status:{" "}
               <Text
