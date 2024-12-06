@@ -130,14 +130,6 @@ export default function BookingModal() {
     console.log("UTC+1 Start Time:", startTime.toISOString());
     console.log("UTC+1 End Time:", endTime.toISOString());
 
-    const token = user?.publicMetadata?.access_token;
-    if (!token) {
-      console.error("No access token");
-      return;
-    }
-
-    const api = new Api(token);
-
     const bookingData = data.map((item) => ({
       machine_type: item.type,
       machine_id: item.id,
@@ -150,6 +142,7 @@ export default function BookingModal() {
         bookingData.map((data) => api.setSchedule(data))
       );
       console.log(output);
+      router.back();
     } catch (error) {
       console.error("Error setting schedule:", error);
     }
