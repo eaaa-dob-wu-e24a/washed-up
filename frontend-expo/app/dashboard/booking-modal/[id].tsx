@@ -247,18 +247,36 @@ export default function BookingModal() {
               />
               <Text className="text-center">Selected date: {selectedDate}</Text>
               {renderHours}
-              {isBooking && (
-                <Button
-                  className="flex-col mt-4 self-center w-fit mx-6"
-                  onPress={handleBookNow}
-                >
-                  <Text>Book now</Text>
-                </Button>
-              )}
             </>
           )}
         </SafeAreaView>
       </ScrollView>
+      {isBooking && (
+        <View className="bg-white p-6 rounded-t-3xl">
+          <Text className="text-xl font-bold mb-4">Confirm Booking</Text>
+          <Text className="mb-2">
+            {data[0]?.type === "dry" ? "Dryer" : "Washer"} #{data[0]?.id}
+          </Text>
+          <Text className="mb-2">Date: {selectedDate}</Text>
+          <Text className="mb-4">
+            Time: {bookedHours[0]}:00 -{" "}
+            {bookedHours[bookedHours.length - 1] + 1}:00
+          </Text>
+
+          <View className="flex-row justify-between gap-4">
+            <Button
+              variant="outline"
+              onPress={() => setIsBooking(false)}
+              className="flex-1"
+            >
+              <Text>Cancel</Text>
+            </Button>
+            <Button onPress={handleBookNow} className="flex-1">
+              <Text>Confirm Booking</Text>
+            </Button>
+          </View>
+        </View>
+      )}
     </>
   );
 }
