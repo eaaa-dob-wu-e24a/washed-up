@@ -42,9 +42,6 @@ export default function ScheduleCard({
     Math.floor((startTime.getTime() - Date.now()) / 1000 / 60)
   ); // in minutes
 
-  const hours = Math.floor(timeUntilStartInMinutes / 60);
-  const minutes = timeUntilStartInMinutes % 60;
-
   const getStatus = () => {
     const now = new Date();
     if (now >= startTime && now <= endTime) {

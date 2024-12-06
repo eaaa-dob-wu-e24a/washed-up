@@ -3,7 +3,7 @@ import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Check } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
@@ -31,6 +31,7 @@ export default function BookingModal() {
     return;
   }
 
+  const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(today);
   const [data, setMachines] = useState<Machine[]>([]);
   const [events, setEvents] = useState<Schedule[]>([]);
@@ -56,7 +57,16 @@ export default function BookingModal() {
     setMachines(filteredMachines);
     setEvents(schedule_data);
   }
-  getData();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      await getData();
+      setLoading(false);
+    };
+
+    fetchData();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -204,28 +214,42 @@ export default function BookingModal() {
     <>
       <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView className="p-6 sm:max-w-[425px]">
-          <Heading title={`Details`} subtitle={`Machine #${events[0]?.id} `} />
-          <Calendar
-            calendarActiveDateRanges={[
-              {
-                startId: selectedDate,
-                endId: selectedDate,
-              },
-            ]}
-            calendarMonthId={today}
-            calendarFirstDayOfWeek={"monday"}
-            calendarDayHeight={30}
-            onCalendarDayPress={setSelectedDate}
+          <Heading
+            title={`Details`}
+            subtitle={loading ? undefined : `Machine #${events[0]?.id}`}
           />
-          <Text className="text-center">Selected date: {selectedDate}</Text>
-          {renderHours}
-          {isBooking && (
-            <Button
-              className="flex-col mt-4 self-center w-fit mx-6"
-              onPress={handleBookNow}
-            >
-              <Text>Book now</Text>
-            </Button>
+          {loading ? (
+            <ActivityIndicator
+              animating={true}
+              size={64}
+              color="#479e96"
+              className="mt-48"
+            />
+          ) : (
+            <>
+              <Calendar
+                calendarActiveDateRanges={[
+                  {
+                    startId: selectedDate,
+                    endId: selectedDate,
+                  },
+                ]}
+                calendarMonthId={today}
+                calendarFirstDayOfWeek={"monday"}
+                calendarDayHeight={30}
+                onCalendarDayPress={setSelectedDate}
+              />
+              <Text className="text-center">Selected date: {selectedDate}</Text>
+              {renderHours}
+              {isBooking && (
+                <Button
+                  className="flex-col mt-4 self-center w-fit mx-6"
+                  onPress={handleBookNow}
+                >
+                  <Text>Book now</Text>
+                </Button>
+              )}
+            </>
           )}
         </SafeAreaView>
       </ScrollView>
