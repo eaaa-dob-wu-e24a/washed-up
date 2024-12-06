@@ -1,7 +1,7 @@
 import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { View } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Alert } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
@@ -10,32 +10,75 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
+import { useStripe } from "@stripe/stripe-react-native";
 
 export default function PayModal() {
-  const [credits, setCredits] = useState<string>("");
+  const [credits, setCredits] = useState<string>("10");
   const price = Number(credits) * 10;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user } = useUser();
   const router = useRouter();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
-  const handlePayment = async () => {
-    setLoading(true);
+  const fetchPaymentSheetParams = async () => {
     const api = new Api(user?.publicMetadata.access_token);
-
-    const result = await api.buyCredits({
-      amount: Number(credits),
-      price: price,
+    const response = await api.createPaymentIntent({
+      amount: Number(credits) * 100,
       currency: "DKK",
-      payment_method: "card",
     });
 
-    if (result === "success") {
-      router.back();
-    } else {
-      setError("Something went wrong");
+    return {
+      paymentIntent: response.paymentIntent,
+      ephemeralKey: response.ephemeralKey,
+      customer: response.customer,
+    };
+  };
+
+  const initializePaymentSheet = async () => {
+    setLoading(true);
+    try {
+      const { paymentIntent, ephemeralKey, customer } =
+        await fetchPaymentSheetParams();
+
+      const { error } = await initPaymentSheet({
+        merchantDisplayName: "Your App Name",
+        customerId: customer,
+        customerEphemeralKeySecret: ephemeralKey,
+        paymentIntentClientSecret: paymentIntent,
+        allowsDelayedPaymentMethods: true,
+      });
+
+      if (error) {
+        setError(error.message);
+      } else {
+        setLoading(true);
+      }
+    } catch (e) {
+      setError("Failed to initialize payment sheet");
     }
     setLoading(false);
+  };
+
+  const openPaymentSheet = async () => {
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      Alert.alert(`Error code: ${error.code}`, error.message);
+      setError(error.message);
+    } else {
+      Alert.alert("Success", "Payment successful!");
+      router.back();
+    }
+  };
+
+  useEffect(() => {
+    initializePaymentSheet();
+  }, []);
+
+  const handlePayment = async () => {
+    if (!credits || Number(credits) <= 0) return;
+    await openPaymentSheet();
   };
 
   return (

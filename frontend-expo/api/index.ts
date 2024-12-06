@@ -4,6 +4,7 @@ import { CreditsApi } from "./credits";
 import { LocationApi } from "./location";
 import { MachineApi } from "./machine";
 import { ScheduleApi } from "./schedule";
+import { StripeApi } from "./stripe";
 import { TransactionsApi } from "./transactions";
 import { UserApi } from "./user";
 
@@ -14,6 +15,7 @@ export class Api extends ApiBase {
   private locationApi: LocationApi;
   private machineApi: MachineApi;
   private scheduleApi: ScheduleApi;
+  private stripeApi: StripeApi;
   private transactionsApi: TransactionsApi;
   private userApi: UserApi;
 
@@ -31,6 +33,7 @@ export class Api extends ApiBase {
   public getSchedules;
   public getScheduleById;
   public setSchedule;
+  public createPaymentIntent;
   public getCreditPurchases;
   public getCreditPurchase;
   public getCreditUsages;
@@ -47,6 +50,7 @@ export class Api extends ApiBase {
     this.locationApi = new LocationApi(accessToken);
     this.machineApi = new MachineApi(accessToken);
     this.scheduleApi = new ScheduleApi(accessToken);
+    this.stripeApi = new StripeApi(accessToken);
     this.transactionsApi = new TransactionsApi(accessToken);
     this.userApi = new UserApi(accessToken);
 
@@ -64,6 +68,7 @@ export class Api extends ApiBase {
     this.getSchedules = this.scheduleApi.getSchedules;
     this.getScheduleById = this.scheduleApi.getScheduleById;
     this.setSchedule = this.scheduleApi.setSchedule;
+    this.createPaymentIntent = this.stripeApi.createPaymentIntent;
     this.getCreditPurchases = this.transactionsApi.getCreditPurchases;
     this.getCreditPurchase = this.transactionsApi.getCreditPurchase;
     this.getCreditUsages = this.transactionsApi.getCreditUsages;

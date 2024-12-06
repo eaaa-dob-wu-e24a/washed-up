@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Stripe\StripeClient;
 
 class StripeController extends Controller
@@ -9,7 +10,7 @@ class StripeController extends Controller
     /**
      * Initialize payment setup for Stripe
      */
-    public function initializePayment()
+    public function initializePayment(Request $request)
     {
         $stripe = new StripeClient(config('services.stripe.secret'));
 
@@ -25,8 +26,8 @@ class StripeController extends Controller
 
         // Create payment intent
         $paymentIntent = $stripe->paymentIntents->create([
-            'amount' => 1099,
-            'currency' => 'eur',
+            'amount' => $request->amount,
+            'currency' => $request->currency,
             'customer' => $customer->id,
             'automatic_payment_methods' => [
                 'enabled' => true,
