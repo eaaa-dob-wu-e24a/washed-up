@@ -116,7 +116,7 @@ export default function BookingModal() {
         bookingData.map((data) => api.setSchedule(data))
       );
       console.log(output);
-      router.back();
+      router.replace("/");
     } catch (error) {
       console.error("Error setting schedule:", error);
     }
@@ -179,7 +179,7 @@ export default function BookingModal() {
               }}
             />
           )}
-          <Text className="w-[15%] text-center p-2">{hour}</Text>
+          <Text className="w-[20%] text-center p-2">{hour}</Text>
           <Separator orientation={"vertical"} />
 
           <Text className="p-2">
