@@ -245,7 +245,10 @@ export default function BookingModal() {
                 calendarDayHeight={30}
                 onCalendarDayPress={setSelectedDate}
               />
-              <Text className="text-center">Selected date: {selectedDate}</Text>
+              <Text className="text-center pb-2">
+                Selected date: {selectedDate}
+              </Text>
+              <Separator />
               {renderHours}
             </>
           )}
