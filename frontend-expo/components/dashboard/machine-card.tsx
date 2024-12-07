@@ -27,9 +27,12 @@ export default function MachineCard({
 
   return (
     <>
-      <Link href={`/dashboard/booking-modal/${data.id}`}>
+      <Link
+        className="w-full block"
+        href={`/dashboard/booking-modal/${data.id}`}
+      >
         <Card className="w-full shadow shadow-slate-400 ios:shadow-black/5">
-          <CardHeader className="flex-row justify-between">
+          <CardHeader className="flex w-full gap-4 flex-row justify-between">
             <View>
               <CardTitle className="capitalize">
                 {data.type === "wash"

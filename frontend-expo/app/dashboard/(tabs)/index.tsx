@@ -125,7 +125,7 @@ export default function Dashboard() {
           </Button>
         </View>
         {machines ? (
-          <View className="gap-4 mb-20">
+          <View className="gap-4 mb-20 w-full">
             {machines
               ?.filter((a) =>
                 selectedBadge === "all" ? true : a.type === selectedBadge
