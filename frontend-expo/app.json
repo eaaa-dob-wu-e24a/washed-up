@@ -1,13 +1,12 @@
 {
   "expo": {
     "name": "Washed Up",
-    "slug": "washed-up",
+    "slug": "washedup",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -18,20 +17,31 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.fred9891.washedup"
     },
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.fred9891.washedup"
+      "package": "com.fred9891.washedup",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-router", "expo-font"],
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "color": "#ffffff",
+          "defaultChannel": "default",
+          "enableBackgroundRemoteNotifications": false
+        }
+      ]
+    ],
     "experiments": {
       "typedRoutes": true
     },
@@ -50,7 +60,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "1bccdb16-a434-44de-b395-b47ab68b1947"
+        "projectId": "8ff51ca6-6c0b-4dc8-89f8-4d3f6d1f68ce"
       }
     }
   }

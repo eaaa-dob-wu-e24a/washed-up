@@ -26,6 +26,33 @@ import {
 import { PortalHost } from "@rn-primitives/portal";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import StripeProvider from "~/components/stripe-provider";
+import { NotificationProvider } from "~/context/notification-context";
+import * as Notifications from "expo-notifications";
+import * as TaskManager from "expo-task-manager";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+const BACKGROUND_NOTIFICATION_TASK = "BACKGROUND-NOTIFICATION-TASK";
+
+TaskManager.defineTask(
+  BACKGROUND_NOTIFICATION_TASK,
+  async ({ data, error, executionInfo }) => {
+    console.log("✅ Received a notification in the background!", {
+      data,
+      error,
+      executionInfo,
+    });
+    // Do something with the notification data
+  }
+);
+
+Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
 
 SplashScreen.preventAutoHideAsync();
 
@@ -133,28 +160,30 @@ export default function RootLayoutNav() {
 
   return (
     <>
-      <StripeProvider>
-        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-          <ClerkProvider
-            tokenCache={tokenCache}
-            publishableKey={publishableKey}
-          >
-            <ClerkLoaded>
-              <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-              <GestureHandlerRootView style={{ flex: 1 }}>
-                <Stack
-                  screenOptions={{
-                    headerShown: false,
-                  }}
-                >
-                  <Stack.Screen name="index" />
-                </Stack>
-                <PortalHost />
-              </GestureHandlerRootView>
-            </ClerkLoaded>
-          </ClerkProvider>
-        </ThemeProvider>
-      </StripeProvider>
+      <NotificationProvider>
+        <StripeProvider>
+          <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+            <ClerkProvider
+              tokenCache={tokenCache}
+              publishableKey={publishableKey}
+            >
+              <ClerkLoaded>
+                <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                    }}
+                  >
+                    <Stack.Screen name="index" />
+                  </Stack>
+                  <PortalHost />
+                </GestureHandlerRootView>
+              </ClerkLoaded>
+            </ClerkProvider>
+          </ThemeProvider>
+        </StripeProvider>
+      </NotificationProvider>
     </>
   );
 }

@@ -2,10 +2,17 @@
   "type": "module",
   "scripts": {
     "update-api": "echo 'Updating API...' && node scripts/update-api-index.js",
-    "watch-api": "nodemon --verbose --watch ./frontend-expo/api --watch ./frontend-svelte/src/lib/api --ignore './frontend-expo/api/index.ts' --ignore './frontend-svelte/src/lib/api/index.ts' --ext ts,js,json --exec \"node scripts/update-api-index.js\""
+    "watch-api": "nodemon --verbose --watch ./frontend-expo/api --watch ./frontend-svelte/src/lib/api --ignore './frontend-expo/api/index.ts' --ignore './frontend-svelte/src/lib/api/index.ts' --ext ts,js,json --exec \"node scripts/update-api-index.js\"",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "dependencies": {
+    "expo": "^52.0.17",
     "nodemon": "^3.1.7",
-    "typescript": "^5.0.0"
-  }
+    "typescript": "^5.0.0",
+    "react": "18.3.1",
+    "react-native": "0.76.3"
+  },
+  "name": "final-project-fucc",
+  "version": "1.0.0"
 }

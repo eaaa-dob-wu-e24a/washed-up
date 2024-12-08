@@ -6,11 +6,12 @@ import { View } from "react-native";
 import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Machine, Schedule } from "types";
-import Heading from "~/components/heading";
 import MachineCard from "~/components/dashboard/machine-card";
 import ScheduleCard from "~/components/dashboard/schedule-card";
+import Heading from "~/components/heading";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
+import { useNotification } from "~/context/notification-context";
 
 export default function Dashboard() {
   const { user } = useUser();
@@ -19,6 +20,12 @@ export default function Dashboard() {
   const [unfilteredSchedule, setUnfilteredSchedule] = useState<Schedule[]>([]);
   const [selectedBadge, setSelectedBadge] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
+
+  const { notification, expoPushToken, error } = useNotification();
+
+  console.log(notification);
+  console.log(expoPushToken);
+  console.log(error);
 
   async function getData() {
     const token = user?.publicMetadata?.access_token;
