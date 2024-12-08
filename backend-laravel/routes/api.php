@@ -12,6 +12,7 @@ use App\Http\Controllers\CreditPurchaseController;
 use App\Http\Controllers\CreditUsageController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\ExpoTokenController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('validate', 'validate');
@@ -48,6 +49,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/credit-usages/{id}', [CreditUsageController::class, 'show']);
 
     Route::post('/payment/init', [StripeController::class, 'initializePayment']);
+    Route::post('/expo-token', [ExpoTokenController::class, 'store']);
+    Route::delete('/expo-token', [ExpoTokenController::class, 'destroy']);
 });
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {

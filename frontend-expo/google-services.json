@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "786479298022",
+    "project_id": "washed-up-expo",
+    "storage_bucket": "washed-up-expo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:786479298022:android:cbaa7176a75d0ae1929227",
+        "android_client_info": {
+          "package_name": "com.fred9891.washedup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQZUvqDGd9lEz_tolvGXy6ALMRaiHPIcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,11 +8,15 @@ import React, {
 } from "react";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotificationsAsync } from "~/utils/registerForPushNotificationsAsync";
+import { useUser } from "@clerk/clerk-expo";
+import { Api } from "~/api";
 
 interface NotificationContextType {
   expoPushToken: string | null;
   notification: Notifications.Notification | null;
   error: Error | null;
+  registerToken: (token: string) => Promise<boolean>;
+  removeToken: (token: string) => Promise<boolean>;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
@@ -36,6 +40,9 @@ interface NotificationProviderProps {
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   children,
 }) => {
+  const { user } = useUser();
+  const api = new Api(user?.publicMetadata.access_token);
+
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   const [notification, setNotification] =
     useState<Notifications.Notification | null>(null);
@@ -46,7 +53,19 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
   useEffect(() => {
     registerForPushNotificationsAsync().then(
-      (token) => setExpoPushToken(token),
+      async (token) => {
+        if (token) {
+          setExpoPushToken(token);
+          try {
+            const success = await api.registerToken(token);
+            if (!success) {
+              throw new Error("Failed to register token with server");
+            }
+          } catch (error) {
+            console.error("Failed to register token with server:", error);
+          }
+        }
+      },
       (error) => setError(error)
     );
 
@@ -80,7 +99,13 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
 
   return (
     <NotificationContext.Provider
-      value={{ expoPushToken, notification, error }}
+      value={{
+        expoPushToken,
+        notification,
+        error,
+        registerToken: api.registerToken,
+        removeToken: api.removeToken,
+      }}
     >
       {children}
     </NotificationContext.Provider>

@@ -160,14 +160,13 @@ export default function RootLayoutNav() {
 
   return (
     <>
-      <NotificationProvider>
-        <StripeProvider>
-          <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-            <ClerkProvider
-              tokenCache={tokenCache}
-              publishableKey={publishableKey}
-            >
-              <ClerkLoaded>
+      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+        <ClerkLoaded>
+          <NotificationProvider>
+            <StripeProvider>
+              <ThemeProvider
+                value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}
+              >
                 <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
                 <GestureHandlerRootView style={{ flex: 1 }}>
                   <Stack
@@ -179,11 +178,11 @@ export default function RootLayoutNav() {
                   </Stack>
                   <PortalHost />
                 </GestureHandlerRootView>
-              </ClerkLoaded>
-            </ClerkProvider>
-          </ThemeProvider>
-        </StripeProvider>
-      </NotificationProvider>
+              </ThemeProvider>
+            </StripeProvider>
+          </NotificationProvider>
+        </ClerkLoaded>
+      </ClerkProvider>
     </>
   );
 }

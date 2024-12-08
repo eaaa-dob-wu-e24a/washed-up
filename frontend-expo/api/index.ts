@@ -3,6 +3,7 @@ import { AuthApi } from "./auth";
 import { CreditsApi } from "./credits";
 import { LocationApi } from "./location";
 import { MachineApi } from "./machine";
+import { NotificationsApi } from "./notifications";
 import { ScheduleApi } from "./schedule";
 import { StripeApi } from "./stripe";
 import { TransactionsApi } from "./transactions";
@@ -14,6 +15,7 @@ export class Api extends ApiBase {
   private creditsApi: CreditsApi;
   private locationApi: LocationApi;
   private machineApi: MachineApi;
+  private notificationsApi: NotificationsApi;
   private scheduleApi: ScheduleApi;
   private stripeApi: StripeApi;
   private transactionsApi: TransactionsApi;
@@ -30,6 +32,8 @@ export class Api extends ApiBase {
   public getLocationByCode;
   public getMachines;
   public getMachineByCode;
+  public registerToken;
+  public removeToken;
   public getSchedules;
   public getScheduleById;
   public setSchedule;
@@ -49,6 +53,7 @@ export class Api extends ApiBase {
     this.creditsApi = new CreditsApi(accessToken);
     this.locationApi = new LocationApi(accessToken);
     this.machineApi = new MachineApi(accessToken);
+    this.notificationsApi = new NotificationsApi(accessToken);
     this.scheduleApi = new ScheduleApi(accessToken);
     this.stripeApi = new StripeApi(accessToken);
     this.transactionsApi = new TransactionsApi(accessToken);
@@ -65,6 +70,8 @@ export class Api extends ApiBase {
     this.getLocationByCode = this.locationApi.getLocationByCode;
     this.getMachines = this.machineApi.getMachines;
     this.getMachineByCode = this.machineApi.getMachineByCode;
+    this.registerToken = this.notificationsApi.registerToken;
+    this.removeToken = this.notificationsApi.removeToken;
     this.getSchedules = this.scheduleApi.getSchedules;
     this.getScheduleById = this.scheduleApi.getScheduleById;
     this.setSchedule = this.scheduleApi.setSchedule;
