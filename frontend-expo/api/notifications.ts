@@ -13,7 +13,9 @@ export class NotificationsApi extends ApiBase {
         body: JSON.stringify({ token }),
       });
 
-      return response.ok;
+      const data = await response.json();
+
+      return data;
     } catch (error) {
       console.error("Error registering token", error);
       return false;

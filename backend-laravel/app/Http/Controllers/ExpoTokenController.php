@@ -5,27 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use YieldStudio\LaravelExpoNotifier\Models\ExpoToken;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ExpoTokenController extends Controller
 {
     public function store(Request $request): JsonResponse
     {
+        $user = Auth::user();
         $request->validate([
             'token' => 'required|string'
         ]);
 
-        // Delete any existing tokens for this user (optional)
-        // Uncomment if you want only one token per user
-        // $request->user()->expoTokens()->delete();
-
         // Create or update the token
         ExpoToken::updateOrCreate(
             [
-                'user_id' => $request->user()->id,
+                'owner_id' => $request->user()->id,
+                'owner_type' => $user->role,
                 'value' => $request->token,
             ],
             [
-                'user_id' => $request->user()->id,
+                'owner_id' => $request->user()->id,
+                'owner_type' => $user->role,
                 'value' => $request->token,
             ]
         );
@@ -41,7 +41,7 @@ class ExpoTokenController extends Controller
             'token' => 'required|string'
         ]);
 
-        $request->user()->expoTokens()
+        ExpoToken::where('owner_id', $request->user()->id)
             ->where('value', $request->token)
             ->delete();
 

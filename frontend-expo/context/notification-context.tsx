@@ -58,6 +58,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           setExpoPushToken(token);
           try {
             const success = await api.registerToken(token);
+            console.log("🔔 Token registered with server:", success);
             if (!success) {
               throw new Error("Failed to register token with server");
             }
