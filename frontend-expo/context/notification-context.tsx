@@ -15,8 +15,6 @@ interface NotificationContextType {
   expoPushToken: string | null;
   notification: Notifications.Notification | null;
   error: Error | null;
-  registerToken: (token: string) => Promise<boolean>;
-  removeToken: (token: string) => Promise<boolean>;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
@@ -52,6 +50,8 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   const responseListener = useRef<Notifications.Subscription>();
 
   useEffect(() => {
+    if (!user) return;
+
     registerForPushNotificationsAsync().then(
       async (token) => {
         if (token) {
@@ -96,7 +96,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         Notifications.removeNotificationSubscription(responseListener.current);
       }
     };
-  }, []);
+  }, [user]);
 
   return (
     <NotificationContext.Provider
@@ -104,8 +104,6 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         expoPushToken,
         notification,
         error,
-        registerToken: api.registerToken,
-        removeToken: api.removeToken,
       }}
     >
       {children}

@@ -22,8 +22,14 @@ class NewSampleNotification extends Notification
 
     public function toExpoNotification($notifiable): ExpoMessage
     {
+        if (!$notifiable->expoTokens) {
+            throw new \Exception('User does not have an Expo token registered');
+        }
+
+        $token = $notifiable->expoTokens->value;
+
         return (new ExpoMessage())
-            ->to([$notifiable->expoTokens->value])
+            ->to([$token])
             ->title('A beautiful title')
             ->body('This is a content: ' . $this->customData)
             ->channelId('default');

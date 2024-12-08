@@ -24,6 +24,7 @@ export class NotificationsApi extends ApiBase {
 
   public async removeToken(token: string): Promise<boolean> {
     try {
+      console.log("Removing token", token);
       const response = await fetch(`${this.baseUrl}/api/expo-token`, {
         method: "DELETE",
         headers: {
@@ -33,7 +34,9 @@ export class NotificationsApi extends ApiBase {
         body: JSON.stringify({ token }),
       });
 
-      return response.ok;
+      const data = await response.json();
+      console.log("Token removed", data);
+      return data;
     } catch (error) {
       console.error("Error removing token", error);
       return false;

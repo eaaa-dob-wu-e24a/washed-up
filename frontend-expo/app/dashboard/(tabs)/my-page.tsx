@@ -18,6 +18,7 @@ import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import UserInfo from "~/components/my-page/user-info";
 import { Label } from "~/components/ui/label";
 import Transactions from "~/components/my-page/transactions";
+import { useNotification } from "~/context/notification-context";
 
 export default function MyPage() {
   const { signOut } = useAuth();
@@ -64,6 +65,8 @@ export default function MyPage() {
     }, [])
   );
 
+  const { expoPushToken } = useNotification();
+
   if (!user) {
     return <Redirect href={"/"} />;
   }
@@ -96,7 +99,13 @@ export default function MyPage() {
         <Button
           className="mt-16 mb-6"
           variant={"destructive"}
-          onPress={() => signOut()}
+          onPress={async () => {
+            if (expoPushToken) {
+              const api = new Api(user?.publicMetadata.access_token);
+              await api.removeToken(expoPushToken);
+            }
+            signOut();
+          }}
         >
           <Text>Sign Out</Text>
         </Button>
