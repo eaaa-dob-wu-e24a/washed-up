@@ -31,7 +31,9 @@ class TestExpoNotification extends Command
             return;
         }
 
-        $user->notify(new NewSampleNotification());
+        $user->notify(new NewSampleNotification(
+            "Hello, this is a test notification!"
+        ));
 
         $this->info('Notification sent to user ' . $userId);
     }

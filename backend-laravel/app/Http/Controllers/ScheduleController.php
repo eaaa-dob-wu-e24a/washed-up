@@ -7,7 +7,10 @@ use App\Models\CreditUsage;
 use App\Models\Machine;
 use Illuminate\Http\Request;
 use App\Models\Schedule;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\NewSampleNotification;
+
 
 class ScheduleController extends Controller
 {
@@ -104,6 +107,12 @@ class ScheduleController extends Controller
 
         // Delete the schedule
         $schedule->delete();
+
+        $user = User::find($user->id);
+
+        $user->notify(new NewSampleNotification(
+            "Your schedule has been deleted! You have been refunded " . $duration_in_hours . " credits."
+        ));
 
         return response()->json(null, 204);
     }

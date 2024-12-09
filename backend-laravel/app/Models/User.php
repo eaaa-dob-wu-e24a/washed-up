@@ -10,7 +10,7 @@ use YieldStudio\LaravelExpoNotifier\Models\ExpoToken;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
