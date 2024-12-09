@@ -8,12 +8,14 @@ use Illuminate\Console\Command;
 
 class TestExpoNotification extends Command
 {
-    protected $signature = 'notification:test {user_id?}';
+    protected $signature = 'notification:test {user_id?} {title?} {body?}';
     protected $description = 'Test Expo notification';
 
     public function handle()
     {
         $userId = $this->argument('user_id') ?? 1;
+        $title = $this->argument('title') ?? 'Test Notification';
+        $body = $this->argument('body') ?? 'This is a test notification';
 
         if (!$userId) {
             $this->error('User not found!');
@@ -32,7 +34,8 @@ class TestExpoNotification extends Command
         }
 
         $user->notify(new NewSampleNotification(
-            "Hello, this is a test notification!"
+            $title,
+            $body
         ));
 
         $this->info('Notification sent to user ' . $userId);
