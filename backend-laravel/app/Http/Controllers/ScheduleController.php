@@ -86,7 +86,7 @@ class ScheduleController extends Controller
         $duration = (strtotime($schedule->end_time) - strtotime($schedule->start_time)) / 60;
         $duration_in_hours = $duration / 60;
 
-        $user = Auth::user();
+        $user = User::find($schedule->user_id);
         $credits = Credits::where('user_id', $user->id)->first();
 
         // Create credit usage record for refund

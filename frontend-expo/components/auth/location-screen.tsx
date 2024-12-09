@@ -38,9 +38,11 @@ interface LocationScreenProps {
   contentInsets: { top: number; bottom: number; left: number; right: number };
   onUpdate: (field: keyof LocationFormData, value: string) => void;
   onNext: () => void;
+  isLoading: boolean;
 }
 
 export function LocationScreen({
+  isLoading,
   data,
   errors,
   locations,
@@ -89,8 +91,8 @@ export function LocationScreen({
         </Tabs>
       </View>
 
-      <Button size="high" onPress={onNext}>
-        <Text>Next step</Text>
+      <Button size="high" onPress={onNext} disabled={isLoading}>
+        <Text>{isLoading ? "Loading..." : "Next step"}</Text>
       </Button>
     </>
   );
@@ -176,13 +178,11 @@ function ManualLocationForm({
   contentInsets: { top: number; bottom: number; left: number; right: number };
 }) {
   const [location, setLocation] = useState<LocationObject | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     async function getCurrentLocation() {
       let { status } = await requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
         return;
       }
 

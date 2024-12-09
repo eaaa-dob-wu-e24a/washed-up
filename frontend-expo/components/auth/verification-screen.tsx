@@ -8,6 +8,7 @@ import { Text } from "~/components/ui/text";
 import { SignUpFormErrors } from "~/types";
 
 interface VerificationScreenProps {
+  isLoading: boolean;
   code: string;
   errors: SignUpFormErrors;
   onCodeChange: (code: string) => void;
@@ -15,6 +16,7 @@ interface VerificationScreenProps {
 }
 
 export function VerificationScreen({
+  isLoading,
   code,
   errors,
   onCodeChange,
@@ -38,8 +40,8 @@ export function VerificationScreen({
         </View>
       </View>
       <View>
-        <Button size="high" onPress={onVerify}>
-          <Text>Verify</Text>
+        <Button size="high" onPress={onVerify} disabled={isLoading}>
+          <Text>{isLoading ? "Loading..." : "Verify"}</Text>
         </Button>
       </View>
     </>

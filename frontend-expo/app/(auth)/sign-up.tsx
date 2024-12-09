@@ -39,6 +39,7 @@ export default function SignUpScreen() {
   const [locations, setLocations] = useState<Location[]>([]);
   const [metaData, setMetaData] = useState<SignUpMetadata>({});
   const [errors, setErrors] = useState<SignUpFormErrors>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     async function updateMetadata() {
@@ -81,16 +82,20 @@ export default function SignUpScreen() {
   };
 
   const onNextStep = async () => {
+    setIsLoading(true);
     if (screen === "location") {
       if (!isLoaded) return;
       console.log("is loaded");
       if (locationData.location === "") {
         setErrors({ location: "Location is required" });
+        setIsLoading(false);
         return;
       }
       console.log("location is good");
       if (locationData.locationCode === "") {
         setErrors({ locationCode: "Location code is required" });
+        setIsLoading(false);
+        return;
       }
 
       console.log("location code is good");
@@ -107,8 +112,10 @@ export default function SignUpScreen() {
           "invalid"
         );
         setErrors({ locationCode: "Invalid location code" });
+        setIsLoading(false);
         return;
       } else {
+        setIsLoading(false);
         setScreen("userInfo");
       }
     } else if (screen === "userInfo") {
@@ -121,30 +128,32 @@ export default function SignUpScreen() {
 
       if (validate?.success) {
         try {
-          console.log("creating user");
           await signUp?.create({
             emailAddress: userInfo.emailAddress,
             password: userInfo.password,
           });
-          console.log("preparing email");
           await signUp?.prepareEmailAddressVerification({
             strategy: "email_code",
           });
-          console.log("verification screen");
           setScreen("verification");
+          setIsLoading(false);
         } catch (err: any) {
           console.error(JSON.stringify(err, null, 2));
+          setIsLoading(false);
         }
       } else {
         setErrors(validate);
+        setIsLoading(false);
       }
     }
   };
 
   const onVerify = async () => {
     if (!isLoaded) return;
+    setIsLoading(true);
     if (code === "") {
       setErrors({ code: "Verification code is required" });
+      setIsLoading(false);
       return;
     }
     try {
@@ -171,8 +180,10 @@ export default function SignUpScreen() {
       } else {
         setErrors({ code: "Invalid verification code" });
       }
+      setIsLoading(false);
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2));
+      setErrors({ code: "Invalid verification code" });
+      setIsLoading(false);
     }
   };
 
@@ -180,6 +191,7 @@ export default function SignUpScreen() {
     <SafeAreaView className="p-6 h-screen justify-between">
       {screen === "location" && (
         <LocationScreen
+          isLoading={isLoading}
           data={locationData}
           errors={errors}
           locations={locations}
@@ -190,6 +202,7 @@ export default function SignUpScreen() {
       )}
       {screen === "userInfo" && (
         <UserInfoScreen
+          isLoading={isLoading}
           data={userInfo}
           errors={errors}
           onUpdate={handleUserInfoUpdate}
@@ -198,6 +211,7 @@ export default function SignUpScreen() {
       )}
       {screen === "verification" && (
         <VerificationScreen
+          isLoading={isLoading}
           code={code}
           errors={errors}
           onCodeChange={setCode}

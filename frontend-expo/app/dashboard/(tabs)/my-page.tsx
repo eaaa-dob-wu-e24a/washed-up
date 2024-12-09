@@ -96,7 +96,7 @@ export default function MyPage() {
         </View>
 
         <Button
-          className="mt-16 mb-6"
+          className="my-16"
           variant={"destructive"}
           onPress={async () => {
             if (expoPushToken) {

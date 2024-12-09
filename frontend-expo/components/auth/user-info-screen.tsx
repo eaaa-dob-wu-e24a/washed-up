@@ -16,9 +16,11 @@ interface UserInfoScreenProps {
   errors: SignUpFormErrors;
   onUpdate: (field: keyof UserInfoFormData, value: string) => void;
   onNext: () => void;
+  isLoading: boolean;
 }
 
 export function UserInfoScreen({
+  isLoading,
   data,
   errors,
   onUpdate,
@@ -72,8 +74,8 @@ export function UserInfoScreen({
             />
             <InputError errors={errors} name="confirmPassword" />
           </View>
-          <Button size="high" onPress={onNext}>
-            <Text>Next step</Text>
+          <Button size="high" onPress={onNext} disabled={isLoading}>
+            <Text>{isLoading ? "Loading..." : "Next step"}</Text>
           </Button>
         </View>
       </ScrollView>
