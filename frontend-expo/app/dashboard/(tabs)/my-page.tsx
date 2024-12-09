@@ -1,7 +1,7 @@
 import { useAuth, useUser } from "@clerk/clerk-expo";
 import { Redirect, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { View } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
 import { Button } from "~/components/ui/button";
@@ -14,7 +14,6 @@ import {
 } from "~/types";
 import Credits from "~/components/my-page/credits";
 import Heading from "~/components/heading";
-import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import UserInfo from "~/components/my-page/user-info";
 import { Label } from "~/components/ui/label";
 import Transactions from "~/components/my-page/transactions";
