@@ -37,7 +37,11 @@ export default function Dashboard() {
     const machine_data = await api.getMachines();
     const schedule_data = await api.getSchedules();
     const filtered_schedule_data = schedule_data
-      .filter((schedule) => schedule.user_id === user_id)
+      .filter((schedule) => {
+        const currentTime = new Date();
+        const scheduleEndTime = new Date(schedule.end_time);
+        return schedule.user_id === user_id && scheduleEndTime >= currentTime;
+      })
       .sort(
         (a, b) =>
           new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
