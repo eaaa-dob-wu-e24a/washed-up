@@ -17,12 +17,14 @@ export default function PayModal() {
   const price = Number(credits) * 10;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
   const { user } = useUser();
   const router = useRouter();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
   async function initializePaymentSheet() {
     setLoading(true);
+    setIsInitialized(false);
     try {
       const api = new Api(user?.publicMetadata.access_token);
 
@@ -42,7 +44,8 @@ export default function PayModal() {
       if (error) {
         setError(error.message);
       } else {
-        setLoading(true);
+        setLoading(false);
+        setIsInitialized(true);
       }
     } catch (e) {
       setError("Failed to initialize payment sheet");
@@ -71,16 +74,24 @@ export default function PayModal() {
     }
   }
 
-  useEffect(() => {
-    if (credits !== "" && Number(credits) > 0) {
-      initializePaymentSheet();
-    }
-  }, [credits]);
+  // useEffect(() => {
+  //   if (credits !== "" && Number(credits) > 0) {
+  //     initializePaymentSheet();
+  //   }
+  // }, [credits]);
 
   async function handlePayment() {
     if (!credits || Number(credits) <= 0) return;
-    await openPaymentSheet();
+    // await openPaymentSheet();
+
+    await initializePaymentSheet();
   }
+
+  useEffect(() => {
+    if (isInitialized) {
+      openPaymentSheet();
+    }
+  }, [isInitialized]);
 
   return (
     <SafeAreaView className="flex-1">

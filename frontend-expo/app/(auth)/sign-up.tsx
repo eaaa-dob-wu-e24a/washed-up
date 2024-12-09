@@ -23,8 +23,8 @@ export default function SignUpScreen() {
   const insets = useSafeAreaInsets();
 
   const [screen, setScreen] = useState<
-    "userInfo" | "location" | "verification"
-  >("userInfo");
+    "location" | "userInfo" | "verification"
+  >("location");
   const [userInfo, setUserInfo] = useState<UserInfoFormData>({
     name: "",
     emailAddress: "",
@@ -81,20 +81,7 @@ export default function SignUpScreen() {
   };
 
   const onNextStep = async () => {
-    if (screen === "userInfo") {
-      const validate = await api.validateCredentials({
-        name: userInfo.name,
-        email: userInfo.emailAddress,
-        password: userInfo.password,
-        confirm_password: userInfo.confirmPassword,
-      });
-
-      if (validate?.success) {
-        setScreen("location");
-      } else {
-        setErrors(validate);
-      }
-    } else if (screen === "location") {
+    if (screen === "location") {
       if (!isLoaded) return;
       console.log("is loaded");
       if (locationData.location === "") {
@@ -122,14 +109,25 @@ export default function SignUpScreen() {
         setErrors({ locationCode: "Invalid location code" });
         return;
       } else {
+        setScreen("userInfo");
+      }
+    } else if (screen === "userInfo") {
+      const validate = await api.validateCredentials({
+        name: userInfo.name,
+        email: userInfo.emailAddress,
+        password: userInfo.password,
+        confirm_password: userInfo.confirmPassword,
+      });
+
+      if (validate?.success) {
         try {
           console.log("creating user");
-          await signUp.create({
+          await signUp?.create({
             emailAddress: userInfo.emailAddress,
             password: userInfo.password,
           });
           console.log("preparing email");
-          await signUp.prepareEmailAddressVerification({
+          await signUp?.prepareEmailAddressVerification({
             strategy: "email_code",
           });
           console.log("verification screen");
@@ -137,6 +135,8 @@ export default function SignUpScreen() {
         } catch (err: any) {
           console.error(JSON.stringify(err, null, 2));
         }
+      } else {
+        setErrors(validate);
       }
     }
   };
@@ -178,14 +178,6 @@ export default function SignUpScreen() {
 
   return (
     <SafeAreaView className="p-6 h-screen justify-between">
-      {screen === "userInfo" && (
-        <UserInfoScreen
-          data={userInfo}
-          errors={errors}
-          onUpdate={handleUserInfoUpdate}
-          onNext={onNextStep}
-        />
-      )}
       {screen === "location" && (
         <LocationScreen
           data={locationData}
@@ -193,6 +185,14 @@ export default function SignUpScreen() {
           locations={locations}
           contentInsets={insets}
           onUpdate={handleLocationUpdate}
+          onNext={onNextStep}
+        />
+      )}
+      {screen === "userInfo" && (
+        <UserInfoScreen
+          data={userInfo}
+          errors={errors}
+          onUpdate={handleUserInfoUpdate}
           onNext={onNextStep}
         />
       )}

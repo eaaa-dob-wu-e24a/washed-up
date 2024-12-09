@@ -24,6 +24,12 @@ import {
   useCameraPermissions,
 } from "expo-camera";
 import { Api } from "~/api";
+import {
+  getCurrentPositionAsync,
+  LocationObject,
+  requestForegroundPermissionsAsync,
+} from "expo-location";
+import { getDistance } from "geolib";
 
 interface LocationScreenProps {
   data: LocationFormData;
@@ -169,6 +175,45 @@ function ManualLocationForm({
   locations: Location[];
   contentInsets: { top: number; bottom: number; left: number; right: number };
 }) {
+  const [location, setLocation] = useState<LocationObject | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function getCurrentLocation() {
+      let { status } = await requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await getCurrentPositionAsync({});
+      setLocation(location);
+    }
+
+    getCurrentLocation();
+  }, []);
+
+  const coordinates = location?.coords;
+
+  // Calculate distances and sort locations
+  const sortedLocations = locations
+    .map((loc) => {
+      const distance = coordinates
+        ? getDistance(
+            {
+              latitude: coordinates.latitude,
+              longitude: coordinates.longitude,
+            },
+            {
+              latitude: String(loc.latitude),
+              longitude: String(loc.longitude),
+            }
+          )
+        : 0;
+      return { ...loc, distance };
+    })
+    .sort((a, b) => a.distance - b.distance);
+
   return (
     <View className="gap-4">
       <View>
@@ -188,14 +233,14 @@ function ManualLocationForm({
           <SelectContent insets={contentInsets} className="flex w-[90%]">
             <ScrollView className="max-h-72">
               <SelectGroup>
-                {locations.map((loc) => (
+                {sortedLocations.map((loc) => (
                   <SelectItem
                     key={loc.id}
-                    label={loc.address}
+                    label={`(${Number(loc.distance / 1000).toFixed(1)} km) ${
+                      loc.address
+                    } `}
                     value={`${loc.id}`}
-                  >
-                    {loc.address}
-                  </SelectItem>
+                  />
                 ))}
               </SelectGroup>
             </ScrollView>

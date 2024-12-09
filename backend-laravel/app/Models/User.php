@@ -73,6 +73,6 @@ class User extends Authenticatable
 
     public function expoTokens()
     {
-        return $this->hasOne(ExpoToken::class, "owner_id");
+        return $this->hasMany(ExpoToken::class, "owner_id");
     }
 }

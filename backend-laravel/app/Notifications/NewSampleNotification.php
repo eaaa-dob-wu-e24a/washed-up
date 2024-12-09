@@ -28,10 +28,10 @@ class NewSampleNotification extends Notification
             throw new \Exception('User does not have an Expo token registered');
         }
 
-        $token = $notifiable->expoTokens->value;
+        $tokens = $notifiable->expoTokens->pluck('value')->toArray();
 
         return (new ExpoMessage())
-            ->to([$token])
+            ->to($tokens)
             ->title($this->title)
             ->body($this->body)
             ->channelId('default');
