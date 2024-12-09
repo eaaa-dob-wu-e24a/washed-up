@@ -54,7 +54,7 @@ export default function QR() {
   }
 
   return (
-    <SafeAreaView className="flex-1" edges={["top"]}>
+    <SafeAreaView className="flex-1 android:pt-2" edges={["top"]}>
       {isCameraActive && (
         <CameraView
           barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
