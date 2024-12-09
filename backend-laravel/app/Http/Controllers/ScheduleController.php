@@ -111,7 +111,8 @@ class ScheduleController extends Controller
         $user = User::find($user->id);
 
         $user->notify(new NewSampleNotification(
-            "Your schedule has been deleted! You have been refunded " . $duration_in_hours . " credits."
+            'Your schedule time has been deleted!',
+            'Your schedule has been deleted by your admin. You have been refunded ' . $duration_in_hours . ' credits.'
         ));
 
         return response()->json(null, 204);

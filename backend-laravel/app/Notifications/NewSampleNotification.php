@@ -8,11 +8,13 @@ use YieldStudio\LaravelExpoNotifier\Dto\ExpoMessage;
 
 class NewSampleNotification extends Notification
 {
-    private $customData;
+    private $title;
+    private $body;
 
-    public function __construct($customData = null)
+    public function __construct($title = null, $body = null)
     {
-        $this->customData = $customData;
+        $this->title = $title;
+        $this->body = $body;
     }
 
     public function via($notifiable): array
@@ -30,8 +32,8 @@ class NewSampleNotification extends Notification
 
         return (new ExpoMessage())
             ->to([$token])
-            ->title('A beautiful title')
-            ->body('This is a content: ' . $this->customData)
+            ->title($this->title)
+            ->body($this->body)
             ->channelId('default');
     }
 }
