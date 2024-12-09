@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
-import { View } from "react-native";
+import { useRouter } from "expo-router";
+import { Pressable, View } from "react-native";
 import {
   Card,
   CardDescription,
@@ -16,6 +16,7 @@ export default function MachineCard({
   data: Machine;
   schedule: Schedule;
 }) {
+  const router = useRouter();
   const isInProgress = schedule
     ? (() => {
         const currentTime = new Date();
@@ -26,43 +27,40 @@ export default function MachineCard({
     : false;
 
   return (
-    <>
-      <Link
-        className="w-full block"
-        href={`/dashboard/booking-modal/${data.id}`}
-      >
-        <Card className="w-full shadow shadow-slate-400 ios:shadow-black/5">
-          <CardHeader className="flex w-full gap-4 flex-row justify-between">
-            <View>
-              <CardTitle className="capitalize">
-                {data.type === "wash"
-                  ? "Washer"
-                  : data.type === "dry"
-                  ? "Dryer"
-                  : data.type}
-              </CardTitle>
-              <CardDescription>Machine #{data.id}</CardDescription>
-            </View>
-            <Text className="text-2xl mt-1">
-              <Text
-                className={`text-2xl mt-1 ${
-                  isInProgress
-                    ? "text-destructive"
-                    : data.status === 1
-                    ? "text-primary"
-                    : "text-destructive"
-                }`}
-              >
-                {isInProgress
-                  ? "In progress"
+    <Pressable
+      onPress={() => router.push(`/dashboard/booking-modal/${data.id}`)}
+    >
+      <Card className="shadow shadow-slate-400 ios:shadow-black/5">
+        <CardHeader className="flex gap-4 flex-row justify-between">
+          <View>
+            <CardTitle className="capitalize">
+              {data.type === "wash"
+                ? "Washer"
+                : data.type === "dry"
+                ? "Dryer"
+                : data.type}
+            </CardTitle>
+            <CardDescription>Machine #{data.id}</CardDescription>
+          </View>
+          <Text className="text-2xl mt-1">
+            <Text
+              className={`text-2xl mt-1 ${
+                isInProgress
+                  ? "text-destructive"
                   : data.status === 1
-                  ? "Available"
-                  : "Disabled"}
-              </Text>
+                  ? "text-primary"
+                  : "text-destructive"
+              }`}
+            >
+              {isInProgress
+                ? "In progress"
+                : data.status === 1
+                ? "Available"
+                : "Disabled"}
             </Text>
-          </CardHeader>
-        </Card>
-      </Link>
-    </>
+          </Text>
+        </CardHeader>
+      </Card>
+    </Pressable>
   );
 }
