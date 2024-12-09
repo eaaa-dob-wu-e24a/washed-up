@@ -1,8 +1,7 @@
 import { useUser } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
-import { View, Alert } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { View, Alert, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
 import Heading from "~/components/heading";

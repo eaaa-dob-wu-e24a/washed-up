@@ -1,8 +1,4 @@
-import { Keyboard, KeyboardAvoidingView, Platform, View } from "react-native";
-import {
-  ScrollView,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { ScrollView, View } from "react-native";
 import Heading from "~/components/heading";
 import InputError from "~/components/input-error";
 import { Button } from "~/components/ui/button";
