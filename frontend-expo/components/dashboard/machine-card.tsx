@@ -28,7 +28,12 @@ export default function MachineCard({
 
   return (
     <Pressable
-      onPress={() => router.push(`/dashboard/booking-modal/${data.id}`)}
+      onPress={() =>
+        router.push({
+          pathname: "/dashboard/booking-modal/[id]",
+          params: { id: data.id },
+        })
+      }
     >
       <Card className="shadow shadow-slate-400 ios:shadow-black/5">
         <CardHeader className="flex gap-4 flex-row justify-between">
