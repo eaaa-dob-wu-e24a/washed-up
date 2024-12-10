@@ -42,7 +42,7 @@ export default function BookingModal() {
   const currentMinutes = currentTime.getMinutes();
   const currentMinutesPercentage = Math.round((currentMinutes / 60) * 100);
 
-  const hours = Array.from({ length: 16 }, (_, i) => `${i + 8}:00`);
+  const hours = Array.from({ length: 14 }, (_, i) => `${i + 8}:00`);
   const rentalTimes = data.map((item) => (item.type === "wash" ? 2 : 0));
 
   const api = new Api(token);
@@ -254,7 +254,7 @@ export default function BookingModal() {
         </SafeAreaView>
       </ScrollView>
       {isBooking && (
-        <View className="bg-white p-6 rounded-t-3xl">
+        <View className="bg-white p-6 border border-slate-200">
           <Text className="text-xl font-bold mb-4">Confirm Booking</Text>
           <Text className="mb-2">
             {data[0]?.type === "dry" ? "Dryer" : "Washer"} #{data[0]?.id}
