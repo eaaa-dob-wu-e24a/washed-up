@@ -18,4 +18,21 @@ export class ScheduleApi extends ApiBase {
 			return false;
 		}
 	}
+
+	public async getSchedules(): Promise<[]> {
+		try {
+			const response = await fetch(`${this.baseUrl}/api/schedules`, {
+				headers: {
+					Authorization: `Bearer ${this.accessToken}`
+				}
+			});
+			if (!response.ok) {
+				return [];
+			}
+			return await response.json();
+		} catch (error) {
+			console.error('Error getting schedules', error);
+			return [];
+		}
+	}
 }
