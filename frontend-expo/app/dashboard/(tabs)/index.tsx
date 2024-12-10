@@ -29,7 +29,6 @@ export default function Dashboard() {
   console.log(error);
 
   async function getData() {
-    setLoading(true);
     const token = user?.publicMetadata?.access_token;
     if (!token) return;
     const api = new Api(token);
@@ -52,7 +51,6 @@ export default function Dashboard() {
     setMachines(machine_data);
     setSchedule(filtered_schedule_data);
     setUnfilteredSchedule(schedule_data);
-    setLoading(false);
   }
 
   useEffect(() => {
@@ -70,7 +68,12 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    getData();
+    const fetchData = async () => {
+      setLoading(true);
+      await getData();
+      setLoading(false);
+    };
+    fetchData();
   }, [user]);
 
   useFocusEffect(
