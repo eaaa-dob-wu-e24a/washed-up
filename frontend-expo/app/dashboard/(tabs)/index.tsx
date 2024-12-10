@@ -85,7 +85,10 @@ export default function Dashboard() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Heading title={`Hello, ${user?.publicMetadata?.name}`} />
+        <Heading
+          title={`Hello, ${user?.publicMetadata?.name}`}
+          subtitle="It's laundry day!"
+        />
         <Text className="text-2xl">Schedule</Text>
         {schedule.length > 0 ? (
           <ScrollView
