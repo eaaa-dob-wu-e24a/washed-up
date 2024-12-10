@@ -2,7 +2,7 @@ import { useUser } from "@clerk/clerk-expo";
 import { Api } from "api";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ActivityIndicator, ScrollView, View } from "react-native";
 import { RefreshControl } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Machine, Schedule } from "types";
@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [unfilteredSchedule, setUnfilteredSchedule] = useState<Schedule[]>([]);
   const [selectedBadge, setSelectedBadge] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { notification, expoPushToken, error } = useNotification();
 
@@ -28,6 +29,7 @@ export default function Dashboard() {
   console.log(error);
 
   async function getData() {
+    setLoading(true);
     const token = user?.publicMetadata?.access_token;
     if (!token) return;
     const api = new Api(token);
@@ -50,6 +52,7 @@ export default function Dashboard() {
     setMachines(machine_data);
     setSchedule(filtered_schedule_data);
     setUnfilteredSchedule(schedule_data);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -90,7 +93,9 @@ export default function Dashboard() {
           subtitle="It's laundry day!"
         />
         <Text className="text-2xl">Schedule</Text>
-        {schedule.length > 0 ? (
+        {loading ? (
+          <ActivityIndicator size={"large"} className="h-6" />
+        ) : schedule.length > 0 ? (
           <ScrollView
             className="-mx-6 mt-4"
             horizontal
@@ -138,7 +143,9 @@ export default function Dashboard() {
             <Text className="text-sm">Dryers</Text>
           </Button>
         </View>
-        {machines ? (
+        {loading ? (
+          <ActivityIndicator size={"large"} className="mt-16" />
+        ) : machines ? (
           <View className="gap-4 mb-20 w-full">
             {machines
               ?.filter((a) =>
