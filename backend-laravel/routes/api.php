@@ -13,6 +13,7 @@ use App\Http\Controllers\CreditUsageController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\ExpoTokenController;
+use App\Http\Controllers\LocationStatsController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('validate', 'validate');
@@ -54,6 +55,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('/stats', [LocationStatsController::class, 'getStats'])
+        ->middleware('auth:sanctum');
+
     Route::get('/users', [AuthController::class, 'list']);
     Route::get('/users/{id}', [AuthController::class, 'adminShow']);
 

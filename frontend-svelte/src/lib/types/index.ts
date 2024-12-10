@@ -67,3 +67,42 @@ export type ExtendedUser = User & {
 	};
 	schedules: Schedule[];
 };
+
+export type Stats = {
+	machine_stats: {
+		total_machines: number;
+		washing_machines: string;
+		dryers: string;
+		active_machines: string;
+		inactive_machines: string;
+	};
+	usage_stats: {
+		total_bookings: number;
+		unique_users: number;
+		avg_duration_minutes: string;
+		total_minutes_used: string;
+	};
+	revenue_stats: {
+		date: string;
+		total_credits_spent: string;
+		unique_paying_users: string;
+		avg_transaction_value: string;
+	}[];
+	refund_stats: {
+		date: string;
+		total_credits_refunded: string;
+		unique_refunded_users: string;
+		avg_refund_value: string;
+	}[];
+	peak_hours: {
+		hour: string;
+		booking_count: string;
+	}[];
+	machine_performance: {
+		id: number;
+		type: string;
+		total_bookings: number;
+		total_revenue: string;
+		avg_usage_time: string;
+	}[];
+};

@@ -18,8 +18,13 @@
 	}
 </script>
 
-<div class="container mx-auto py-8">
-	<h1 class="mb-6 text-3xl font-bold">Users</h1>
+<div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+	<div class="mb-6 flex justify-between gap-6">
+		<div>
+			<h2 class="mb-1 text-xl font-semibold">Users</h2>
+			<p class="text-muted-foreground text-sm">Here you can manage your users.</p>
+		</div>
+	</div>
 
 	<div class="grid gap-4">
 		{#each data.users as user}

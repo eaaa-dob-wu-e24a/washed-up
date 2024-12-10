@@ -2,6 +2,8 @@
 	import Button from '@/components/ui/button/button.svelte';
 	import * as Card from '@/components/ui/card';
 	import { Printer } from 'lucide-svelte';
+	import { browser } from '$app/environment';
+	import maplibregl from 'maplibre-gl';
 	// @ts-ignore
 	import QrCode from 'svelte-qrcode';
 
@@ -11,22 +13,22 @@
 		return new Date(dateString).toLocaleString();
 	};
 
-	let map: any;
+	let map: maplibregl.Map;
 
 	$effect(() => {
-		// Initialize the map after component mounts
-		//@ts-ignore
-		const L = window.L;
-		map = L.map('map').setView([data?.location?.latitude, data?.location?.longitude], 13);
+		map = new maplibregl.Map({
+			container: 'map',
+			style:
+				'https://api.maptiler.com/maps/streets/style.json?key=' + import.meta.env.VITE_MAPTILER_KEY, // free key from maptiler
+			center: [Number(data?.location?.longitude), Number(data?.location?.latitude)],
+			zoom: 13
+		});
 
-		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: '© OpenStreetMap contributors'
-		}).addTo(map);
-
-		// Add a marker
-		L.marker([data?.location?.latitude, data?.location?.longitude])
-			.addTo(map)
-			.bindPopup(data?.location?.address);
+		// Add marker
+		new maplibregl.Marker()
+			.setLngLat([Number(data?.location?.longitude), Number(data?.location?.latitude)])
+			.setPopup(new maplibregl.Popup().setHTML(data?.location?.address || ''))
+			.addTo(map);
 	});
 
 	const handlePrint = (id: string) => {
@@ -40,8 +42,9 @@
 </script>
 
 <svelte:head>
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+	{#if browser}
+		<link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+	{/if}
 </svelte:head>
 
 <div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
@@ -133,7 +136,5 @@
 </div>
 
 <style>
-	:global(.leaflet-container) {
-		z-index: 0;
-	}
+	/* Remove the leaflet-specific style */
 </style>
