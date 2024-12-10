@@ -321,6 +321,9 @@
 								<Axis
 									placement="bottom"
 									format={(d) => formatDate(d, PeriodType.Day, { variant: 'short' })}
+									ticks={revenueData.map((d) => d.date).length > 7
+										? 7
+										: revenueData.map((d) => d.date).length}
 									rule
 								/>
 								<Spline class="stroke-primary stroke-2" />
@@ -403,6 +406,9 @@
 									placement="bottom"
 									format={(d) => formatDate(d, PeriodType.Day, { variant: 'short' })}
 									rule
+									ticks={revenueRefundData.map((d) => d.date).length > 7
+										? 7
+										: revenueRefundData.map((d) => d.date).length}
 								/>
 								<Spline class="stroke-primary stroke-2" />
 								<Spline y="refunds" class="stroke-destructive stroke-2" />
@@ -465,6 +471,9 @@
 									placement="bottom"
 									format={(d) => formatDate(d, PeriodType.Day, { variant: 'short' })}
 									rule
+									ticks={refundData.map((d) => d.date).length > 7
+										? 7
+										: refundData.map((d) => d.date).length}
 								/>
 								<Spline class="stroke-destructive stroke-2" />
 								<Spline y={(d) => y1Scale?.(d.users)} class="stroke-muted-foreground stroke-2" />
