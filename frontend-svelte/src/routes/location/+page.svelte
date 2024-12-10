@@ -18,8 +18,7 @@
 	$effect(() => {
 		map = new maplibregl.Map({
 			container: 'map',
-			style:
-				'https://api.maptiler.com/maps/streets/style.json?key=' + import.meta.env.VITE_MAPTILER_KEY, // free key from maptiler
+			style: 'https://api.maptiler.com/maps/streets/style.json?key=sbfEucYQxAyackK4Fnbi', // free key from maptiler
 			center: [Number(data?.location?.longitude), Number(data?.location?.latitude)],
 			zoom: 13
 		});
