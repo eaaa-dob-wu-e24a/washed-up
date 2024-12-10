@@ -27,7 +27,7 @@ services:
     networks:
       - washed_network
 
-  cron:
+  notifier:
     image: alpine/curl
     command: >
       sh -c "
