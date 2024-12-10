@@ -14,7 +14,7 @@ services:
     depends_on:
       - laravel
     networks:
-      - my_network
+      - washed_network
 
   laravel:
     build:
@@ -25,7 +25,7 @@ services:
       - APP_ENV=production
       - APP_DEBUG=false
     networks:
-      - my_network
+      - washed_network
 
   cron:
     image: alpine/curl
@@ -37,8 +37,8 @@ services:
     depends_on:
       - laravel
     networks:
-      - my_network
+      - washed_network
 
 networks:
-  my_network:
+  washed_network:
     driver: bridge
