@@ -47,7 +47,7 @@
 	{/if}
 </svelte:head>
 
-<div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+<div class="mx-auto max-w-7xl">
 	<h1 class="mb-8 text-3xl font-bold text-gray-900">Location Details</h1>
 
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2">

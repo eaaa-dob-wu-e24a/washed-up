@@ -35,7 +35,7 @@
 	let isLoading: boolean = $state(false);
 </script>
 
-<div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+<div class="mx-auto max-w-7xl">
 	<div class="mb-8 flex items-start justify-between gap-4">
 		<div>
 			<h1 class="text-3xl font-bold text-gray-900">Machine Details</h1>

@@ -135,8 +135,8 @@
 	});
 </script>
 
-<div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
-	<div class="mb-6 flex justify-between gap-6">
+<div class="mx-auto max-w-7xl">
+	<div class="mb-6 flex flex-col justify-between gap-6 sm:flex-row">
 		<div>
 			<h2 class="mb-1 text-xl font-semibold">Statistics</h2>
 			<p class="text-muted-foreground text-sm">
@@ -192,7 +192,7 @@
 	{/if}
 
 	{#if data}
-		<div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+		<div class="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 			<!-- Machine Stats Card -->
 			<Card.Root>
 				<Card.Header>
@@ -233,7 +233,7 @@
 			</Card.Root>
 		</div>
 
-		<div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+		<div class="mb-12 grid grid-cols-1 gap-6 2xl:grid-cols-2">
 			<!-- Revenue Chart Card -->
 			<Card.Root>
 				<Card.Header>
@@ -245,12 +245,10 @@
 						<Chart
 							data={revenueData}
 							x="date"
-							xScale={scaleTime()}
 							y="value"
 							yDomain={[0, null]}
 							yNice
 							y1="users"
-							y1Scale={scaleLinear()}
 							y1Range={({ yScale }) => yScale.domain()}
 							padding={{ top: 24, bottom: 24, left: 24, right: 24 }}
 							tooltip={{ mode: 'bisect-x' }}
@@ -267,6 +265,9 @@
 								<Axis
 									placement="bottom"
 									format={(d) => formatDate(d, PeriodType.Day, { variant: 'short' })}
+									ticks={revenueData.map((d) => d.date).length > 7
+										? 7
+										: revenueData.map((d) => d.date).length}
 									rule
 								/>
 								<Spline class="stroke-primary stroke-2" />
@@ -319,6 +320,9 @@
 									placement="bottom"
 									format={(d) => formatDate(d, PeriodType.Day, { variant: 'short' })}
 									rule
+									ticks={revenueData.map((d) => d.date).length > 7
+										? 7
+										: revenueData.map((d) => d.date).length}
 								/>
 								<Spline class="stroke-primary stroke-2" />
 								<Highlight lines points />
@@ -399,6 +403,9 @@
 								<Axis
 									placement="bottom"
 									format={(d) => formatDate(d, PeriodType.Day, { variant: 'short' })}
+									ticks={revenueRefundData.map((d) => d.date).length > 7
+										? 7
+										: revenueRefundData.map((d) => d.date).length}
 									rule
 								/>
 								<Spline class="stroke-primary stroke-2" />
@@ -462,6 +469,9 @@
 									placement="bottom"
 									format={(d) => formatDate(d, PeriodType.Day, { variant: 'short' })}
 									rule
+									ticks={refundData.map((d) => d.date).length > 7
+										? 7
+										: refundData.map((d) => d.date).length}
 								/>
 								<Spline class="stroke-destructive stroke-2" />
 								<Spline y={(d) => y1Scale?.(d.users)} class="stroke-muted-foreground stroke-2" />

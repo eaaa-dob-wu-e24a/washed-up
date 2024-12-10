@@ -31,8 +31,8 @@
 	}
 </script>
 
-<div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
-	<div class="mb-6 flex justify-between gap-6">
+<div class="mx-auto max-w-7xl">
+	<div class="mb-6 flex flex-col justify-between gap-6 sm:flex-row">
 		<div>
 			<h2 class="mb-1 text-xl font-semibold">Machines</h2>
 			<p class="text-muted-foreground text-sm">
