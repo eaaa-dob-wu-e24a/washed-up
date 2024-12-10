@@ -10,6 +10,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\CreditPurchaseController;
 use App\Http\Controllers\CreditUsageController;
+use App\Http\Controllers\CronController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\ExpoTokenController;
@@ -22,6 +23,8 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('admin-login', 'adminLogin');
     Route::get('locations', [LocationController::class, 'index']);
     Route::get('locations/code/{code}', [LocationController::class, 'getByCode']);
+
+    Route::get('/cron/test', [CronController::class, 'index']);
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {

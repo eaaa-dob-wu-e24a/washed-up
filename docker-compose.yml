@@ -12,13 +12,33 @@ services:
       - ORIGIN=${ORIGIN}
       - NODE_ENV=production
     depends_on:
-      - laravel # Ensure the backend is started before the frontend
+      - laravel
+    networks:
+      - my_network
 
   laravel:
     build:
       context: ./backend-laravel
     ports:
-      - "8181:80" # Map container's Apache port 80 to host port 8181
+      - "8181:80"
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
+    networks:
+      - my_network
+
+  cron:
+    image: alpine/curl
+    command: >
+      sh -c "
+        echo '*/10 * * * * curl -X GET http://laravel/api/cron/test' > /etc/crontabs/root && \
+        crond -f -l 2
+      "
+    depends_on:
+      - laravel
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
