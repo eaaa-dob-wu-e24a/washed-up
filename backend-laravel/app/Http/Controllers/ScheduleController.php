@@ -12,22 +12,23 @@ use Illuminate\Support\Facades\Auth;
 use App\Notifications\NewSampleNotification;
 
 
-class ScheduleController extends Controller
-{
-    public function index()
-    {
+class ScheduleController extends Controller {
+    public function index() {
         $schedules = Schedule::all();
         return response()->json($schedules);
     }
 
-    public function show($machine_id)
-    {
+    public function show($machine_id) {
         $schedules = Schedule::where('machine_id', $machine_id)->get();
         return response()->json($schedules);
     }
 
-    public function store(Request $request)
-    {
+    public function getById($id) {
+        $schedule = Schedule::findOrFail($id);
+        return response()->json($schedule);
+    }
+
+    public function store(Request $request) {
         if ($this->hasOverlap($request->machine_id, $request->start_time, $request->end_time)) {
             return response()->json(['error' => 'Schedule overlaps with an existing entry'], 409);
         }
@@ -68,8 +69,7 @@ class ScheduleController extends Controller
         return response()->json($schedule, 201);
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         if ($this->hasOverlap($request->machine_id, $request->start_time, $request->end_time, $id)) {
             return response()->json(['error' => 'Schedule overlaps with an existing entry'], 409);
         }
@@ -79,8 +79,7 @@ class ScheduleController extends Controller
         return response()->json($schedule, 200);
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $schedule = Schedule::findOrFail($id);
         $machine = Machine::findOrFail($schedule->machine_id);
         $duration = (strtotime($schedule->end_time) - strtotime($schedule->start_time)) / 60;
@@ -118,8 +117,7 @@ class ScheduleController extends Controller
         return response()->json(null, 204);
     }
 
-    private function hasOverlap($machine_id, $start_time, $end_time, $exclude_id = null)
-    {
+    private function hasOverlap($machine_id, $start_time, $end_time, $exclude_id = null) {
         $query = Schedule::where('machine_id', $machine_id)
             ->where(function ($query) use ($start_time, $end_time) {
                 $query->where('start_time', '<', $end_time)

@@ -36,6 +36,7 @@ export class Api extends ApiBase {
   public removeToken;
   public getSchedules;
   public getScheduleById;
+  public getByScheduleId;
   public setSchedule;
   public createPaymentIntent;
   public getCreditPurchases;
@@ -74,6 +75,7 @@ export class Api extends ApiBase {
     this.removeToken = this.notificationsApi.removeToken;
     this.getSchedules = this.scheduleApi.getSchedules;
     this.getScheduleById = this.scheduleApi.getScheduleById;
+    this.getByScheduleId = this.scheduleApi.getByScheduleId;
     this.setSchedule = this.scheduleApi.setSchedule;
     this.createPaymentIntent = this.stripeApi.createPaymentIntent;
     this.getCreditPurchases = this.transactionsApi.getCreditPurchases;

@@ -42,6 +42,26 @@ export class ScheduleApi extends ApiBase {
     }
   }
 
+  public async getByScheduleId(id: number): Promise<Schedule[] | null> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/schedule/${id}`, {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        return null;
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error getting schedule by id", error);
+      return null;
+    }
+  }
+
   public async setSchedule({
     machine_type,
     machine_id,
