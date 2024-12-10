@@ -142,7 +142,8 @@ export default function ScheduleModal() {
         <View className="bg-white p-6 border border-slate-200">
           <View className="mb-2">
             <Text className="text-xl font-bold mb-4">Cancel Booking</Text>
-            <Text className="mb-2">Do you wish to cancel this booking?</Text>
+            <Text>Do you wish to cancel this booking?</Text>
+            <Text className="mb-2">Your credits will be refunded.</Text>
           </View>
           <View className="flex-row justify-between gap-4">
             <Button
