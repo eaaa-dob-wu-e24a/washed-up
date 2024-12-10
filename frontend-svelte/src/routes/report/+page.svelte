@@ -87,7 +87,7 @@
 			date_ranges?.end.toDate(getLocalTimeZone())
 		);
 
-		const res = await fetch(`/api/stats?start=${dateRanges.start}&end=${dateRanges.end}`);
+		const res = await fetch(`/svelte/api/stats?start=${dateRanges.start}&end=${dateRanges.end}`);
 		const data = await res.json();
 		return data;
 	}
