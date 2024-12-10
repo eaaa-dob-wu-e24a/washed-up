@@ -148,7 +148,7 @@ export default function Dashboard() {
         </View>
         {loading ? (
           <ActivityIndicator size={"large"} className="mt-16" />
-        ) : machines ? (
+        ) : machines.length > 0 ? (
           <View className="gap-4 mb-20 w-full">
             {machines
               ?.filter((a) =>
