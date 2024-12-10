@@ -79,7 +79,7 @@ class ScheduleController extends Controller {
         return response()->json($schedule, 200);
     }
 
-    public function destroy($id) {
+    public function destroyWithNotification($id) {
         $schedule = Schedule::findOrFail($id);
         $machine = Machine::findOrFail($schedule->machine_id);
         $duration = (strtotime($schedule->end_time) - strtotime($schedule->start_time)) / 60;
@@ -113,6 +113,37 @@ class ScheduleController extends Controller {
             'Your schedule time has been deleted!',
             'Your schedule has been deleted by your admin. You have been refunded ' . $duration_in_hours . ' credits.'
         ));
+
+        return response()->json(null, 204);
+    }
+
+    public function destroy($id) {
+        $schedule = Schedule::findOrFail($id);
+        $machine = Machine::findOrFail($schedule->machine_id);
+        $duration = (strtotime($schedule->end_time) - strtotime($schedule->start_time)) / 60;
+        $duration_in_hours = $duration / 60;
+
+        $user = User::find($schedule->user_id);
+        $credits = Credits::where('user_id', $user->id)->first();
+
+        // Create credit usage record for refund
+        CreditUsage::create([
+            'user_id' => $user->id,
+            'machine_id' => $schedule->machine_id,
+            'machine_type' => $machine->type,
+            'duration_minutes' => $duration,
+            'cost_credits' => $duration_in_hours,
+            'type' => 'refund',
+            'balance_after' => $credits->amount + $duration_in_hours,
+        ]);
+
+        // Update user's credits
+        Credits::where('user_id', $user->id)->update([
+            'amount' => $credits->amount + $duration_in_hours,
+        ]);
+
+        // Delete the schedule
+        $schedule->delete();
 
         return response()->json(null, 204);
     }
