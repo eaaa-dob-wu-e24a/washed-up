@@ -9,6 +9,9 @@ export function getDateRanges(start: Date, end: Date) {
 }
 
 export function formatDate(date: Date) {
-	const string = new Date(date.toLocaleString()).toLocaleDateString().split('/');
-	return `${string[2]}-${string[0]}-${string[1]}`;
+	const string = new Date(date).toLocaleDateString('da-DK').split('.');
+
+	const formattedDate = `${string[2]}-${string[1].padStart(2, '0')}-${string[0].padStart(2, '0')}`;
+
+	return formattedDate;
 }

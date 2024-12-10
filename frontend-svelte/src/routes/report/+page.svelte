@@ -62,10 +62,12 @@
 		users: number;
 		avg_transaction: number;
 	}[] = $state([]);
+
 	let peakHoursData: {
 		hour: number;
 		value: number;
 	}[] = $state([]);
+
 	let loading = $state(true);
 
 	let revenueRefundData: {
@@ -83,8 +85,8 @@
 	async function getStats() {
 		if (!date_ranges?.start || !date_ranges?.end) return;
 		const dateRanges = getDateRanges(
-			date_ranges?.start.toDate(getLocalTimeZone()),
-			date_ranges?.end.toDate(getLocalTimeZone())
+			date_ranges?.start.toDate('Europe/Copenhagen'),
+			date_ranges?.end.toDate('Europe/Copenhagen')
 		);
 
 		const res = await fetch(`/svelte/api/stats?start=${dateRanges.start}&end=${dateRanges.end}`);
