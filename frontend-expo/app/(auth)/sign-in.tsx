@@ -1,6 +1,6 @@
-import { useSignIn } from "@clerk/clerk-expo";
+import { AuthApi } from "~/api/auth";
 import { Label } from "~/components/ui/label";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,39 +8,27 @@ import Heading from "~/components/heading";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
+import { useAuth } from "~/context/auth";
 
 export default function Page() {
-  const { signIn, setActive, isLoaded } = useSignIn();
-
+  const { setToken } = useAuth();
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const authApi = React.useMemo(() => new AuthApi(), []);
 
   const onSignInPress = React.useCallback(async () => {
-    if (!isLoaded) {
-      return;
-    }
-
     try {
-      const signInAttempt = await signIn.create({
-        identifier: emailAddress,
+      const response = await authApi.signIn({
+        email: emailAddress,
         password,
       });
 
-      if (signInAttempt.status === "complete") {
-        await setActive({
-          session: signInAttempt.createdSessionId,
-        });
-
-        // router.replace("/");
-      } else {
-        // See https://clerk.com/docs/custom-flows/error-handling
-        // for more info on error handling
-        console.error(JSON.stringify(signInAttempt, null, 2));
-      }
+      await setToken(response.token);
+      router.replace("/");
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2));
+      console.error("Sign in error:", err.message);
     }
-  }, [isLoaded, emailAddress, password]);
+  }, [emailAddress, password, setToken, authApi]);
 
   return (
     <SafeAreaView className="p-6 h-screen justify-between">

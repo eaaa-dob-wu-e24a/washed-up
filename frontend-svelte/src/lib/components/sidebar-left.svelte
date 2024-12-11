@@ -3,7 +3,7 @@
 	import Calendar from 'lucide-svelte/icons/calendar';
 	import LineChart from 'lucide-svelte/icons/line-chart';
 	import Users from 'lucide-svelte/icons/users';
-
+	import Bell from 'lucide-svelte/icons/bell';
 	// This is sample data.
 	const data: {
 		navMain: MenuItems[];
@@ -28,6 +28,11 @@
 				title: 'Users',
 				url: '/users',
 				icon: Users
+			},
+			{
+				title: 'Notifyer',
+				url: '/notifyer',
+				icon: Bell
 			}
 		]
 	};

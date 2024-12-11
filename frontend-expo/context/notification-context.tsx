@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import * as Notifications from "expo-notifications";
 import { registerForPushNotificationsAsync } from "~/utils/registerForPushNotificationsAsync";
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth } from "~/context/auth";
 import { Api } from "~/api";
 
 interface NotificationContextType {
@@ -38,8 +38,8 @@ interface NotificationProviderProps {
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   children,
 }) => {
-  const { user } = useUser();
-  const api = new Api(user?.publicMetadata.access_token);
+  const { token, isSignedIn } = useAuth();
+  const api = new Api(token);
 
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
   const [notification, setNotification] =
@@ -50,7 +50,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
   const responseListener = useRef<Notifications.Subscription>();
 
   useEffect(() => {
-    if (!user) return;
+    if (!isSignedIn || !token) return;
 
     registerForPushNotificationsAsync().then(
       async (token) => {
@@ -83,7 +83,6 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
           JSON.stringify(response, null, 2),
           JSON.stringify(response.notification.request.content.data, null, 2)
         );
-        // Handle the notification response here
       });
 
     return () => {
@@ -96,7 +95,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({
         Notifications.removeNotificationSubscription(responseListener.current);
       }
     };
-  }, [user]);
+  }, [token, isSignedIn]);
 
   return (
     <NotificationContext.Provider

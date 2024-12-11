@@ -23,8 +23,8 @@ export class Api extends ApiBase {
 
   // Method declarations
   public signUp;
-  public validateCredentials;
-  public updateClerkMetadata;
+  public signIn;
+  public validateEmail;
   public getCredits;
   public buyCredits;
   public getLocations;
@@ -63,8 +63,8 @@ export class Api extends ApiBase {
 
     // Assign methods inside constructor
     this.signUp = this.authApi.signUp;
-    this.validateCredentials = this.authApi.validateCredentials;
-    this.updateClerkMetadata = this.authApi.updateClerkMetadata;
+    this.signIn = this.authApi.signIn;
+    this.validateEmail = this.authApi.validateEmail;
     this.getCredits = this.creditsApi.getCredits;
     this.buyCredits = this.creditsApi.buyCredits;
     this.getLocations = this.locationApi.getLocations;

@@ -1,5 +1,6 @@
 import { ApiBase } from "./base";
 
+// api/auth.ts
 export class AuthApi extends ApiBase {
   public async signUp({
     name,
@@ -27,77 +28,63 @@ export class AuthApi extends ApiBase {
         }),
       });
 
-      const data = await response.json();
-      return data;
+      return await response.json();
     } catch (error) {
       console.error("Error signing up", error);
       return null;
     }
   }
 
-  public async validateCredentials({
-    name,
+  public async signIn({
     email,
     password,
-    confirm_password,
   }: {
-    name: string;
     email: string;
     password: string;
-    confirm_password: string;
   }) {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed");
+      }
+
+      const data = await response.json();
+      return {
+        token: data.access_token,
+        tokenType: data.token_type,
+        role: data.role,
+      };
+    } catch (error) {
+      console.error("Error signing in", error);
+      throw error;
+    }
+  }
+
+  public async validateEmail(email: string) {
     try {
       const response = await fetch(`${this.baseUrl}/api/validate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          c_password: confirm_password,
-        }),
+        body: JSON.stringify({ email }),
       });
 
-      const data = await response.json();
-      return data;
+      return await response.json();
     } catch (error) {
-      console.error("Error validating credentials", error);
-      return null;
-    }
-  }
-
-  public async updateClerkMetadata({
-    access_token,
-    metadata,
-    user_id,
-  }: {
-    access_token: string;
-    metadata: {
-      [key: string]: any;
-    };
-    user_id: string;
-  }) {
-    try {
-      const response = await fetch(
-        `${this.baseUrl}/api/clerk-metadata/${user_id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-          body: JSON.stringify({
-            public_metadata: metadata,
-          }),
-        }
-      );
-
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error updating metadata", error);
+      console.error("Error validating email", error);
       return null;
     }
   }

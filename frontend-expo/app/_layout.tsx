@@ -1,6 +1,5 @@
 import "global.css";
 
-import { ClerkLoaded, ClerkProvider } from "@clerk/clerk-expo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   DarkTheme,
@@ -29,6 +28,7 @@ import StripeProvider from "~/components/stripe-provider";
 import { NotificationProvider } from "~/context/notification-context";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
+import { AuthProvider } from "~/context/auth";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -80,14 +80,6 @@ const tokenCache = {
     }
   },
 };
-
-const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
-
-if (!publishableKey) {
-  throw new Error(
-    "Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env"
-  );
-}
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -159,30 +151,24 @@ export default function RootLayoutNav() {
   }
 
   return (
-    <>
-      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-        <ClerkLoaded>
-          <NotificationProvider>
-            <StripeProvider>
-              <ThemeProvider
-                value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}
+    <AuthProvider>
+      <NotificationProvider>
+        <StripeProvider>
+          <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+            <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
               >
-                <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-                <GestureHandlerRootView style={{ flex: 1 }}>
-                  <Stack
-                    screenOptions={{
-                      headerShown: false,
-                    }}
-                  >
-                    <Stack.Screen name="index" />
-                  </Stack>
-                  <PortalHost />
-                </GestureHandlerRootView>
-              </ThemeProvider>
-            </StripeProvider>
-          </NotificationProvider>
-        </ClerkLoaded>
-      </ClerkProvider>
-    </>
+                <Stack.Screen name="index" />
+              </Stack>
+              <PortalHost />
+            </GestureHandlerRootView>
+          </ThemeProvider>
+        </StripeProvider>
+      </NotificationProvider>
+    </AuthProvider>
   );
 }

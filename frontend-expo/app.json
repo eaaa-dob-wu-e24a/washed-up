@@ -7,12 +7,15 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "owner": "washed_up",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.fred9891.washedup"
@@ -64,8 +67,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "8ff51ca6-6c0b-4dc8-89f8-4d3f6d1f68ce"
+        "projectId": "ff6d2962-dfb1-4d07-b881-cfc2184f8fad"
       }
-    }
+    },
+    "newArchEnabled": true
   }
 }

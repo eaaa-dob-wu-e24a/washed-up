@@ -1,4 +1,3 @@
-import { useUser } from "@clerk/clerk-expo";
 import { Api } from "api";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
@@ -6,6 +5,7 @@ import { ActivityIndicator, ScrollView, View } from "react-native";
 import { RefreshControl } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Machine, Schedule } from "types";
+import { useAuth } from "~/context/auth";
 import MachineCard from "~/components/dashboard/machine-card";
 import ScheduleCard from "~/components/dashboard/schedule-card";
 import Heading from "~/components/heading";
@@ -14,26 +14,24 @@ import { Text } from "~/components/ui/text";
 import { useNotification } from "~/context/notification-context";
 
 export default function Dashboard() {
-  const { user } = useUser();
+  const { token } = useAuth();
   const [machines, setMachines] = useState<Machine[]>([]);
   const [schedule, setSchedule] = useState<Schedule[]>([]);
   const [unfilteredSchedule, setUnfilteredSchedule] = useState<Schedule[]>([]);
   const [selectedBadge, setSelectedBadge] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [userName, setUserName] = useState<string>("");
 
   const { notification, expoPushToken, error } = useNotification();
 
-  console.log(notification);
-  console.log(expoPushToken);
-  console.log(error);
-
   async function getData() {
-    const token = user?.publicMetadata?.access_token;
     if (!token) return;
-    const api = new Api(token);
+    const api = new Api(token); // Use token directly from auth context
 
-    const user_id = (await api.getUser())[0].id;
+    const [userData] = await api.getUser();
+    setUserName(userData.name || "User");
+    const user_id = userData.id;
 
     const machine_data = await api.getMachines();
     const schedule_data = await api.getSchedules();
@@ -53,6 +51,7 @@ export default function Dashboard() {
     setUnfilteredSchedule(schedule_data);
   }
 
+  // Rest of the useEffect hooks remain the same, just replace user with token in dependencies
   useEffect(() => {
     const interval = setInterval(async () => {
       await getData();
@@ -74,7 +73,7 @@ export default function Dashboard() {
       setLoading(false);
     };
     fetchData();
-  }, [user]);
+  }, [token]);
 
   useFocusEffect(
     useCallback(() => {
@@ -91,10 +90,7 @@ export default function Dashboard() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Heading
-          title={`Hello, ${user?.publicMetadata?.name}`}
-          subtitle="It's laundry day!"
-        />
+        <Heading title={`Hello, ${userName}`} subtitle="It's laundry day!" />
         <Text className="text-2xl">Schedule</Text>
         {loading ? (
           <ActivityIndicator size={"large"} className="h-6" />

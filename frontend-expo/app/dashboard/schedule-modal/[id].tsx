@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth } from "~/context/auth"; // Replace Clerk import
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
@@ -18,25 +18,23 @@ import { Schedule } from "~/types";
 
 export default function ScheduleModal() {
   const { id } = useLocalSearchParams();
-  const { user } = useUser();
+  const { token } = useAuth();
 
   if (!id) {
     router.back();
     return null;
   }
 
-  const token = user?.publicMetadata?.access_token;
   if (!token) {
     console.error("No access token");
-    return null; // Changed from return
+    return null;
   }
 
-  // Change to single Schedule object instead of array
   const [schedule, setSchedule] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
-  const api = new Api(token);
+  const api = new Api(token); // Use token directly from auth context
 
   const getData = async () => {
     const schedule_data = await api.getByScheduleId(Number(id));
