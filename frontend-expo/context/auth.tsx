@@ -1,5 +1,9 @@
-import { createContext, useContext, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createContext, useContext, useEffect, useState } from "react";
+import {
+  deleteSecureValue,
+  getSecureValue,
+  setSecureValue,
+} from "~/lib/secure-store";
 
 interface AuthContextType {
   token: string | null;
@@ -13,11 +17,19 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setTokenState] = useState<string | null>(null);
 
+  useEffect(() => {
+    async function fetchToken() {
+      const token = await getSecureValue("token");
+      setTokenState(token);
+    }
+    fetchToken();
+  }, []);
+
   const setToken = async (newToken: string | null) => {
     if (newToken) {
-      await AsyncStorage.setItem("token", newToken);
+      await setSecureValue("token", newToken);
     } else {
-      await AsyncStorage.removeItem("token");
+      await deleteSecureValue("token");
     }
     setTokenState(newToken);
   };
