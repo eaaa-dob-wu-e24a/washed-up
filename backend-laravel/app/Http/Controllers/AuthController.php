@@ -11,10 +11,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use App\Models\Credits;
 
-class AuthController extends Controller
-{
-    public function index()
-    {
+class AuthController extends Controller {
+    public function index() {
         $user = Auth::user();
         if ($user) {
             return response()->json($user);
@@ -25,20 +23,28 @@ class AuthController extends Controller
         }
     }
 
-    public function list()
-    {
-        $users = User::all();
+    public function list() {
+        $authUser = Auth::user();
+        $users = User::where('location_id', $authUser->location_id)->get();
         return response()->json($users);
     }
 
-    public function adminShow($id)
-    {
-        $user = User::with(['credits', 'schedules'])->find($id);
+    public function adminShow($id) {
+        $authUser = Auth::user();
+        $user = User::with(['credits', 'schedules'])
+            ->where('location_id', $authUser->location_id)
+            ->find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found or unauthorized'
+            ], 403);
+        }
+
         return response()->json($user);
     }
 
-    public function register(Request $request)
-    {
+    public function register(Request $request) {
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
@@ -77,8 +83,7 @@ class AuthController extends Controller
             'role' => $user->role
         ]);
     }
-    public function validate(Request $request)
-    {
+    public function validate(Request $request) {
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
@@ -114,8 +119,7 @@ class AuthController extends Controller
             'success' => true
         ]);
     }
-    public function login(Request $request)
-    {
+    public function login(Request $request) {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Invalid login details'
@@ -133,8 +137,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function adminLogin(Request $request)
-    {
+    public function adminLogin(Request $request) {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Invalid login details'
