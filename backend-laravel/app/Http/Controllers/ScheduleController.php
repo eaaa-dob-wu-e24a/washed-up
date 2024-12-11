@@ -28,9 +28,11 @@ class ScheduleController extends Controller {
         return response()->json($schedule);
     }
 
+
     public function adminIndex() {
         $user = Auth::user();
-        $schedules = Schedule::with(['machine'])
+
+        $schedules = Schedule::with(['user', 'machine'])
             ->whereHas('machine', function ($query) use ($user) {
                 $query->where('location_id', $user->location_id);
             })
