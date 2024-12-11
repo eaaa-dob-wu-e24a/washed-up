@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth } from "~/context/auth";
 import {
   BarcodeScanningResult,
   CameraView,
@@ -16,7 +16,7 @@ export default function QR() {
   const [permission, requestPermission] = useCameraPermissions();
   const [isScanning, setIsScanning] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
-  const { user } = useUser();
+  const { token } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
@@ -44,7 +44,7 @@ export default function QR() {
   async function handleBarcodeScanned(scanningResult: BarcodeScanningResult) {
     if (isScanning) return;
     setIsScanning(true);
-    const api = new Api(user?.publicMetadata?.access_token);
+    const api = new Api(token);
     const machine = await api.getMachineByCode(scanningResult.data);
     if (machine) {
       setIsCameraActive(false);

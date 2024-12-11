@@ -1,30 +1,26 @@
-import { useSignUp, useUser } from "@clerk/clerk-expo";
-import { Api } from "api";
-import { useEffect, useState } from "react";
+// app/(auth)/sign-up.tsx
+import { useState, useEffect } from "react";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Api } from "~/api";
 import { LocationScreen } from "~/components/auth/location-screen";
 import { UserInfoScreen } from "~/components/auth/user-info-screen";
-import { VerificationScreen } from "~/components/auth/verification-screen";
-import { Location } from "~/types";
-import {
+import type {
+  Location,
   LocationFormData,
   SignUpFormErrors,
-  SignUpMetadata,
   UserInfoFormData,
 } from "~/types";
 
 export default function SignUpScreen() {
   const api = new Api();
-  const { isLoaded, signUp, setActive } = useSignUp();
-  const { user } = useUser();
   const insets = useSafeAreaInsets();
 
-  const [screen, setScreen] = useState<
-    "location" | "userInfo" | "verification"
-  >("location");
+  const [screen, setScreen] = useState<"location" | "userInfo">("location");
   const [userInfo, setUserInfo] = useState<UserInfoFormData>({
     name: "",
     emailAddress: "",
@@ -35,35 +31,15 @@ export default function SignUpScreen() {
     location: "",
     locationCode: "",
   });
-  const [code, setCode] = useState("");
   const [locations, setLocations] = useState<Location[]>([]);
-  const [metaData, setMetaData] = useState<SignUpMetadata>({});
   const [errors, setErrors] = useState<SignUpFormErrors>({});
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    async function updateMetadata() {
-      if (!user) return;
-      if (!metaData?.access_token) return;
-      await api.updateClerkMetadata({
-        access_token: metaData?.access_token,
-        metadata: metaData,
-        user_id: user.id,
-      });
-
-      await user.reload();
-    }
-
-    updateMetadata();
-  }, [user]);
-
-  useEffect(() => {
     async function getLocations() {
-      await api.getLocations().then((data) => {
-        setLocations(data);
-      });
+      const data = await api.getLocations();
+      if (data) setLocations(data);
     }
-
     getLocations();
   }, []);
 
@@ -84,105 +60,49 @@ export default function SignUpScreen() {
   const onNextStep = async () => {
     setIsLoading(true);
     if (screen === "location") {
-      if (!isLoaded) return;
-      console.log("is loaded");
       if (locationData.location === "") {
         setErrors({ location: "Location is required" });
         setIsLoading(false);
         return;
       }
-      console.log("location is good");
+
       if (locationData.locationCode === "") {
         setErrors({ locationCode: "Location code is required" });
         setIsLoading(false);
         return;
       }
 
-      console.log("location code is good");
-
       const selectedLocation = locations.find(
         (loc) => loc.id === parseInt(locationData.location)
       );
 
-      console.log("selected location", selectedLocation);
       if (selectedLocation?.code !== locationData.locationCode.toUpperCase()) {
-        console.log(
-          selectedLocation?.code,
-          locationData.locationCode.toUpperCase(),
-          "invalid"
-        );
         setErrors({ locationCode: "Invalid location code" });
         setIsLoading(false);
         return;
-      } else {
-        setIsLoading(false);
-        setScreen("userInfo");
       }
-    } else if (screen === "userInfo") {
-      const validate = await api.validateCredentials({
-        name: userInfo.name,
-        email: userInfo.emailAddress,
-        password: userInfo.password,
-        confirm_password: userInfo.confirmPassword,
-      });
 
-      if (validate?.success) {
-        try {
-          await signUp?.create({
-            emailAddress: userInfo.emailAddress,
-            password: userInfo.password,
-          });
-          await signUp?.prepareEmailAddressVerification({
-            strategy: "email_code",
-          });
-          setScreen("verification");
-          setIsLoading(false);
-        } catch (err: any) {
-          console.error(JSON.stringify(err, null, 2));
-          setIsLoading(false);
-        }
-      } else {
-        setErrors(validate);
-        setIsLoading(false);
-      }
-    }
-  };
-
-  const onVerify = async () => {
-    if (!isLoaded) return;
-    setIsLoading(true);
-    if (code === "") {
-      setErrors({ code: "Verification code is required" });
+      setScreen("userInfo");
       setIsLoading(false);
-      return;
-    }
-    try {
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code,
-      });
-
-      if (completeSignUp.status === "complete") {
-        const db_sign_up = await api.signUp({
+    } else if (screen === "userInfo") {
+      try {
+        const response = await api.signUp({
           name: userInfo.name,
           email: userInfo.emailAddress,
           password: userInfo.password,
           location: locationData.location,
         });
 
-        if (db_sign_up?.access_token) {
-          setMetaData({
-            access_token: db_sign_up.access_token,
-            location: locationData.location,
-            name: userInfo.name,
-          });
-          await setActive({ session: completeSignUp.createdSessionId });
+        if (response?.access_token) {
+          await AsyncStorage.setItem("token", response.access_token);
+          router.replace("/"); // Navigate to home screen
+        } else {
+          setErrors(response);
         }
-      } else {
-        setErrors({ code: "Invalid verification code" });
+      } catch (error) {
+        console.error("Sign up error:", error);
+        setErrors({ form: "An error occurred during sign up" });
       }
-      setIsLoading(false);
-    } catch (err: any) {
-      setErrors({ code: "Invalid verification code" });
       setIsLoading(false);
     }
   };
@@ -207,15 +127,6 @@ export default function SignUpScreen() {
           errors={errors}
           onUpdate={handleUserInfoUpdate}
           onNext={onNextStep}
-        />
-      )}
-      {screen === "verification" && (
-        <VerificationScreen
-          isLoading={isLoading}
-          code={code}
-          errors={errors}
-          onCodeChange={setCode}
-          onVerify={onVerify}
         />
       )}
     </SafeAreaView>

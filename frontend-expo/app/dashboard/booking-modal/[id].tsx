@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth } from "~/context/auth";
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Check } from "lucide-react-native";
@@ -17,17 +17,16 @@ const today = toDateId(new Date());
 export default function BookingModal() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
-  const { user } = useUser();
+  const { token } = useAuth();
 
   if (!id) {
     router.back();
     return null;
   }
 
-  const token = user?.publicMetadata?.access_token;
   if (!token) {
     console.error("No access token");
-    return;
+    return null;
   }
 
   const [loading, setLoading] = useState(true);

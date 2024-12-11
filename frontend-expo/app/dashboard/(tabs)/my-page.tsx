@@ -1,4 +1,4 @@
-import { useAuth, useUser } from "@clerk/clerk-expo";
+import { useAuth } from "~/context/auth";
 import { Redirect, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
@@ -20,8 +20,7 @@ import Transactions from "~/components/my-page/transactions";
 import { useNotification } from "~/context/notification-context";
 
 export default function MyPage() {
-  const { signOut } = useAuth();
-  const { user } = useUser();
+  const { token, signOut } = useAuth();
   const [credits, setCredits] = useState<CreditsType | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
   const [creditPurchases, setCreditPurchases] = useState<CreditPurchase[]>([]);
@@ -29,7 +28,7 @@ export default function MyPage() {
   const [refreshing, setRefreshing] = useState(false);
 
   async function getData() {
-    const api = new Api(user?.publicMetadata.access_token);
+    const api = new Api(token);
     const credits = await api.getCredits();
     const location = await api.getLocation();
     const creditPurchases = await api.getCreditPurchases();
@@ -42,31 +41,25 @@ export default function MyPage() {
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-
     await getData();
-
     setRefreshing(false);
   }, []);
 
   useEffect(() => {
-    if (!user) {
-      return;
-    }
+    if (!token) return;
     getData();
-  }, [user]);
+  }, [token]);
 
   useFocusEffect(
     useCallback(() => {
-      if (!user) {
-        return;
-      }
+      if (!token) return;
       getData();
-    }, [])
+    }, [token])
   );
 
   const { expoPushToken } = useNotification();
 
-  if (!user) {
+  if (!token) {
     return <Redirect href={"/"} />;
   }
 
@@ -100,7 +93,7 @@ export default function MyPage() {
           variant={"destructive"}
           onPress={async () => {
             if (expoPushToken) {
-              const api = new Api(user?.publicMetadata.access_token);
+              const api = new Api(token);
               await api.removeToken(expoPushToken);
             }
             signOut();

@@ -1,10 +1,10 @@
-import { useUser } from "@clerk/clerk-expo";
 import { Redirect } from "expo-router";
+import { useAuth } from "~/context/auth";
 
 export default function HomeScreen() {
-  const { user } = useUser();
+  const { token } = useAuth();
 
-  if (!user) {
+  if (!token) {
     return <Redirect href={"/welcome"} />;
   } else {
     return <Redirect href={"/dashboard/(tabs)"} />;

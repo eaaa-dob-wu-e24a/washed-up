@@ -1,12 +1,12 @@
-import { useUser } from "@clerk/clerk-expo";
+import { useAuth } from "~/context/auth";
 import { Redirect, Tabs } from "expo-router";
 import { ScanQrCode, User, WashingMachine } from "lucide-react-native";
 import { Platform } from "react-native";
 
 export default function Layout() {
-  const { user } = useUser();
+  const { isSignedIn } = useAuth();
 
-  if (!user) {
+  if (!isSignedIn) {
     return <Redirect href={"/"} />;
   }
 

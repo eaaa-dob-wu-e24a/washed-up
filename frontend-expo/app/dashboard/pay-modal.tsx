@@ -1,10 +1,10 @@
-import { useUser } from "@clerk/clerk-expo";
 import { useStripe } from "@stripe/stripe-react-native";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
+import { useAuth } from "~/context/auth"; // Import custom auth hook
 import Heading from "~/components/heading";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -17,15 +17,20 @@ export default function PayModal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
-  const { user } = useUser();
+  const { token } = useAuth(); // Use auth context
   const router = useRouter();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
   async function initializePaymentSheet() {
+    if (!token) {
+      setError("Not authenticated");
+      return;
+    }
+
     setLoading(true);
     setIsInitialized(false);
     try {
-      const api = new Api(user?.publicMetadata.access_token);
+      const api = new Api(token); // Use token directly
 
       const data = await api.createPaymentIntent({
         amount: Number(credits) * 1000,
@@ -35,7 +40,6 @@ export default function PayModal() {
       const { error } = await initPaymentSheet({
         merchantDisplayName: "Washed Up",
         customerId: data.customer,
-
         customerEphemeralKeySecret: data.ephemeralKey,
         paymentIntentClientSecret: data.paymentIntent,
         allowsDelayedPaymentMethods: true,
@@ -54,8 +58,13 @@ export default function PayModal() {
   }
 
   async function openPaymentSheet() {
+    if (!token) {
+      setError("Not authenticated");
+      return;
+    }
+
     const { error } = await presentPaymentSheet();
-    const api = new Api(user?.publicMetadata.access_token);
+    const api = new Api(token); // Use token directly
 
     if (error) {
       setError(error.message);
