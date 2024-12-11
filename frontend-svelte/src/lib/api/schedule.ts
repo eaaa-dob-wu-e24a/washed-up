@@ -21,7 +21,7 @@ export class ScheduleApi extends ApiBase {
 
 	public async getSchedules(): Promise<[]> {
 		try {
-			const response = await fetch(`${this.baseUrl}/api/schedules/admin`, {
+			const response = await fetch(`${this.baseUrl}/api/admin/schedules`, {
 				headers: {
 					Authorization: `Bearer ${this.accessToken}`
 				}
