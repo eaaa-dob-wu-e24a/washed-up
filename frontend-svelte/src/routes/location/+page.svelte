@@ -6,6 +6,8 @@
 	import maplibregl from 'maplibre-gl';
 	// @ts-ignore
 	import QrCode from 'svelte-qrcode';
+	import * as Select from '@/components/ui/select';
+	import { Input } from '@/components/ui/input';
 
 	let { data } = $props();
 
@@ -38,6 +40,22 @@
 		window.print();
 		document.body.innerHTML = originalBody;
 	};
+
+	// Add new state variables
+	let price = $state(data?.location?.price_per_credit || 0);
+	let currency = $state(data?.location?.currency || 'EUR');
+
+	const currencies = [
+		{ value: 'EUR', label: 'Euro (EUR)' },
+		{ value: 'GBP', label: 'British Pound (GBP)' },
+		{ value: 'DKK', label: 'Danish Krone (DKK)' },
+		{ value: 'SEK', label: 'Swedish Krona (SEK)' },
+		{ value: 'NOK', label: 'Norwegian Krone (NOK)' }
+	];
+
+	const triggerContent = $derived(
+		currencies.find((c) => c.value === currency)?.label ?? 'Select a currency'
+	);
 </script>
 
 <svelte:head>
@@ -46,7 +64,7 @@
 	{/if}
 </svelte:head>
 
-<div class="mx-auto max-w-7xl">
+<div class="mx-auto max-w-7xl pb-12">
 	<h1 class="mb-8 text-3xl font-bold text-gray-900">Location Details</h1>
 
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -110,6 +128,43 @@
 			</Card.Header>
 			<Card.Content>
 				<div id="map" class="h-[400px] w-full rounded-lg"></div>
+			</Card.Content>
+		</Card.Root>
+
+		<!-- Pricing Settings -->
+		<Card.Root class="md:col-span-2">
+			<Card.Header>
+				<Card.Title>Pricing Settings</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<form class="space-y-4" method="POST">
+					<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+						<div class="space-y-2">
+							<label for="price" class="text-sm font-medium text-gray-700">Price per Credit</label>
+							<Input type="number" id="price" bind:value={price} step="0.01" min="0" />
+						</div>
+						<div class="space-y-2">
+							<label for="currency" class="text-sm font-medium text-gray-700">Currency</label>
+							<Select.Root type="single" name="currency" bind:value={currency}>
+								<Select.Trigger>
+									{triggerContent}
+								</Select.Trigger>
+								<Select.Content>
+									<Select.Group>
+										{#each currencies as curr}
+											<Select.Item value={curr.value} label={curr.label}>
+												{curr.label}
+											</Select.Item>
+										{/each}
+									</Select.Group>
+								</Select.Content>
+							</Select.Root>
+						</div>
+					</div>
+					<div class="flex justify-end">
+						<Button type="submit">Update Pricing</Button>
+					</div>
+				</form>
 			</Card.Content>
 		</Card.Root>
 

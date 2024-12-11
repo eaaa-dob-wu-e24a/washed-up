@@ -6,6 +6,8 @@ export type Location = {
 	longitude: string;
 	created_at: string;
 	updated_at: string;
+	price_per_credit: number;
+	currency: string;
 };
 
 export type Machine = {
