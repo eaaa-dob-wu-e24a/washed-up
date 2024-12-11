@@ -24,6 +24,7 @@ export class Api extends ApiBase {
   public updateMachine;
   public deleteMachine;
   public cancelSchedule;
+  public getSchedules;
   public getStats;
   public getUser;
   public getUsers;
@@ -50,6 +51,7 @@ export class Api extends ApiBase {
     this.updateMachine = this.machineApi.updateMachine;
     this.deleteMachine = this.machineApi.deleteMachine;
     this.cancelSchedule = this.scheduleApi.cancelSchedule;
+    this.getSchedules = this.scheduleApi.getSchedules;
     this.getStats = this.statsApi.getStats;
     this.getUser = this.userApi.getUser;
     this.getUsers = this.userApi.getUsers;

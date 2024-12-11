@@ -35,11 +35,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/machines/{id}', [MachineController::class, 'show']);
     Route::get('/machines/code/{code}', [MachineController::class, 'findByCode']);
 
+    Route::get('/schedule/{id}', [ScheduleController::class, 'getById']);     // Get schedules by a specific schedule ID
+    Route::delete('/schedule/{id}', [ScheduleController::class, 'destroy']); // Delete a schedule by ID (without notification)
+
     Route::get('/schedules', [ScheduleController::class, 'index']);
-    Route::get('/schedules/{id}', [ScheduleController::class, 'show']);
+    Route::get('/schedules/{id}', [ScheduleController::class, 'show']);     // Get schedules for a specific machine
     Route::post('/schedules', [ScheduleController::class, 'store']);
     Route::put('/schedules/{id}', [ScheduleController::class, 'update']);
-    Route::delete('/schedules/{id}', [ScheduleController::class, 'destroy']);
+    Route::delete('/schedules/{id}', [ScheduleController::class, 'destroyWithNotification']); // Delete a schedule by ID (with admin notification)
 
     Route::get('/credits', [CreditController::class, 'index']);
     Route::put('/credits', [CreditController::class, 'update']);

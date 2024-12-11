@@ -66,7 +66,7 @@
 					<div class="flex flex-col gap-1">
 						<Card.Title class="capitalize">{machine.type}</Card.Title>
 						<Card.Description>
-							<Badge variant={getMachineStatus(machine.status).variant}>
+							<Badge variant={getMachineStatus(machine.status).variant} class="my-2 p-2">
 								{getMachineStatus(machine.status).text}
 							</Badge>
 						</Card.Description>

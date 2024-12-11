@@ -42,6 +42,44 @@ export class ScheduleApi extends ApiBase {
     }
   }
 
+  public async getByScheduleId(id: number): Promise<Schedule[]> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/schedule/${id}`, {
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        return [];
+      }
+
+      const data = await response.json();
+      return Array.isArray(data) ? data : [data];
+    } catch (error) {
+      console.error("Error getting schedule by id", error);
+      return [];
+    }
+  }
+
+  public async cancelSchedule(id: number): Promise<boolean> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/schedule/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${this.accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error("Error cancelling schedule", error);
+      return false;
+    }
+  }
+
   public async setSchedule({
     machine_type,
     machine_id,

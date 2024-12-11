@@ -105,10 +105,10 @@ export default function SignUpScreen() {
       );
 
       console.log("selected location", selectedLocation);
-      if (selectedLocation?.code !== locationData.locationCode) {
+      if (selectedLocation?.code !== locationData.locationCode.toUpperCase()) {
         console.log(
           selectedLocation?.code,
-          locationData.locationCode,
+          locationData.locationCode.toUpperCase(),
           "invalid"
         );
         setErrors({ locationCode: "Invalid location code" });

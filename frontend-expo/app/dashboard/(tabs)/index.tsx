@@ -2,7 +2,7 @@ import { useUser } from "@clerk/clerk-expo";
 import { Api } from "api";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ActivityIndicator, ScrollView, View } from "react-native";
 import { RefreshControl } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Machine, Schedule } from "types";
@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [unfilteredSchedule, setUnfilteredSchedule] = useState<Schedule[]>([]);
   const [selectedBadge, setSelectedBadge] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { notification, expoPushToken, error } = useNotification();
 
@@ -67,7 +68,12 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
-    getData();
+    const fetchData = async () => {
+      setLoading(true);
+      await getData();
+      setLoading(false);
+    };
+    fetchData();
   }, [user]);
 
   useFocusEffect(
@@ -85,9 +91,14 @@ export default function Dashboard() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Heading title={`Hello, ${user?.publicMetadata?.name}`} />
+        <Heading
+          title={`Hello, ${user?.publicMetadata?.name}`}
+          subtitle="It's laundry day!"
+        />
         <Text className="text-2xl">Schedule</Text>
-        {schedule.length > 0 ? (
+        {loading ? (
+          <ActivityIndicator size={"large"} className="h-6" />
+        ) : schedule.length > 0 ? (
           <ScrollView
             className="-mx-6 mt-4"
             horizontal
@@ -135,7 +146,9 @@ export default function Dashboard() {
             <Text className="text-sm">Dryers</Text>
           </Button>
         </View>
-        {machines ? (
+        {loading ? (
+          <ActivityIndicator size={"large"} className="mt-16" />
+        ) : machines.length > 0 ? (
           <View className="gap-4 mb-20 w-full">
             {machines
               ?.filter((a) =>

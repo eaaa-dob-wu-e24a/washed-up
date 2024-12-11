@@ -20,7 +20,7 @@ export function getMachineStatus(status: number): MachineStatus {
 		case MACHINE_STATUS.AVAILABLE:
 			return {
 				text: 'Available',
-				variant: 'positive'
+				variant: 'default'
 			};
 		default:
 			return {

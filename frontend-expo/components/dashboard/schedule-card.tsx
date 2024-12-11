@@ -1,5 +1,6 @@
+import { useRouter } from "expo-router";
 import { Calendar, Clock, WashingMachine } from "lucide-react-native";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import {
   Card,
   CardContent,
@@ -20,6 +21,7 @@ export default function ScheduleCard({
 }) {
   const startTime = new Date(data.start_time);
   const endTime = new Date(data.end_time);
+  const router = useRouter();
 
   if (endTime.getTime() <= Date.now()) {
     return null;
@@ -37,10 +39,10 @@ export default function ScheduleCard({
     hour: "2-digit",
     minute: "2-digit",
   })}`;
-  const timeUntilStartInMinutes = Math.max(
-    0,
-    Math.floor((startTime.getTime() - Date.now()) / 1000 / 60)
-  ); // in minutes
+  // const timeUntilStartInMinutes = Math.max(
+  //   0,
+  //   Math.floor((startTime.getTime() - Date.now()) / 1000 / 60)
+  // ); // in minutes
 
   const getStatus = () => {
     const now = new Date();
@@ -78,7 +80,14 @@ export default function ScheduleCard({
   const status = getStatus();
 
   return (
-    <>
+    <Pressable
+      onPress={() =>
+        router.push({
+          pathname: "/dashboard/schedule-modal/[id]",
+          params: { id: data.id },
+        })
+      }
+    >
       <Card className="w-72 shadow shadow-slate-400 ios:shadow-black/5">
         <CardHeader>
           <CardTitle>{machine?.type === "dry" ? "Dryer" : "Washer"}</CardTitle>
@@ -99,7 +108,7 @@ export default function ScheduleCard({
           <View className="ml-2">
             <Text>{timeDisplay}</Text>
             <Text>
-              Status:{" "}
+              Status:&nbsp;
               <Text
                 className={
                   status === "Ready" ? "text-primary" : "text-destructive"
@@ -111,6 +120,6 @@ export default function ScheduleCard({
           </View>
         </CardFooter>
       </Card>
-    </>
+    </Pressable>
   );
 }

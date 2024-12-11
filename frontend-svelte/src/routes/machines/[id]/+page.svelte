@@ -5,7 +5,7 @@
 	import * as Card from '@/components/ui/card';
 	import { cn } from '@/utils';
 	import { getMachineStatus } from '@/utils/machine-status.js';
-	import { Loader2, Printer, Trash2 } from 'lucide-svelte';
+	import { Loader2, Power, Printer, Trash2 } from 'lucide-svelte';
 	// @ts-ignore
 	import QrCode from 'svelte-qrcode';
 
@@ -52,12 +52,15 @@
 			>
 				<input type="hidden" name="id" value={data?.machine?.id ?? ''} />
 				<input type="hidden" name="status" value={data?.machine?.status === 1 ? 0 : 1} />
+
 				<button
 					class={cn(
-						badgeVariants({ variant: getMachineStatus(data?.machine?.status ?? 0).variant })
+						badgeVariants({ variant: getMachineStatus(data?.machine?.status ?? 0).variant }),
+						'mt-4 py-2 text-sm'
 					)}
 					type="submit"
 				>
+				<Power class="mr-2" />
 					{isLoading ? 'Updating...' : getMachineStatus(data?.machine?.status ?? 0).text}
 				</button>
 			</form>
