@@ -28,6 +28,18 @@ class ScheduleController extends Controller {
         return response()->json($schedule);
     }
 
+    public function adminIndex() {
+        $user = Auth::user();
+        $schedules = Schedule::with(['machine'])
+            ->whereHas('machine', function ($query) use ($user) {
+                $query->where('location_id', $user->location_id);
+            })
+            ->orderBy('start_time', 'desc')
+            ->get();
+
+        return response()->json($schedules);
+    }
+
     public function store(Request $request) {
         if ($this->hasOverlap($request->machine_id, $request->start_time, $request->end_time)) {
             return response()->json(['error' => 'Schedule overlaps with an existing entry'], 409);
