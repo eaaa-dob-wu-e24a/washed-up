@@ -48,7 +48,10 @@ export default function QR() {
     const machine = await api.getMachineByCode(scanningResult.data);
     if (machine) {
       setIsCameraActive(false);
-      router.push(`/dashboard/booking-modal/${machine.id}`);
+      router.push({
+        pathname: "/dashboard/booking-modal/[id]",
+        params: { id: machine.id },
+      });
     }
     setIsScanning(false);
   }

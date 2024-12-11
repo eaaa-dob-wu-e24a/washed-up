@@ -73,7 +73,7 @@ export default function ScheduleModal() {
   const handleDelete = async () => {
     try {
       await api.cancelSchedule(Number(id));
-      router.push("/");
+      router.back();
     } catch (error) {
       console.error("Failed to cancel schedule:", error);
     }
