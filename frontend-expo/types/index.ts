@@ -44,6 +44,8 @@ export type Location = {
   longitude: number;
   created_at: string;
   updated_at: string;
+  price_per_credit: string;
+  currency: string;
 };
 
 export type Schedule = {

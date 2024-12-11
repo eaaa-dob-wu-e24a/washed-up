@@ -137,11 +137,18 @@
 				<Card.Title>Pricing Settings</Card.Title>
 			</Card.Header>
 			<Card.Content>
-				<form class="space-y-4" method="POST">
+				<form class="space-y-4" method="POST" action="?/update_pricing">
 					<div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
 						<div class="space-y-2">
 							<label for="price" class="text-sm font-medium text-gray-700">Price per Credit</label>
-							<Input type="number" id="price" bind:value={price} step="0.01" min="0" />
+							<Input
+								type="number"
+								id="price"
+								name="pricePerCredit"
+								bind:value={price}
+								step="0.01"
+								min="0"
+							/>
 						</div>
 						<div class="space-y-2">
 							<label for="currency" class="text-sm font-medium text-gray-700">Currency</label>

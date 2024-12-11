@@ -73,6 +73,8 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::put('/machines/{id}', [MachineController::class, 'update']);
     Route::delete('/machines/{id}', [MachineController::class, 'destroy']);
 
+
+    Route::put('/location/pricing', [LocationController::class, 'updatePricing']);
     Route::get('/qrcodes', [QRCodeController::class, 'index']);
     Route::get('/qrcodes/{id}', [QRCodeController::class, 'show']);
     Route::post('/qrcodes', [QRCodeController::class, 'store']);

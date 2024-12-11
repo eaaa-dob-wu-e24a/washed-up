@@ -18,6 +18,7 @@ export class Api extends ApiBase {
   // Method declarations
   public adminLogin;
   public getLocation;
+  public updatePricing;
   public getMachines;
   public getMachine;
   public createMachine;
@@ -45,6 +46,7 @@ export class Api extends ApiBase {
     // Assign methods inside constructor
     this.adminLogin = this.authApi.adminLogin;
     this.getLocation = this.locationApi.getLocation;
+    this.updatePricing = this.locationApi.updatePricing;
     this.getMachines = this.machineApi.getMachines;
     this.getMachine = this.machineApi.getMachine;
     this.createMachine = this.machineApi.createMachine;
