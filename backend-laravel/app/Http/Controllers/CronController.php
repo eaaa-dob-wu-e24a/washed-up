@@ -9,11 +9,11 @@ class CronController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        // $users = User::all();
 
-        foreach ($users as $user) {
-            $user->notify(new NewSampleNotification('Hov der er vidst noget du har glemt', "Husk at blive Washed Up"));
-        }
+        // foreach ($users as $user) {
+        //     $user->notify(new NewSampleNotification('Hov der er vidst noget du har glemt', "Husk at blive Washed Up"));
+        // }
 
         return response()->json(['message' => 'Hello, World!']);
     }
