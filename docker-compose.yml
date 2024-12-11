@@ -31,7 +31,7 @@ services:
     image: alpine/curl
     command: >
       sh -c "
-        echo '*/3 * * * * curl -X GET http://laravel/api/cron/test' > /etc/crontabs/root && \
+        echo '*/5 * * * * curl -X GET http://laravel/api/cron/test' > /etc/crontabs/root && \
         crond -f -l 2
       "
     depends_on:
