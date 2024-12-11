@@ -1,7 +1,8 @@
 import { useUser } from "@clerk/clerk-expo";
+import { useStripe } from "@stripe/stripe-react-native";
 import { useRouter } from "expo-router";
-import { useState, useEffect } from "react";
-import { View, Alert, ScrollView } from "react-native";
+import { useEffect, useState } from "react";
+import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
 import Heading from "~/components/heading";
@@ -9,7 +10,6 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
-import { useStripe } from "@stripe/stripe-react-native";
 
 export default function PayModal() {
   const [credits, setCredits] = useState<string>("10");
@@ -33,8 +33,9 @@ export default function PayModal() {
       });
 
       const { error } = await initPaymentSheet({
-        merchantDisplayName: "Your App Name",
+        merchantDisplayName: "Washed Up",
         customerId: data.customer,
+
         customerEphemeralKeySecret: data.ephemeralKey,
         paymentIntentClientSecret: data.paymentIntent,
         allowsDelayedPaymentMethods: true,
@@ -57,7 +58,6 @@ export default function PayModal() {
     const api = new Api(user?.publicMetadata.access_token);
 
     if (error) {
-      Alert.alert(`Error code: ${error.code}`, error.message);
       setError(error.message);
     } else {
       const result = await api.buyCredits({
