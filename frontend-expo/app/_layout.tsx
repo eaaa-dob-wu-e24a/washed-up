@@ -1,6 +1,4 @@
 import "global.css";
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   DarkTheme,
   DefaultTheme,
@@ -10,7 +8,6 @@ import {
 import { SplashScreen, Stack } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { StatusBar } from "expo-status-bar";
-import { useColorScheme } from "lib/useColorScheme";
 import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
@@ -29,6 +26,8 @@ import { NotificationProvider } from "~/context/notification-context";
 import * as Notifications from "expo-notifications";
 import * as TaskManager from "expo-task-manager";
 import { AuthProvider } from "~/context/auth";
+import { useColorScheme } from "nativewind";
+import { getSecureValue, setSecureValue } from "~/lib/secure-store";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -99,18 +98,18 @@ export {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayoutNav() {
-  const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const theme = await AsyncStorage.getItem("theme");
+      const theme = await getSecureValue("theme");
       if (Platform.OS === "web") {
         // Adds the background color to the html element to prevent white background on overscroll.
         document.documentElement.classList.add("bg-background");
       }
       if (!theme) {
-        AsyncStorage.setItem("theme", colorScheme);
+        setSecureValue("theme", colorScheme === "dark" ? "dark" : "light");
         setIsColorSchemeLoaded(true);
         return;
       }
@@ -154,8 +153,10 @@ export default function RootLayoutNav() {
     <AuthProvider>
       <NotificationProvider>
         <StripeProvider>
-          <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-            <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+          <ThemeProvider
+            value={colorScheme === "light" ? LIGHT_THEME : DARK_THEME}
+          >
+            <StatusBar style={colorScheme === "light" ? "light" : "dark"} />
             <GestureHandlerRootView style={{ flex: 1 }}>
               <Stack
                 screenOptions={{
