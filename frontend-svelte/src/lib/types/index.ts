@@ -59,6 +59,13 @@ export type User = {
 	location_id: number;
 };
 
+export type NotifyableUser = {
+	id: number;
+	name: string;
+	email: string;
+	role: string;
+};
+
 export type ExtendedUser = User & {
 	credits: {
 		id: number;

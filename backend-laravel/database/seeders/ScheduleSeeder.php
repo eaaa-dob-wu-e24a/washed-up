@@ -21,7 +21,6 @@ class ScheduleSeeder extends Seeder
         $endDate = Carbon::parse('2024-12-10');
 
         while ($startDate->lte($endDate)) {
-            // Skip if it's past 21:00
             $dayStart = $startDate->copy()->setHour(8)->setMinute(0);
             $dayEnd = $startDate->copy()->setHour(21)->setMinute(0);
 
@@ -32,11 +31,14 @@ class ScheduleSeeder extends Seeder
                 $user = $users->random();
                 $machine = $machines->random();
 
-                // Calculate duration based on machine type
+                // Calculate duration and latest start time based on machine type
                 $duration = $machine->type === 'wash' ? 3 : 1;
+                $latestStartHour = $machine->type === 'wash' ? 18 : 20;
 
-                // Generate random start time between 8:00 and 21:00
-                $startTime = $dayStart->copy()->addMinutes(rand(0, (13 * 60) - ($duration * 60)));
+                // Generate random start hour between 8 and latest start hour
+                $startTime = $dayStart->copy()->setHour(
+                    rand(8, $latestStartHour)
+                )->setMinute(0);
                 $endTime = $startTime->copy()->addHours($duration);
 
                 // Only create if end time is before 21:00
