@@ -1,6 +1,6 @@
 import { useStripe } from "@stripe/stripe-react-native";
-import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
@@ -10,13 +10,15 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Text } from "~/components/ui/text";
+import { Location } from "~/types";
 
 export default function PayModal() {
   const [credits, setCredits] = useState<string>("10");
-  const price = Number(credits) * 10;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [location, setLocation] = useState<Location | null>(null);
+  const price = Number(credits) * Number(location?.price_per_credit);
   const { token } = useAuth(); // Use auth context
   const router = useRouter();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
@@ -33,8 +35,8 @@ export default function PayModal() {
       const api = new Api(token); // Use token directly
 
       const data = await api.createPaymentIntent({
-        amount: Number(credits) * 1000,
-        currency: "DKK",
+        amount: Number(credits) * Number(location?.price_per_credit) * 100,
+        currency: location?.currency || "DKK",
       });
 
       const { error } = await initPaymentSheet({
@@ -72,7 +74,7 @@ export default function PayModal() {
       const result = await api.buyCredits({
         amount: Number(credits),
         price: price,
-        currency: "DKK",
+        currency: location?.currency || "DKK",
         payment_method: "card",
       });
 
@@ -81,12 +83,6 @@ export default function PayModal() {
       }
     }
   }
-
-  // useEffect(() => {
-  //   if (credits !== "" && Number(credits) > 0) {
-  //     initializePaymentSheet();
-  //   }
-  // }, [credits]);
 
   async function handlePayment() {
     if (!credits || Number(credits) <= 0) return;
@@ -100,6 +96,16 @@ export default function PayModal() {
       openPaymentSheet();
     }
   }, [isInitialized]);
+
+  useEffect(() => {
+    async function fetchLocation() {
+      const api = new Api(token);
+      const location = await api.getLocation();
+
+      setLocation(location);
+    }
+    fetchLocation();
+  }, [token]);
 
   return (
     <SafeAreaView className="flex-1">
@@ -122,7 +128,13 @@ export default function PayModal() {
 
         <View className="mt-6 mb-6">
           <Text weight={500}>Total Price</Text>
-          <Text className="text-2xl">DKK {price.toFixed(2)}</Text>
+          {isNaN(price) ? (
+            <Text className="text-2xl">Loading...</Text>
+          ) : (
+            <Text className="text-2xl">
+              {location?.currency} {price.toFixed(2)}
+            </Text>
+          )}
         </View>
 
         {error && <Text className="text-red-500">{error}</Text>}
