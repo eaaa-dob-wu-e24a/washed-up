@@ -1,17 +1,3 @@
-import "global.css";
-import {
-  DarkTheme,
-  DefaultTheme,
-  Theme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { SplashScreen, Stack } from "expo-router";
-import * as SecureStore from "expo-secure-store";
-import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { Platform } from "react-native";
-import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
-import { NAV_THEME } from "~/lib/constants";
 import {
   Poppins_400Regular,
   Poppins_500Medium,
@@ -19,15 +5,30 @@ import {
   Poppins_700Bold,
   useFonts,
 } from "@expo-google-fonts/poppins";
+import {
+  DarkTheme,
+  DefaultTheme,
+  Theme,
+  ThemeProvider,
+} from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
+import {
+  getBackgroundColorAsync,
+  setBackgroundColorAsync,
+  setButtonStyleAsync,
+} from "expo-navigation-bar";
+import * as Notifications from "expo-notifications";
+import { SplashScreen, Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import * as TaskManager from "expo-task-manager";
+import "global.css";
+import { useEffect, useState } from "react";
+import { useColorScheme as useNativeColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import StripeProvider from "~/components/stripe-provider";
-import { NotificationProvider } from "~/context/notification-context";
-import * as Notifications from "expo-notifications";
-import * as TaskManager from "expo-task-manager";
 import { AuthProvider } from "~/context/auth";
-import { useColorScheme } from "nativewind";
-import { getSecureValue, setSecureValue } from "~/lib/secure-store";
+import { NotificationProvider } from "~/context/notification-context";
+import { NAV_THEME } from "~/lib/constants";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -55,30 +56,30 @@ Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
 
 SplashScreen.preventAutoHideAsync();
 
-const tokenCache = {
-  async getToken(key: string) {
-    try {
-      const item = await SecureStore.getItemAsync(key);
-      if (item) {
-        console.log(`${key} was used 🔐 \n`);
-      } else {
-        console.log("No values stored under key: " + key);
-      }
-      return item;
-    } catch (error) {
-      console.error("SecureStore get item error: ", error);
-      await SecureStore.deleteItemAsync(key);
-      return null;
-    }
-  },
-  async saveToken(key: string, value: string) {
-    try {
-      return SecureStore.setItemAsync(key, value);
-    } catch (err) {
-      return;
-    }
-  },
-};
+// const tokenCache = {
+//   async getToken(key: string) {
+//     try {
+//       const item = await SecureStore.getItemAsync(key);
+//       if (item) {
+//         console.log(`${key} was used 🔐 \n`);
+//       } else {
+//         console.log("No values stored under key: " + key);
+//       }
+//       return item;
+//     } catch (error) {
+//       console.error("SecureStore get item error: ", error);
+//       await SecureStore.deleteItemAsync(key);
+//       return null;
+//     }
+//   },
+//   async saveToken(key: string, value: string) {
+//     try {
+//       return SecureStore.setItemAsync(key, value);
+//     } catch (err) {
+//       return;
+//     }
+//   },
+// };
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -89,44 +90,19 @@ const DARK_THEME: Theme = {
   colors: NAV_THEME.dark,
 };
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
-
-// Prevent the splash screen from auto-hiding before getting the color scheme.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayoutNav() {
-  const { colorScheme, setColorScheme } = useColorScheme();
-  const [isColorSchemeLoaded, setIsColorSchemeLoaded] = useState(false);
+  const nativeColorScheme = useNativeColorScheme();
+  const [colorScheme, setColorScheme] = useState<Theme>(LIGHT_THEME);
 
   useEffect(() => {
-    (async () => {
-      const theme = await getSecureValue("theme");
-      if (Platform.OS === "web") {
-        // Adds the background color to the html element to prevent white background on overscroll.
-        document.documentElement.classList.add("bg-background");
-      }
-      if (!theme) {
-        setSecureValue("theme", colorScheme === "dark" ? "dark" : "light");
-        setIsColorSchemeLoaded(true);
-        return;
-      }
-      const colorTheme = theme === "dark" ? "dark" : "light";
-      // const colorTheme = "light";
-      if (colorTheme !== colorScheme) {
-        setColorScheme(colorTheme);
-        setAndroidNavigationBar(colorTheme);
-        setIsColorSchemeLoaded(true);
-        return;
-      }
-      setAndroidNavigationBar(colorTheme);
-      setIsColorSchemeLoaded(true);
-    })().finally(() => {
-      SplashScreen.hideAsync();
-    });
+    setColorScheme(nativeColorScheme === "dark" ? DARK_THEME : LIGHT_THEME);
   }, []);
+
+  useEffect(() => {
+    setColorScheme(nativeColorScheme === "dark" ? DARK_THEME : LIGHT_THEME);
+  }, [nativeColorScheme]);
 
   const [loaded, error] = useFonts({
     Poppins_400Regular,
@@ -141,22 +117,12 @@ export default function RootLayoutNav() {
     }
   }, [loaded, error]);
 
-  if (!loaded && !error) {
-    return null;
-  }
-
-  if (!isColorSchemeLoaded) {
-    return null;
-  }
-
   return (
     <AuthProvider>
       <NotificationProvider>
         <StripeProvider>
-          <ThemeProvider
-            value={colorScheme === "light" ? LIGHT_THEME : DARK_THEME}
-          >
-            <StatusBar style={colorScheme === "light" ? "light" : "dark"} />
+          <ThemeProvider value={colorScheme}>
+            <StatusBar />
             <GestureHandlerRootView style={{ flex: 1 }}>
               <Stack
                 screenOptions={{

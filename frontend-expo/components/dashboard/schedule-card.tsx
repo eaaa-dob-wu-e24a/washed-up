@@ -88,7 +88,7 @@ export default function ScheduleCard({
         })
       }
     >
-      <Card className="w-72 shadow shadow-foreground">
+      <Card className="w-72 shadow">
         <CardHeader>
           <CardTitle>{machine?.type === "dry" ? "Dryer" : "Washer"}</CardTitle>
           <CardDescription>Machine #{machine?.id}</CardDescription>

@@ -148,21 +148,21 @@ export default function Dashboard() {
         <Text className="text-2xl mt-4">All machines</Text>
         <View className="flex flex-row justify-start gap-4 my-4">
           <Button
-            className="py-3 px-6 rounded-full shadow shadow-foreground"
+            className="py-3 px-6 rounded-full shadow"
             variant={selectedBadge === "all" ? "default" : "outline"}
             onPress={() => setSelectedBadge("all")}
           >
             <Text className="text-sm">All</Text>
           </Button>
           <Button
-            className="py-3 px-6 rounded-full shadow shadow-foreground"
+            className="py-3 px-6 rounded-full shadow"
             variant={selectedBadge === "wash" ? "default" : "outline"}
             onPress={() => setSelectedBadge("wash")}
           >
             <Text className="text-sm">Washers</Text>
           </Button>
           <Button
-            className="py-3 px-6 rounded-full shadow shadow-foreground"
+            className="py-3 px-6 rounded-full shadow"
             variant={selectedBadge === "dry" ? "default" : "outline"}
             onPress={() => setSelectedBadge("dry")}
           >

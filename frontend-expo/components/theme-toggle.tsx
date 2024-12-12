@@ -1,6 +1,5 @@
 import { useColorScheme } from "nativewind";
 import { Pressable, View } from "react-native";
-import { setAndroidNavigationBar } from "~/lib/android-navigation-bar";
 import { MoonStar } from "~/lib/icons/MoonStar";
 import { Sun } from "~/lib/icons/Sun";
 import { setSecureValue } from "~/lib/secure-store";
@@ -14,7 +13,6 @@ export function ThemeToggle() {
       onPress={() => {
         const newTheme = colorScheme === "light" ? "light" : "dark";
         setColorScheme(newTheme);
-        setAndroidNavigationBar(newTheme);
         setSecureValue("theme", newTheme);
       }}
       className="web:ring-offset-background web:transition-colors web:focus-visible:outline-none web:focus-visible:ring-2 web:focus-visible:ring-ring web:focus-visible:ring-offset-2"

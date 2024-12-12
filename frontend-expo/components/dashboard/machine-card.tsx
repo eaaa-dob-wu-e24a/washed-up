@@ -64,11 +64,7 @@ export default function MachineCard({ data }: { data: Machine }) {
             })
           }
         >
-          <Card
-            className={`${
-              data.status !== 1 ? "opacity-50" : "shadow shadow-foreground"
-            }`}
-          >
+          <Card className={`${data.status !== 1 ? "opacity-50" : "shadow"}`}>
             <CardHeader className="flex gap-4 flex-row justify-between">
               <View className="self-center">
                 <CardTitle className="capitalize">
