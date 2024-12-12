@@ -18,7 +18,6 @@ export default function Dashboard() {
   const { token } = useAuth();
   const [machines, setMachines] = useState<Machine[]>([]);
   const [schedule, setSchedule] = useState<Schedule[]>([]);
-  const [unfilteredSchedule, setUnfilteredSchedule] = useState<Schedule[]>([]);
   const [selectedBadge, setSelectedBadge] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -49,7 +48,6 @@ export default function Dashboard() {
 
     setMachines(machine_data);
     setSchedule(filtered_schedule_data);
-    setUnfilteredSchedule(schedule_data);
   }
 
   // Rest of the useEffect hooks remain the same, just replace user with token in dependencies
@@ -161,7 +159,7 @@ export default function Dashboard() {
                 selectedBadge === "all" ? true : a.type === selectedBadge
               )
               .map((machine) => {
-                const scheduleItem = unfilteredSchedule.find(
+                const scheduleItem = schedule.find(
                   (s) => s.machine_id === machine.id
                 );
                 return (
