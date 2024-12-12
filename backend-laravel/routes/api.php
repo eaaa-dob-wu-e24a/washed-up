@@ -1,11 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BookController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\ClerkController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\CreditPurchaseController;
@@ -30,7 +28,12 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'index']);
-    Route::patch("/clerk-metadata/{id}", [ClerkController::class, 'updateMetadata']);
+
+    Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verify'])
+        ->name('verification.verify');
+
+    Route::post('/email/verification-notification', [AuthController::class, 'resend'])
+        ->name('verification.send');
 
     Route::get('/machines', [MachineController::class, 'index']);
     Route::get('/machines/{id}', [MachineController::class, 'show']);

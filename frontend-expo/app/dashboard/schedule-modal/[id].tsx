@@ -1,4 +1,4 @@
-import { useAuth } from "~/context/auth"; // Replace Clerk import
+import { useAuth } from "~/context/auth";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
