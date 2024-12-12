@@ -21,6 +21,9 @@ export default function QR() {
   useFocusEffect(
     useCallback(() => {
       setIsCameraActive(true);
+      return () => {
+        setIsCameraActive(false);
+      };
     }, [])
   );
 

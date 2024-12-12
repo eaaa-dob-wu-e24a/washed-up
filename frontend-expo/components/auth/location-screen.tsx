@@ -110,11 +110,15 @@ function QRCodeLocationForm({
 }) {
   const [permission, requestPermission] = useCameraPermissions();
   const [isScanning, setIsScanning] = useState(false);
+  const [isCameraActive, setIsCameraActive] = useState(true);
 
   useEffect(() => {
     if (data.location && data.locationCode) {
       onNext();
     }
+    return () => {
+      setIsCameraActive(false);
+    };
   }, [data.location, data.locationCode]);
 
   if (!permission) {
@@ -151,16 +155,18 @@ function QRCodeLocationForm({
 
   return (
     <View className="h-[400px]">
-      <CameraView
-        barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
-        onBarcodeScanned={handleBarcodeScanned}
-        style={{ flex: 1, borderRadius: 10 }}
-        facing={"back"}
-      >
-        <View className="flex-1 flex-row justify-center items-center p-4">
-          <View className="w-64 h-64 border-2 border-foreground rounded-lg"></View>
-        </View>
-      </CameraView>
+      {isCameraActive && (
+        <CameraView
+          barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
+          onBarcodeScanned={handleBarcodeScanned}
+          style={{ flex: 1, borderRadius: 10 }}
+          facing={"back"}
+        >
+          <View className="flex-1 flex-row justify-center items-center p-4">
+            <View className="w-64 h-64 border-2 border-foreground rounded-lg"></View>
+          </View>
+        </CameraView>
+      )}
     </View>
   );
 }
