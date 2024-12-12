@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->string('address');
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
+            $table->string('currency', 3)->default('DKK');
+            $table->decimal('price_per_credit', 10, 2)->default(10);
             $table->timestamps();
         });
         Schema::table('users', function (Blueprint $table) {

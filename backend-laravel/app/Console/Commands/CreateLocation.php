@@ -27,7 +27,7 @@ class CreateLocation extends Command
     public function handle()
     {
         $address = $this->argument('address');
-        $code = strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 4));
+        $code = strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6));
 
         try {
             // Geocode the address using OpenStreetMap

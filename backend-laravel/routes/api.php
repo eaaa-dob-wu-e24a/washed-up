@@ -15,6 +15,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\ExpoTokenController;
 use App\Http\Controllers\LocationStatsController;
+use App\Http\Controllers\NotifyerController;
 
 Route::controller(AuthController::class)->group(function () {
     Route::post('validate', 'validate');
@@ -80,4 +81,7 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/qrcodes', [QRCodeController::class, 'store']);
     Route::put('/qrcodes/{id}', [QRCodeController::class, 'update']);
     Route::delete('/qrcodes/{id}', [QRCodeController::class, 'destroy']);
+
+    Route::get('/notifyer/users', [NotifyerController::class, 'users']);
+    Route::post('/notifyer/send', [NotifyerController::class, 'sendNotification']);
 });

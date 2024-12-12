@@ -6,35 +6,26 @@ use Illuminate\Database\Seeder;
 use App\Models\Machine;
 use App\Models\Location;
 
-class MachineSeeder extends Seeder {
+class MachineSeeder extends Seeder
+{
     /**
      * Run the database seeds.
      */
-    public function run() {
-        $faker = \Faker\Factory::create();
-
+    public function run(): void
+    {
         $locations = Location::all();
 
-        if ($locations->isEmpty()) {
-            $locations = Location::factory()->count(10)->create();
-        }
-
-        // Ensure each location has at least one machine
         foreach ($locations as $location) {
-            Machine::create([
-                'type' => $faker->randomElement(['wash', 'dry']),
-                'location_id' => $location->id,
-                'status' => $faker->boolean,
-            ]);
-        }
+            // Generate 2-5 machines per location
+            $numMachines = rand(2, 5);
 
-        // Create additional machines
-        for ($i = 0; $i < 100; $i++) {
-            Machine::create([
-                'type' => $faker->randomElement(['wash', 'dry']),
-                'location_id' => $locations->random()->id,
-                'status' => $faker->boolean,
-            ]);
+            for ($i = 0; $i < $numMachines; $i++) {
+                Machine::create([
+                    'type' => rand(0, 1) ? 'wash' : 'dry',
+                    'location_id' => $location->id,
+                    'status' => true,
+                ]);
+            }
         }
     }
 }

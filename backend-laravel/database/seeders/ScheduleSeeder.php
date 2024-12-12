@@ -15,27 +15,42 @@ class ScheduleSeeder extends Seeder
      */
     public function run(): void
     {
-        // Ensure there are some users and machines to associate with schedules
         $users = User::all();
         $machines = Machine::all();
+        $startDate = Carbon::parse('2023-12-10');
+        $endDate = Carbon::parse('2024-12-10');
 
-        if ($users->isEmpty()) {
-            $users = User::factory()->count(10)->create();
-        }
+        while ($startDate->lte($endDate)) {
+            // Skip if it's past 21:00
+            $dayStart = $startDate->copy()->setHour(8)->setMinute(0);
+            $dayEnd = $startDate->copy()->setHour(21)->setMinute(0);
 
-        if ($machines->isEmpty()) {
-            $machines = Machine::factory()->count(10)->create();
-        }
+            // Create 5-15 schedules per day
+            $dailySchedules = rand(5, 15);
 
-        foreach ($users as $user) {
-            $machine = $machines->random();
-            $starttime = Carbon::now()->addHours(rand(1, 8));
-            Schedule::create([
-                'user_id' => $user->id,
-                'machine_id' => $machine->id,
-                'start_time' => $starttime,
-                'end_time' => $starttime->copy()->addHours(rand(1, 8)),
-            ]);
+            for ($i = 0; $i < $dailySchedules; $i++) {
+                $user = $users->random();
+                $machine = $machines->random();
+
+                // Calculate duration based on machine type
+                $duration = $machine->type === 'wash' ? 3 : 1;
+
+                // Generate random start time between 8:00 and 21:00
+                $startTime = $dayStart->copy()->addMinutes(rand(0, (13 * 60) - ($duration * 60)));
+                $endTime = $startTime->copy()->addHours($duration);
+
+                // Only create if end time is before 21:00
+                if ($endTime->lte($dayEnd)) {
+                    Schedule::create([
+                        'user_id' => $user->id,
+                        'machine_id' => $machine->id,
+                        'start_time' => $startTime,
+                        'end_time' => $endTime,
+                    ]);
+                }
+            }
+
+            $startDate->addDay();
         }
     }
 }

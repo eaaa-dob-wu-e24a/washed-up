@@ -6,22 +6,19 @@ use Illuminate\Database\Seeder;
 use App\Models\Machine;
 use App\Models\QRCode;
 
-class QRCodeSeeder extends Seeder {
+class QRCodeSeeder extends Seeder
+{
     /**
      * Run the database seeds.
      */
-    public function run(): void {
-        // Ensure there are some machines to associate with QR codes
+    public function run(): void
+    {
         $machines = Machine::all();
-
-        if ($machines->isEmpty()) {
-            $machines = Machine::factory()->count(10)->create();
-        }
 
         foreach ($machines as $machine) {
             QRCode::create([
                 'machine_id' => $machine->id,
-                'code' => 'QR-' . strtoupper(uniqid()),
+                'code' => strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 4)),
             ]);
         }
     }

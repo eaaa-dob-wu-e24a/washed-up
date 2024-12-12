@@ -52,7 +52,7 @@ class MachineController extends Controller
         // Generate and create QR code
         $qrCode = QRCode::create([
             'machine_id' => $machine->id,
-            'code' => strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 6))
+            'code' => strtoupper(substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 4))
         ]);
 
         // Load the QR code relationship and return
