@@ -5,7 +5,6 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Api } from "~/api";
 import { LocationScreen } from "~/components/auth/location-screen";
 import { UserInfoScreen } from "~/components/auth/user-info-screen";
@@ -15,10 +14,12 @@ import type {
   SignUpFormErrors,
   UserInfoFormData,
 } from "~/types";
+import { useAuth } from "~/context/auth";
 
 export default function SignUpScreen() {
   const api = new Api();
   const insets = useSafeAreaInsets();
+  const { setToken } = useAuth();
 
   const [screen, setScreen] = useState<"location" | "userInfo">("location");
   const [userInfo, setUserInfo] = useState<UserInfoFormData>({
@@ -94,8 +95,8 @@ export default function SignUpScreen() {
         });
 
         if (response?.access_token) {
-          await AsyncStorage.setItem("token", response.access_token);
-          router.replace("/"); // Navigate to home screen
+          await setToken(response.access_token); // Set the token first
+          router.replace("/dashboard/(tabs)"); // Then redirect
         } else {
           setErrors(response);
         }

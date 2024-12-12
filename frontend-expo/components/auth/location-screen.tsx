@@ -253,6 +253,7 @@ function ManualLocationForm({
         <Input
           value={data.locationCode}
           placeholder="Enter the location code..."
+          keyboardType="visible-password"
           onChangeText={(value) => onUpdate("locationCode", value)}
         />
         <InputError errors={errors} name="locationCode" />

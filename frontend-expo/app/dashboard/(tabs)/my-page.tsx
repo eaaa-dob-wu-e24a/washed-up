@@ -1,23 +1,24 @@
-import { useAuth } from "~/context/auth";
 import { Redirect, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Api } from "~/api";
+import Heading from "~/components/heading";
+import Credits from "~/components/my-page/credits";
+import Transactions from "~/components/my-page/transactions";
+import UserInfo from "~/components/my-page/user-info";
 import { Button } from "~/components/ui/button";
+import { Label } from "~/components/ui/label";
+import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
+import { useAuth } from "~/context/auth";
+import { useNotification } from "~/context/notification-context";
 import {
-  Credits as CreditsType,
   CreditPurchase,
+  Credits as CreditsType,
   CreditUsage,
   Location,
 } from "~/types";
-import Credits from "~/components/my-page/credits";
-import Heading from "~/components/heading";
-import UserInfo from "~/components/my-page/user-info";
-import { Label } from "~/components/ui/label";
-import Transactions from "~/components/my-page/transactions";
-import { useNotification } from "~/context/notification-context";
 
 export default function MyPage() {
   const { token, signOut } = useAuth();
@@ -26,6 +27,7 @@ export default function MyPage() {
   const [creditPurchases, setCreditPurchases] = useState<CreditPurchase[]>([]);
   const [creditUsages, setCreditUsages] = useState<CreditUsage[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   async function getData() {
     const api = new Api(token);
@@ -47,13 +49,23 @@ export default function MyPage() {
 
   useEffect(() => {
     if (!token) return;
-    getData();
+    const fetchData = async () => {
+      setLoading(true);
+      await getData();
+      setLoading(false);
+    };
+    fetchData();
   }, [token]);
 
   useFocusEffect(
     useCallback(() => {
       if (!token) return;
-      getData();
+      const fetchData = async () => {
+        setLoading(true);
+        await getData();
+        setLoading(false);
+      };
+      fetchData();
     }, [token])
   );
 
@@ -76,16 +88,36 @@ export default function MyPage() {
 
         <View className="flex gap-4">
           <Label>Account</Label>
-          <UserInfo location={location} />
+          {loading ? (
+            <>
+              <Skeleton className="rounded-lg w-full h-12" />
+              <Skeleton className="rounded-lg w-full h-12" />
+            </>
+          ) : (
+            <UserInfo location={location} />
+          )}
 
           <Label>Credits</Label>
-          <Credits credits={credits} />
+          {loading ? (
+            <Skeleton className="rounded-lg w-full h-32" />
+          ) : (
+            <Credits credits={credits} />
+          )}
 
           <Label>Transactions</Label>
-          <Transactions
-            creditPurchases={creditPurchases}
-            creditUsages={creditUsages}
-          />
+          {loading ? (
+            <View className="h-screen">
+              <Skeleton className="rounded-lg w-full h-16" />
+              <Skeleton className="rounded-lg w-full h-16 mt-4" />
+              <Skeleton className="rounded-lg w-full h-16 mt-4" />
+              <Skeleton className="rounded-lg w-full h-16 mt-4" />
+            </View>
+          ) : (
+            <Transactions
+              creditPurchases={creditPurchases}
+              creditUsages={creditUsages}
+            />
+          )}
         </View>
 
         <Button

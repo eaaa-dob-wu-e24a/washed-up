@@ -1,7 +1,7 @@
 import { Api } from "api";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { RefreshControl } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Machine, Schedule } from "types";
@@ -78,7 +78,12 @@ export default function Dashboard() {
 
   useFocusEffect(
     useCallback(() => {
-      getData();
+      const fetchData = async () => {
+        setLoading(true);
+        await getData();
+        setLoading(false);
+      };
+      fetchData();
     }, [])
   );
 
@@ -94,7 +99,7 @@ export default function Dashboard() {
         <Heading title={`Hello, ${userName}`} subtitle="It's laundry day!" />
         <Text className="text-2xl">Schedule</Text>
         {loading ? (
-          <Skeleton className="rounded-full w-full h-12" />
+          <Skeleton className="rounded-lg w-full h-6 mt-4" />
         ) : schedule.length > 0 ? (
           <ScrollView
             className="-mx-6 mt-4"
@@ -144,7 +149,11 @@ export default function Dashboard() {
           </Button>
         </View>
         {loading ? (
-          <Skeleton className="rounded-full w-full h-12" />
+          <>
+            <Skeleton className="rounded-lg w-full h-12 mt-4" />
+            <Skeleton className="rounded-lg w-full h-12 mt-4" />
+            <Skeleton className="rounded-lg w-full h-12 mt-4" />
+          </>
         ) : machines.length > 0 ? (
           <View className="gap-4 mb-20 w-full">
             {machines
