@@ -1,16 +1,34 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import Input from '@/components/ui/input/input.svelte';
 	import MultiSelect from './multi-select.svelte';
 	import Button from '@/components/ui/button/button.svelte';
 	import Label from '@/components/ui/label/label.svelte';
 
+	const notificationSchema = z.object({
+		title: z
+			.string()
+			.min(1, 'Title is required')
+			.max(100, 'Title must be less than 100 characters'),
+		body: z
+			.string()
+			.min(1, 'Message is required')
+			.max(500, 'Message must be less than 500 characters'),
+		selectedUsers: z
+			.array(
+				z.object({
+					value: z.string(),
+					label: z.string()
+				})
+			)
+			.min(1, 'Please select at least one recipient')
+	});
+
+	type NotificationSchema = z.infer<typeof notificationSchema>;
+
 	let { data } = $props();
 
-	let formData: {
-		title: string;
-		body: string;
-		selectedUsers: { value: string; label: string }[];
-	} = $state({
+	let formData: NotificationSchema = $state({
 		title: '',
 		body: '',
 		selectedUsers: []
@@ -33,47 +51,36 @@
 
 	let hasSubmitted = $state(false);
 
-	function validateTitle(title: string): string {
-		if (!title.trim()) return 'Title is required';
-		if (title.length > 100) return 'Title must be less than 100 characters';
-		return '';
-	}
-
-	function validateBody(body: string): string {
-		if (!body.trim()) return 'Message is required';
-		if (body.length > 500) return 'Message must be less than 500 characters';
-		return '';
-	}
-
-	function validateUsers(users: any[]): string {
-		return users.length === 0 ? 'Please select at least one recipient' : '';
-	}
-
-	function validateForm(): boolean {
-		errors.title = validateTitle(formData.title);
-		errors.body = validateBody(formData.body);
-		errors.selectedUsers = validateUsers(formData.selectedUsers);
-
-		return !errors.title && !errors.body && !errors.selectedUsers;
-	}
-
 	$effect(() => {
-		errors.title = validateTitle(formData.title);
-	});
+		if (hasSubmitted) {
+			const result = notificationSchema.safeParse(formData);
 
-	$effect(() => {
-		errors.body = validateBody(formData.body);
-	});
+			if (!result.success) {
+				// Reset all errors first
+				errors.title = '';
+				errors.body = '';
+				errors.selectedUsers = '';
 
-	$effect(() => {
-		errors.selectedUsers = validateUsers(formData.selectedUsers);
+				// Map Zod errors to our error state
+				result.error.errors.forEach((error) => {
+					const path = error.path[0] as keyof typeof errors;
+					errors[path] = error.message;
+				});
+			} else {
+				// Clear all errors if the form becomes valid
+				errors.title = '';
+				errors.body = '';
+				errors.selectedUsers = '';
+			}
+		}
 	});
 
 	async function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
 		hasSubmitted = true;
 
-		if (!validateForm()) {
+		const result = notificationSchema.safeParse(formData);
+		if (!result.success) {
 			return;
 		}
 
