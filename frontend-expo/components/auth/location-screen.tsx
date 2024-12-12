@@ -153,11 +153,11 @@ function QRCodeLocationForm({
       <CameraView
         barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
         onBarcodeScanned={handleBarcodeScanned}
-        style={{ flex: 1 }}
+        style={{ flex: 1, borderRadius: 10 }}
         facing={"back"}
       >
         <View className="flex-1 flex-row justify-center items-center p-4">
-          <View className="w-64 h-64 border-2 border-background rounded-lg"></View>
+          <View className="w-64 h-64 border-2 border-foreground rounded-lg"></View>
         </View>
       </CameraView>
     </View>
