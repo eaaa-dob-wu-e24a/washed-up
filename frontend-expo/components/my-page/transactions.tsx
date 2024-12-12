@@ -43,14 +43,14 @@ function UsageTransactions({ creditUsages }: { creditUsages: CreditUsage[] }) {
   return (
     <View className="flex-col gap-3">
       {creditUsages.length === 0 && (
-        <Text className="text-secondary text-sm mt-1 text-center">
+        <Text className="text-secondary-foreground text-sm mt-1 text-center">
           No usage transactions yet.
         </Text>
       )}
       {creditUsages.map((usage) => (
         <View key={usage.id} className="flex-col p-3 rounded-lg bg-secondary">
           <View className="flex-row justify-between mb-1">
-            <Text className="font-medium">
+            <Text className="font-semibold text-xl">
               {usage.machine_type === "wash" ? "Washer" : "Dryer"} #
               {usage.machine_id}
             </Text>
@@ -65,14 +65,14 @@ function UsageTransactions({ creditUsages }: { creditUsages: CreditUsage[] }) {
             </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-secondary">
+            <Text className="text-secondary-foreground">
               {usage.duration_minutes} minutes
             </Text>
-            <Text className="text-secondary">
+            <Text className="text-secondary-foreground">
               Balance: {usage.balance_after}
             </Text>
           </View>
-          <Text className="text-secondary text-sm mt-1">
+          <Text className="text-secondary-foreground text-sm mt-1">
             {new Date(usage.created_at).toLocaleString(undefined, {
               year: "numeric",
               month: "numeric",
@@ -95,7 +95,7 @@ function PurchaseTransactions({
   return (
     <View className="flex-col gap-3">
       {creditPurchases.length === 0 && (
-        <Text className="text-secondary text-sm mt-1 text-center">
+        <Text className="text-secondary-foreground text-sm mt-1 text-center">
           No purchase transactions yet.
         </Text>
       )}
@@ -111,15 +111,15 @@ function PurchaseTransactions({
             </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-secondary flex-1 capitalize">
+            <Text className="text-secondary-foreground flex-1 capitalize">
               {purchase.payment_method}
             </Text>
-            <Text className="text-secondary flex-1 text-right">
+            <Text className="text-secondary-foreground flex-1 text-right">
               Balance: {purchase.balance_after}
             </Text>
           </View>
           <View className="flex-row justify-between">
-            <Text className="text-secondary text-sm mt-1 flex-1">
+            <Text className="text-secondary-foreground text-sm mt-1 flex-1">
               {new Date(purchase.created_at).toLocaleString(undefined, {
                 year: "numeric",
                 month: "numeric",
@@ -128,7 +128,7 @@ function PurchaseTransactions({
                 minute: "numeric",
               })}
             </Text>
-            <Text className="text-secondary flex-1 text-right">
+            <Text className="text-secondary-foreground flex-1 text-right">
               {purchase.price} {purchase.currency}
             </Text>
           </View>

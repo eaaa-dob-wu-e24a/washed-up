@@ -1,3 +1,4 @@
+import React from "react";
 import { useAuth } from "~/context/auth";
 import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -184,7 +185,7 @@ export default function BookingModal() {
             />
           )}
           <Text className="w-[20%] text-center p-2">{hour}</Text>
-          <Separator orientation={"vertical"} />
+          <Separator orientation={"vertical"} className="dark:bg-border" />
 
           <Text className="p-2">
             {isEvent ? (
@@ -209,7 +210,7 @@ export default function BookingModal() {
               </Text>
             )}
         </View>
-        <Separator />
+        <Separator className="dark:bg-border" />
       </ScrollView>
     );
   });
@@ -252,14 +253,14 @@ export default function BookingModal() {
               <Text className="text-center pb-2">
                 Selected date: {selectedDate}
               </Text>
-              <Separator />
+              <Separator className="dark:bg-border" />
               {renderHours}
             </>
           )}
         </SafeAreaView>
       </ScrollView>
       {isBooking && (
-        <View className="bg-white p-6 border border-slate-200">
+        <View className="p-6 border-t border-secondary">
           <Text className="text-xl font-bold mb-4">Confirm Booking</Text>
           <Text className="mb-2">
             {data[0]?.type === "dry" ? "Dryer" : "Washer"} #{data[0]?.id}

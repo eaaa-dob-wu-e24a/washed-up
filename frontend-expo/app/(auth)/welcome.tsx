@@ -26,9 +26,9 @@ export default function Welcome() {
           </Button>
         </Link>
         <View className="flex flex-row items-center">
-          <View className="flex-1 h-px bg-gray-300"></View>
+          <View className="flex-1 h-px bg-secondary-foreground"></View>
           <Text className="px-3 text-center">or</Text>
-          <View className="flex-1 h-px bg-gray-300"></View>
+          <View className="flex-1 h-px bg-secondary-foreground"></View>
         </View>
         <Link href={"/sign-in"} className="p-8" asChild>
           <Button variant={"outline"}>

@@ -169,7 +169,9 @@ export default function Dashboard() {
             <Text className="text-sm">Dryers</Text>
           </Button>
         </View>
-        {machines.length > 0 ? (
+        {loading ? (
+          <Skeleton className="rounded-lg w-full h-24" />
+        ) : machines.length > 0 ? (
           <View className="gap-4 mb-20 w-full">
             {machines
               ?.filter((a) =>

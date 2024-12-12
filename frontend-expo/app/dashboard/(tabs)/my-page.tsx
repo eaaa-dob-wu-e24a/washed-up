@@ -1,3 +1,4 @@
+import React from "react";
 import { Redirect, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
