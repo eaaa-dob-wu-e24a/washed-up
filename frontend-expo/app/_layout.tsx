@@ -12,11 +12,6 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
-import {
-  getBackgroundColorAsync,
-  setBackgroundColorAsync,
-  setButtonStyleAsync,
-} from "expo-navigation-bar";
 import * as Notifications from "expo-notifications";
 import { SplashScreen, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
