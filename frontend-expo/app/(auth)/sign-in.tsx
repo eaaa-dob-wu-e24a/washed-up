@@ -45,7 +45,7 @@ export default function Page() {
             autoCapitalize="none"
             value={emailAddress}
             placeholder="Email..."
-            className="placeholder:text-foreground placeholder:opacity-50"
+            className="placeholder:text-foreground"
             onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
           />
         </View>
@@ -54,7 +54,7 @@ export default function Page() {
           <Input
             value={password}
             placeholder="Password..."
-            className="placeholder:text-foreground placeholder:opacity-50"
+            className="placeholder:text-foreground"
             secureTextEntry={true}
             onChangeText={(password) => setPassword(password)}
           />
