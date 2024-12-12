@@ -48,7 +48,7 @@ function UsageTransactions({ creditUsages }: { creditUsages: CreditUsage[] }) {
         </Text>
       )}
       {creditUsages.map((usage) => (
-        <View key={usage.id} className="flex-col p-3 bg-gray-100 rounded-lg">
+        <View key={usage.id} className="flex-col p-3 rounded-lg bg-secondary">
           <View className="flex-row justify-between mb-1">
             <Text className="font-medium">
               {usage.machine_type === "wash" ? "Washer" : "Dryer"} #
@@ -100,7 +100,10 @@ function PurchaseTransactions({
         </Text>
       )}
       {creditPurchases.map((purchase) => (
-        <View key={purchase.id} className="flex-col p-3 bg-gray-100 rounded-lg">
+        <View
+          key={purchase.id}
+          className="flex-col p-3 rounded-lg bg-secondary"
+        >
           <View className="flex-row justify-between mb-1">
             <Text className="font-medium flex-1">Credit Purchase</Text>
             <Text className="text-green-600 flex-1 text-right">

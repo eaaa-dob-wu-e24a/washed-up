@@ -64,8 +64,8 @@ export default function MachineCard({ data }: { data: Machine }) {
           }
         >
           <Card
-            className={`shadow shadow-slate-400 ios:shadow-black/5 ${
-              data.status !== 1 ? "opacity-50" : ""
+            className={`${
+              data.status !== 1 ? "opacity-50" : "shadow shadow-foreground"
             }`}
           >
             <CardHeader className="flex gap-4 flex-row justify-between">

@@ -114,8 +114,8 @@ export default function RootLayoutNav() {
         setIsColorSchemeLoaded(true);
         return;
       }
-      // const colorTheme = theme === "dark" ? "dark" : "light";
-      const colorTheme = "light";
+      const colorTheme = theme === "dark" ? "dark" : "light";
+      // const colorTheme = "light";
       if (colorTheme !== colorScheme) {
         setColorScheme(colorTheme);
         setAndroidNavigationBar(colorTheme);
