@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -42,6 +43,26 @@ class AuthController extends Controller {
         }
 
         return response()->json($user);
+    }
+
+    public function verify(Request $request) {
+        $user = User::find($request->route('id'));
+
+        if ($user->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email already verified'], 400);
+        }
+
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        return response()->json(['message' => 'Email verified successfully']);
+    }
+
+    public function resend(Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+
+        return response()->json(['message' => 'Verification link sent']);
     }
 
     public function register(Request $request) {
@@ -93,7 +114,6 @@ class AuthController extends Controller {
         $user = new User([
             'name' => $request->name,
             'email' => $request->email,
-            'email_verified_at' => Carbon::now(),
             'password' => Hash::make($request->password),
             'location_id' => $request->location_id,
             'role' => $request->role ?? 'user'
@@ -107,12 +127,26 @@ class AuthController extends Controller {
             'amount' => 0  // Set initial credit amount to 0
         ]);
 
+        $user->sendEmailVerificationNotification();
+
         $token = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
             'role' => $user->role
+        ]);
+    }
+
+    public function verificationStatus($id) {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        return response()->json([
+            'is_verified' => !is_null($user->email_verified_at),
         ]);
     }
 
@@ -152,6 +186,7 @@ class AuthController extends Controller {
             'success' => true
         ]);
     }
+
     public function login(Request $request) {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
@@ -160,6 +195,13 @@ class AuthController extends Controller {
         }
 
         $user = User::where('email', $request->email)->firstOrFail();
+
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Please verify your email address.',
+                'verification_required' => true
+            ], 403);
+        }
 
         $token = $user->createToken('authToken')->plainTextToken;
 

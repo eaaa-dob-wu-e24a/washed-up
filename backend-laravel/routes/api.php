@@ -20,6 +20,14 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login');
     Route::post('admin-login', 'adminLogin');
+
+    Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verify'])
+        ->name('verification.verify');
+    Route::get('/email/status/{id}', 'verificationStatus')
+        ->name('verification.status');
+    Route::post('/email/verification-notification', [AuthController::class, 'resend'])
+        ->name('verification.send');
+
     Route::get('locations', [LocationController::class, 'index']);
     Route::get('locations/code/{code}', [LocationController::class, 'getByCode']);
 
@@ -28,12 +36,6 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', [AuthController::class, 'index']);
-
-    Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verify'])
-        ->name('verification.verify');
-
-    Route::post('/email/verification-notification', [AuthController::class, 'resend'])
-        ->name('verification.send');
 
     Route::get('/machines', [MachineController::class, 'index']);
     Route::get('/machines/{id}', [MachineController::class, 'show']);

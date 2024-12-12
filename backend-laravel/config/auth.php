@@ -112,4 +112,9 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    // Enable email verification
+    'verification' => [
+        'enable' => true,
+        'expire' => 60, // minutes
+    ],
 ];
