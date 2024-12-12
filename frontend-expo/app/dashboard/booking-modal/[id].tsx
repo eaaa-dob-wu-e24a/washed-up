@@ -271,7 +271,7 @@ export default function BookingModal() {
           </Text>
 
           {bookingError && (
-            <Text className="mb-4 text-red-500 font-medium">
+            <Text className="mb-4 text-destructive font-medium">
               {bookingError}
             </Text>
           )}

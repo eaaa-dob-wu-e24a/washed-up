@@ -137,7 +137,7 @@ export default function PayModal() {
           )}
         </View>
 
-        {error && <Text className="text-red-500">{error}</Text>}
+        {error && <Text className="text-destructive">{error}</Text>}
 
         <Button
           className="w-full mt-3"
