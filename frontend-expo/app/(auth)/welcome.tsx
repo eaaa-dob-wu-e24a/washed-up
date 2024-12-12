@@ -17,7 +17,7 @@ export default function Welcome() {
         />
       </View>
       <View className="flex items-center">
-        <Text className="text-xl">The easiest way to get washed up!</Text>
+        <Text className="text-xl">Your laundry room in the 21st century!</Text>
       </View>
       <View className="flex gap-3 p-6">
         <Link href={"/sign-up"} className="p-8" asChild>
