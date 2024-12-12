@@ -66,9 +66,9 @@ export default function Page() {
       </View>
       <View className="gap-4">
         <View className="flex flex-row items-center">
-          <View className="flex-1 h-px bg-gray-300"></View>
+          <View className="flex-1 h-px bg-secondary"></View>
           <Text className="px-3 text-center">Don't have an account?</Text>
-          <View className="flex-1 h-px bg-gray-300"></View>
+          <View className="flex-1 h-px bg-secondary"></View>
         </View>
         <View>
           <Link href={"/sign-up"} className="p-8" asChild>

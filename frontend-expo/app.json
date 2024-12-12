@@ -10,8 +10,9 @@
     "owner": "washed_up",
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#ffffff",
+      "backgroundColorDark": "#09090B"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -21,7 +22,8 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "backgroundColorDark": "#09090B"
       },
       "package": "com.fred9891.washedup",
       "googleServicesFile": "./google-services.json"
