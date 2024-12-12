@@ -97,7 +97,7 @@ export default function Dashboard() {
         <Heading title={`Hello, ${userName}`} subtitle="It's laundry day!" />
         <Text className="text-2xl">Schedule</Text>
         {loading ? (
-          <Skeleton className="rounded-lg w-full h-6 mt-4" />
+          <Skeleton className="rounded-lg w-full h-6" />
         ) : schedule.length > 0 ? (
           <ScrollView
             className="-mx-6 mt-4"
@@ -146,30 +146,15 @@ export default function Dashboard() {
             <Text className="text-sm">Dryers</Text>
           </Button>
         </View>
-        {loading ? (
-          <>
-            <Skeleton className="rounded-lg w-full h-12 mt-4" />
-            <Skeleton className="rounded-lg w-full h-12 mt-4" />
-            <Skeleton className="rounded-lg w-full h-12 mt-4" />
-          </>
-        ) : machines.length > 0 ? (
+        {machines.length > 0 ? (
           <View className="gap-4 mb-20 w-full">
             {machines
               ?.filter((a) =>
                 selectedBadge === "all" ? true : a.type === selectedBadge
               )
-              .map((machine) => {
-                const scheduleItem = schedule.find(
-                  (s) => s.machine_id === machine.id
-                );
-                return (
-                  <MachineCard
-                    key={machine.id}
-                    data={machine}
-                    schedule={scheduleItem as Schedule}
-                  />
-                );
-              })}
+              .map((machine) => (
+                <MachineCard key={machine.id} data={machine} />
+              ))}
           </View>
         ) : (
           <Text>Your location has no machines!</Text>
