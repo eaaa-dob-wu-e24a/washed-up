@@ -14,10 +14,12 @@ export default function Page() {
   const { setToken } = useAuth();
   const [emailAddress, setEmailAddress] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [error, setError] = React.useState("");
   const authApi = React.useMemo(() => new AuthApi(), []);
 
   const onSignInPress = React.useCallback(async () => {
     try {
+      setError(""); // Clear previous errors
       const response = await authApi.signIn({
         email: emailAddress,
         password,
@@ -26,7 +28,7 @@ export default function Page() {
       await setToken(response.token);
       router.replace("/");
     } catch (err: any) {
-      console.error("Sign in error:", err.message);
+      setError(err.message);
     }
   }, [emailAddress, password, setToken, authApi]);
 
@@ -55,11 +57,10 @@ export default function Page() {
             onChangeText={(password) => setPassword(password)}
           />
         </View>
-        <View className="pt-6">
-          <Button size="high" onPress={onSignInPress}>
-            <Text>Sign In</Text>
-          </Button>
-        </View>
+        {error && <Text className="text-destructive">{error}</Text>}
+        <Button size="high" onPress={onSignInPress}>
+          <Text>Sign In</Text>
+        </Button>
       </View>
       <View className="gap-4">
         <View className="flex flex-row items-center">

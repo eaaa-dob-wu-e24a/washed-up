@@ -8,9 +8,9 @@ export interface SignUpMetadata {
 
 export interface UserInfoFormData {
   name: string;
-  emailAddress: string;
+  email: string;
   password: string;
-  confirmPassword: string;
+  c_password: string;
 }
 
 export interface LocationFormData {

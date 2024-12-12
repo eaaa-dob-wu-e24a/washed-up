@@ -23,9 +23,9 @@ export default function SignUpScreen() {
   const [screen, setScreen] = useState<"location" | "userInfo">("location");
   const [userInfo, setUserInfo] = useState<UserInfoFormData>({
     name: "",
-    emailAddress: "",
+    email: "",
     password: "",
-    confirmPassword: "",
+    c_password: "",
   });
   const [locationData, setLocationData] = useState<LocationFormData>({
     location: "",
@@ -61,13 +61,13 @@ export default function SignUpScreen() {
     setIsLoading(true);
     if (screen === "location") {
       if (locationData.location === "") {
-        setErrors({ location: "Location is required" });
+        setErrors({ location: "Location is required!" });
         setIsLoading(false);
         return;
       }
 
       if (locationData.locationCode === "") {
-        setErrors({ locationCode: "Location code is required" });
+        setErrors({ locationCode: "Location code is required!" });
         setIsLoading(false);
         return;
       }
@@ -77,7 +77,7 @@ export default function SignUpScreen() {
       );
 
       if (selectedLocation?.code !== locationData.locationCode.toUpperCase()) {
-        setErrors({ locationCode: "Invalid location code" });
+        setErrors({ locationCode: "Invalid location code. Please try again!" });
         setIsLoading(false);
         return;
       }
@@ -88,7 +88,7 @@ export default function SignUpScreen() {
       try {
         const response = await api.signUp({
           name: userInfo.name,
-          email: userInfo.emailAddress,
+          email: userInfo.email,
           password: userInfo.password,
           location: locationData.location,
         });

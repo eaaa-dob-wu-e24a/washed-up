@@ -5,12 +5,13 @@ import { ActivityIndicator, ScrollView, View } from "react-native";
 import { RefreshControl } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Machine, Schedule } from "types";
-import { useAuth } from "~/context/auth";
 import MachineCard from "~/components/dashboard/machine-card";
 import ScheduleCard from "~/components/dashboard/schedule-card";
 import Heading from "~/components/heading";
 import { Button } from "~/components/ui/button";
+import { Skeleton } from "~/components/ui/skeleton";
 import { Text } from "~/components/ui/text";
+import { useAuth } from "~/context/auth";
 import { useNotification } from "~/context/notification-context";
 
 export default function Dashboard() {
@@ -93,7 +94,7 @@ export default function Dashboard() {
         <Heading title={`Hello, ${userName}`} subtitle="It's laundry day!" />
         <Text className="text-2xl">Schedule</Text>
         {loading ? (
-          <ActivityIndicator size={"large"} className="h-6" />
+          <Skeleton className="rounded-full w-full h-12" />
         ) : schedule.length > 0 ? (
           <ScrollView
             className="-mx-6 mt-4"
@@ -143,7 +144,7 @@ export default function Dashboard() {
           </Button>
         </View>
         {loading ? (
-          <ActivityIndicator size={"large"} className="mt-16" />
+          <Skeleton className="rounded-full w-full h-12" />
         ) : machines.length > 0 ? (
           <View className="gap-4 mb-20 w-full">
             {machines

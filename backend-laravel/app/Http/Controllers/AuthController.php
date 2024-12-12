@@ -11,10 +11,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use App\Models\Credits;
 
-class AuthController extends Controller
-{
-    public function index()
-    {
+class AuthController extends Controller {
+    public function index() {
         $user = Auth::user();
         if ($user) {
             return response()->json($user);
@@ -25,15 +23,13 @@ class AuthController extends Controller
         }
     }
 
-    public function list()
-    {
+    public function list() {
         $authUser = Auth::user();
         $users = User::where('location_id', $authUser->location_id)->get();
         return response()->json($users);
     }
 
-    public function adminShow($id)
-    {
+    public function adminShow($id) {
         $authUser = Auth::user();
         $user = User::with(['credits', 'schedules'])
             ->where('location_id', $authUser->location_id)
@@ -48,8 +44,7 @@ class AuthController extends Controller
         return response()->json($user);
     }
 
-    public function register(Request $request)
-    {
+    public function register(Request $request) {
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
@@ -57,6 +52,18 @@ class AuthController extends Controller
             'c_password' => 'required|same:password',
             'location_id' => 'required|exists:locations,id',
             'role' => 'nullable|string|in:admin,user'
+        ], [
+            'name.required' => 'Please enter your name',
+            'name.max' => 'Name cannot be longer than 255 characters',
+            'email.required' => 'Please enter your email address',
+            'email.email' => 'Please enter a valid email address',
+            'email.unique' => 'This email is already registered',
+            'password.required' => 'Please enter a password',
+            'password.min' => 'Password must be at least 8 characters long',
+            'c_password.required' => 'Please confirm your password',
+            'c_password.same' => 'Passwords do not match',
+            'location_id.required' => 'Please select a location',
+            'location_id.exists' => 'Selected location is invalid',
         ]);
 
         if ($validate->fails()) {
@@ -109,8 +116,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function validate(Request $request)
-    {
+    public function validate(Request $request) {
         $validate = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
@@ -146,11 +152,10 @@ class AuthController extends Controller
             'success' => true
         ]);
     }
-    public function login(Request $request)
-    {
+    public function login(Request $request) {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'message' => 'Invalid login details'
+                'message' => "Invalid login details. Please try again."
             ], 401);
         }
 
@@ -165,11 +170,10 @@ class AuthController extends Controller
         ]);
     }
 
-    public function adminLogin(Request $request)
-    {
+    public function adminLogin(Request $request) {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'message' => 'Invalid login details'
+                'message' => "Invalid login details. Please try again."
             ], 401);
         }
 
