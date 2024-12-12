@@ -1,7 +1,17 @@
 import { useAuth } from "~/context/auth";
 import { Redirect, Tabs } from "expo-router";
-import { ScanQrCode, User, WashingMachine } from "lucide-react-native";
-import { Platform } from "react-native";
+import {
+  LucideWashingMachine,
+  ScanQrCode,
+  User,
+  WashingMachine,
+  WashingMachineIcon,
+} from "lucide-react-native";
+import {
+  Platform,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from "react-native";
 
 export default function Layout() {
   const { isSignedIn } = useAuth();
@@ -14,12 +24,19 @@ export default function Layout() {
     <Tabs
       screenOptions={{
         headerShown: false,
+        tabBarInactiveTintColor: "#a0a0a0",
         tabBarActiveTintColor: "#479e96",
         ...(Platform.OS === "android" && {
           tabBarStyle: {
             height: 60,
             paddingTop: 4,
           },
+          tabBarButton: (props) => (
+            <TouchableOpacity
+              {...(props as TouchableOpacityProps)}
+              activeOpacity={1}
+            />
+          ),
         }),
       }}
     >
