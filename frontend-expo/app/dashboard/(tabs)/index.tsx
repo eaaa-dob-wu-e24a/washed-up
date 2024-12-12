@@ -21,6 +21,7 @@ export default function Dashboard() {
   const [selectedBadge, setSelectedBadge] = useState("all");
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentSlogan, setCurrentSlogan] = useState("");
   const [userName, setUserName] = useState<string>("");
 
   const { notification, expoPushToken, error } = useNotification();
@@ -85,6 +86,28 @@ export default function Dashboard() {
     }, [])
   );
 
+  const getRandomSlogan = () => {
+    const laundrySlogans = [
+      "It's laundry day!",
+      "It's time to get Washed Up!",
+      "Fresh & Clean, Just Like Your Dreams",
+      "Wash, Dry, Repeat!",
+      "Keep Calm and Do Laundry",
+      "Cleaning Clothes, Making Smiles",
+      "Life is Better with Clean Laundry",
+      "Stains Don't Stand a Chance",
+      "Freshness Loading...",
+      "Sort, Wash, Fold, Repeat",
+      "Making Your Clothes Happy",
+    ];
+    const randomIndex = Math.floor(Math.random() * laundrySlogans.length);
+    return laundrySlogans[randomIndex];
+  };
+
+  useEffect(() => {
+    setCurrentSlogan(getRandomSlogan());
+  }, []);
+
   return (
     <SafeAreaView className="flex-1 justify-between" edges={["top"]}>
       <ScrollView
@@ -94,7 +117,7 @@ export default function Dashboard() {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Heading title={`Hello, ${userName}`} subtitle="It's laundry day!" />
+        <Heading title={`Hello, ${userName}`} subtitle={currentSlogan} />
         <Text className="text-2xl">Schedule</Text>
         {loading ? (
           <Skeleton className="rounded-lg w-full h-6" />

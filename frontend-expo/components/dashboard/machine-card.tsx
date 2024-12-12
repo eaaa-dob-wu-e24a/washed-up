@@ -85,7 +85,7 @@ export default function MachineCard({ data }: { data: Machine }) {
                     ? "text-destructive"
                     : data.status === 1
                     ? "text-primary"
-                    : "text-destructive"
+                    : "text-foreground"
                 }`}
               >
                 {isInProgress

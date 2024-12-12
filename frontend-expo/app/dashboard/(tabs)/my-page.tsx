@@ -18,6 +18,7 @@ import {
   Credits as CreditsType,
   CreditUsage,
   Location,
+  User,
 } from "~/types";
 
 export default function MyPage() {
@@ -26,6 +27,7 @@ export default function MyPage() {
   const [location, setLocation] = useState<Location | null>(null);
   const [creditPurchases, setCreditPurchases] = useState<CreditPurchase[]>([]);
   const [creditUsages, setCreditUsages] = useState<CreditUsage[]>([]);
+  const [user, setUser] = useState<User[] | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -35,12 +37,15 @@ export default function MyPage() {
     const location = await api.getLocation();
     const creditPurchases = await api.getCreditPurchases();
     const creditUsages = await api.getCreditUsages();
+    const user = await api.getUser();
+    setUser(user);
     setCredits(credits);
     setLocation(location);
     setCreditPurchases(creditPurchases);
     setCreditUsages(creditUsages);
   }
 
+  console.log(user);
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await getData();
@@ -94,7 +99,7 @@ export default function MyPage() {
               <Skeleton className="rounded-lg w-full h-12" />
             </>
           ) : (
-            <UserInfo location={location} />
+            <UserInfo location={location} user={user} />
           )}
 
           <Label>Credits</Label>
