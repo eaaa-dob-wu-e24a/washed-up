@@ -35,6 +35,7 @@ export function UserInfoScreen({
             <Input
               value={data.name}
               placeholder="Your name..."
+              className="placeholder:text-foreground placeholder:opacity-50"
               onChangeText={(value) => onUpdate("name", value)}
               maxLength={255} // Added maxLength based on validation
             />
@@ -46,6 +47,7 @@ export function UserInfoScreen({
             <Input
               value={data.email}
               placeholder="your.email@example.com"
+              className="placeholder:text-foreground placeholder:opacity-50"
               autoCapitalize="none"
               keyboardType="email-address"
               onChangeText={(value) => onUpdate("email", value)}
@@ -57,7 +59,8 @@ export function UserInfoScreen({
             <Label className="mb-2">Password</Label>
             <Input
               value={data.password}
-              placeholder="Minimum 8 characters" // Added hint based on validation
+              placeholder="Minimum 8 characters"
+              className="placeholder:text-foreground placeholder:opacity-50"
               secureTextEntry
               onChangeText={(value) => onUpdate("password", value)}
             />
@@ -69,6 +72,7 @@ export function UserInfoScreen({
             <Input
               value={data.c_password}
               placeholder="Re-enter password"
+              className="placeholder:text-foreground placeholder:opacity-50"
               secureTextEntry
               onChangeText={(value) => onUpdate("c_password", value)}
             />
