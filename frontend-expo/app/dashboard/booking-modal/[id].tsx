@@ -36,6 +36,7 @@ export default function BookingModal() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isBooking, setIsBooking] = useState(false);
   const [bookedHours, setBookedHours] = useState<number[]>([]);
+  const [bookingError, setBookingError] = useState<string | null>(null);
 
   const currentHour = currentTime.getHours();
   const currentMinutes = currentTime.getMinutes();
@@ -90,17 +91,14 @@ export default function BookingModal() {
   };
 
   const handleBookNow = async () => {
+    setBookingError(null); // Reset error state
     const startTime = new Date(selectedDate);
     startTime.setHours(bookedHours[0], 0, 0);
     const endTime = new Date(selectedDate);
     endTime.setHours(bookedHours[bookedHours.length - 1] + 1, 0, 0);
 
-    // Add 1 hour to convert from UTC to UTC+1
     startTime.setHours(startTime.getHours() + 1);
     endTime.setHours(endTime.getHours() + 1);
-
-    console.log("UTC+1 Start Time:", startTime.toISOString());
-    console.log("UTC+1 End Time:", endTime.toISOString());
 
     const bookingData = data.map((item) => ({
       machine_type: item.type,
@@ -113,10 +111,18 @@ export default function BookingModal() {
       const output = await Promise.all(
         bookingData.map((data) => api.setSchedule(data))
       );
+
+      // Check if response contains error
+      if (output.some((res) => res.error === "Insufficient credits")) {
+        setBookingError("You don't have enough credits for this booking");
+        return;
+      }
+
       console.log(output);
       router.back();
     } catch (error) {
       console.error("Error setting schedule:", error);
+      setBookingError("An error occurred while booking");
     }
   };
 
@@ -264,10 +270,19 @@ export default function BookingModal() {
             {bookedHours[bookedHours.length - 1] + 1}:00
           </Text>
 
+          {bookingError && (
+            <Text className="mb-4 text-red-500 font-medium">
+              {bookingError}
+            </Text>
+          )}
+
           <View className="flex-row justify-between gap-4">
             <Button
               variant="outline"
-              onPress={() => setIsBooking(false)}
+              onPress={() => {
+                setIsBooking(false);
+                setBookingError(null);
+              }}
               className="flex-1"
             >
               <Text>Cancel</Text>
