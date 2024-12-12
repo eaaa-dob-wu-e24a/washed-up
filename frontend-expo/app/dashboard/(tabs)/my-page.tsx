@@ -45,7 +45,6 @@ export default function MyPage() {
     setCreditUsages(creditUsages);
   }
 
-  console.log(user);
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await getData();
