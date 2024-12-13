@@ -137,7 +137,7 @@ export default function ScheduleModal() {
         </SafeAreaView>
       </ScrollView>
       {deleteConfirm && (
-        <View className="bg-white p-6 border border-slate-200">
+        <View className="p-6 border-t border-secondary">
           <View className="mb-2">
             <Text className="text-xl font-bold mb-4">Cancel Booking</Text>
             <Text>Do you wish to cancel this booking?</Text>
