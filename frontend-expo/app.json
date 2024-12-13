@@ -10,7 +10,7 @@
     "owner": "washed_up",
     "splash": {
       "image": "./assets/images/splash.png",
-      "resizeMode": "cover",
+      "resizeMode": "native",
       "backgroundColor": "#ffffff",
       "backgroundColorDark": "#09090B"
     },
