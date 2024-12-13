@@ -112,6 +112,10 @@ export default function RootLayoutNav() {
     }
   }, [loaded, error]);
 
+  if (!loaded && !error) {
+    return null;
+  }
+
   return (
     <AuthProvider>
       <NotificationProvider>
