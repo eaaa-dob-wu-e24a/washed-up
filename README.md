@@ -47,11 +47,11 @@ Hvis man ønsker at teste admin panel med en selv-registreret bruger, skal man k
 
 Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine (hvis man er på den rigtige lokation - VE75PK, Banegårdspladsen 1, 8000 Aarhus)
 
-#### Lokation
+#### Lokation (VE75PK, Banegårdspladsen 1, 8000 Aarhus)
 
 ![QR Location](https://github.com/eaaa-dob-wu-e24a/final-project-fucc/blob/main/qr_location.png)
 
-#### Maskine #2
+#### Maskine #2 (Ved ovenstående lokation)
 
 ![QR Machine](https://github.com/eaaa-dob-wu-e24a/final-project-fucc/blob/main/qr_machine.png)
 
