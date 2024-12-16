@@ -1,4 +1,4 @@
-import { useAuth } from "~/context/auth"; // Replace Clerk import
+import React from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, View } from "react-native";
@@ -14,33 +14,42 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
+import { useAuth } from "~/context/auth";
 import { Schedule } from "~/types";
 
 export default function ScheduleModal() {
+  // Get schedule ID from URL params
   const { id } = useLocalSearchParams();
+  // Get authentication token from context
   const { token } = useAuth();
 
+  // Redirect if no ID provided
   if (!id) {
     router.back();
     return null;
   }
 
+  // Handle missing authentication
   if (!token) {
     console.error("No access token");
     return null;
   }
 
-  const [schedule, setSchedule] = useState<Schedule[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  // State management
+  const [schedule, setSchedule] = useState<Schedule[]>([]); // Store schedule data
+  const [loading, setLoading] = useState(true); // Loading state
+  const [deleteConfirm, setDeleteConfirm] = useState(false); // Delete confirmation modal state
 
-  const api = new Api(token); // Use token directly from auth context
+  // Initialize API with auth token
+  const api = new Api(token);
 
+  // Fetch schedule data from API
   const getData = async () => {
     const schedule_data = await api.getByScheduleId(Number(id));
     setSchedule(schedule_data);
   };
 
+  // Load data on component mount
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -51,6 +60,7 @@ export default function ScheduleModal() {
     fetchData();
   }, []);
 
+  // Helper function to format dates
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString("en-UK", {
@@ -60,6 +70,7 @@ export default function ScheduleModal() {
     });
   };
 
+  // Helper function to format times
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString("en-UK", {
@@ -68,10 +79,11 @@ export default function ScheduleModal() {
     });
   };
 
+  // Handle schedule cancellation
   const handleDelete = async () => {
     try {
       await api.cancelSchedule(Number(id));
-      router.back();
+      router.back(); // Return to previous screen after cancellation
     } catch (error) {
       console.error("Failed to cancel schedule:", error);
     }

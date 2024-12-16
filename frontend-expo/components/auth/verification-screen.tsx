@@ -1,3 +1,4 @@
+import React from "react";
 import { View } from "react-native";
 import Heading from "~/components/heading";
 import InputError from "~/components/input-error";

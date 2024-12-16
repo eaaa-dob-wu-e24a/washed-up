@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 
+// Layout til modals på dashboardet
 const Layout = () => {
   return (
     <Stack>

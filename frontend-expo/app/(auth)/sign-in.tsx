@@ -10,6 +10,7 @@ import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
 import { useAuth } from "~/context/auth";
 
+// Skærm til login
 export default function Page() {
   const { setToken } = useAuth();
   const [emailAddress, setEmailAddress] = React.useState("");
@@ -17,6 +18,7 @@ export default function Page() {
   const [error, setError] = React.useState("");
   const authApi = React.useMemo(() => new AuthApi(), []);
 
+  // Funktion til at logge ind, kaldes når der trykkes på knappen
   const onSignInPress = React.useCallback(async () => {
     try {
       setError(""); // Clear previous errors

@@ -12,28 +12,36 @@ import { Api } from "~/api";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 
+/**
+ * QR Component - Handles QR code scanning functionality
+ * Uses the device camera to scan QR codes and navigate to booking modal
+ */
 export default function QR() {
+  // Camera permission handling hooks
   const [permission, requestPermission] = useCameraPermissions();
+  // State to track scanning status and camera activity
   const [isScanning, setIsScanning] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(false);
+  // Get authentication token for API calls
   const { token } = useAuth();
 
+  // Effect to manage camera activation when screen is focused
   useFocusEffect(
     useCallback(() => {
       setIsCameraActive(true);
       return () => {
-        setIsCameraActive(false);
+        setIsCameraActive(false); // Deactivate camera when screen is unfocused
       };
     }, [])
   );
 
+  // Show empty view while permissions are loading
   if (!permission) {
-    // Camera permissions are still loading.
     return <View />;
   }
 
+  // Request camera permissions if not granted
   if (!permission.granted) {
-    // Camera permissions are not granted yet.
     return (
       <SafeAreaView className="flex-1 justify-center items-center gap-4">
         <Text>We need your permission to show the camera</Text>
@@ -44,11 +52,19 @@ export default function QR() {
     );
   }
 
+  /**
+   * Handles successful QR code scanning
+   */
   async function handleBarcodeScanned(scanningResult: BarcodeScanningResult) {
+    // Prevent multiple simultaneous scans
     if (isScanning) return;
     setIsScanning(true);
+
+    // Initialize API and fetch machine data
     const api = new Api(token);
     const machine = await api.getMachineByCode(scanningResult.data);
+
+    // If machine found, navigate to booking modal
     if (machine) {
       setIsCameraActive(false);
       router.push({
@@ -58,7 +74,6 @@ export default function QR() {
     }
     setIsScanning(false);
   }
-
   return (
     <SafeAreaView className="flex-1 android:pt-2" edges={["top"]}>
       {isCameraActive && (

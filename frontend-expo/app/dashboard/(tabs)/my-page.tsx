@@ -22,16 +22,24 @@ import {
   User,
 } from "~/types";
 
+// MyPage component - Displays user account information, credits, and transaction history
+// with pull-to-refresh functionality and loading states
 export default function MyPage() {
+  // Authentication context
   const { token, signOut } = useAuth();
+
+  // State management for user data
   const [credits, setCredits] = useState<CreditsType | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
   const [creditPurchases, setCreditPurchases] = useState<CreditPurchase[]>([]);
   const [creditUsages, setCreditUsages] = useState<CreditUsage[]>([]);
   const [user, setUser] = useState<User[] | null>(null);
+
+  // UI state management
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Fetch all user-related data from API
   async function getData() {
     const api = new Api(token);
     const credits = await api.getCredits();
@@ -39,6 +47,8 @@ export default function MyPage() {
     const creditPurchases = await api.getCreditPurchases();
     const creditUsages = await api.getCreditUsages();
     const user = await api.getUser();
+
+    // Update state with fetched data
     setUser(user);
     setCredits(credits);
     setLocation(location);
@@ -46,12 +56,14 @@ export default function MyPage() {
     setCreditUsages(creditUsages);
   }
 
+  // Handle pull-to-refresh functionality
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await getData();
     setRefreshing(false);
   }, []);
 
+  // Initial data fetch on component mount
   useEffect(() => {
     if (!token) return;
     const fetchData = async () => {
@@ -62,6 +74,7 @@ export default function MyPage() {
     fetchData();
   }, [token]);
 
+  // Refresh data when screen comes into focus
   useFocusEffect(
     useCallback(() => {
       if (!token) return;
@@ -74,8 +87,10 @@ export default function MyPage() {
     }, [token])
   );
 
+  // Get push notification token for sign out
   const { expoPushToken } = useNotification();
 
+  // Redirect to home if not authenticated
   if (!token) {
     return <Redirect href={"/"} />;
   }

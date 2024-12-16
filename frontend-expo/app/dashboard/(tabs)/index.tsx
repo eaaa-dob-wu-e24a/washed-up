@@ -15,27 +15,34 @@ import { useAuth } from "~/context/auth";
 import { useNotification } from "~/context/notification-context";
 
 export default function Dashboard() {
+  // State management for component data
   const { token } = useAuth();
-  const [machines, setMachines] = useState<Machine[]>([]);
-  const [schedule, setSchedule] = useState<Schedule[]>([]);
-  const [selectedBadge, setSelectedBadge] = useState("all");
-  const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [currentSlogan, setCurrentSlogan] = useState("");
-  const [userName, setUserName] = useState<string>("");
+  const [machines, setMachines] = useState<Machine[]>([]); // Store list of machines
+  const [schedule, setSchedule] = useState<Schedule[]>([]); // Store user schedules
+  const [selectedBadge, setSelectedBadge] = useState("all"); // Filter state for machine types
+  const [refreshing, setRefreshing] = useState(false); // Pull-to-refresh state
+  const [loading, setLoading] = useState(true); // Loading state for data fetching
+  const [currentSlogan, setCurrentSlogan] = useState(""); // Random slogan display
+  const [userName, setUserName] = useState<string>(""); // Logged in user's name
 
+  // Get notification context
   const { notification, expoPushToken, error } = useNotification();
 
+  // Main data fetching function
   async function getData() {
     if (!token) return;
-    const api = new Api(token); // Use token directly from auth context
+    const api = new Api(token);
 
+    // Fetch user data and set name
     const [userData] = await api.getUser();
     setUserName(userData.name || "User");
     const user_id = userData.id;
 
+    // Fetch machines and schedules
     const machine_data = await api.getMachines();
     const schedule_data = await api.getSchedules();
+
+    // Filter schedules to show only current user's future schedules
     const filtered_schedule_data = schedule_data
       .filter((schedule) => {
         const currentTime = new Date();
@@ -43,15 +50,17 @@ export default function Dashboard() {
         return schedule.user_id === user_id && scheduleEndTime >= currentTime;
       })
       .sort(
-        (a, b) =>
-          new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
+        (
+          a,
+          b // Sort schedules by start time
+        ) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
       );
 
     setMachines(machine_data);
     setSchedule(filtered_schedule_data);
   }
 
-  // Rest of the useEffect hooks remain the same, just replace user with token in dependencies
+  // Auto-refresh data every minute
   useEffect(() => {
     const interval = setInterval(async () => {
       await getData();
@@ -60,12 +69,14 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  // Handle pull-to-refresh functionality
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await getData();
     setRefreshing(false);
   }, []);
 
+  // Initial data fetch when component mounts
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -75,6 +86,7 @@ export default function Dashboard() {
     fetchData();
   }, [token]);
 
+  // Refresh data when screen comes into focus
   useFocusEffect(
     useCallback(() => {
       const fetchData = async () => {
@@ -86,6 +98,7 @@ export default function Dashboard() {
     }, [])
   );
 
+  // Function to get random welcome slogan
   const getRandomSlogan = () => {
     const laundrySlogans = [
       "It's laundry day!",
@@ -104,6 +117,7 @@ export default function Dashboard() {
     return laundrySlogans[randomIndex];
   };
 
+  // Set initial random slogan
   useEffect(() => {
     setCurrentSlogan(getRandomSlogan());
   }, []);

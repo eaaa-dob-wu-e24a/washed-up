@@ -16,6 +16,7 @@ import type {
 } from "~/types";
 import { useAuth } from "~/context/auth";
 
+// Skærm til oprettelse af bruger
 export default function SignUpScreen() {
   const api = new Api();
   const insets = useSafeAreaInsets();
@@ -58,6 +59,7 @@ export default function SignUpScreen() {
     setLocationData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // Næste skridt i oprettelse af bruger
   const onNextStep = async () => {
     setIsLoading(true);
     if (screen === "location") {
@@ -108,6 +110,7 @@ export default function SignUpScreen() {
     }
   };
 
+  // Returnerer skærmen til oprettelse af bruger
   return (
     <SafeAreaView className="p-6 h-screen justify-between">
       {screen === "location" && (

@@ -13,13 +13,14 @@ import { Separator } from "~/components/ui/separator";
 import { Text } from "~/components/ui/text";
 import { Machine, Schedule } from "~/types";
 
-const today = toDateId(new Date());
+const today = toDateId(new Date()); // Get today's date in calendar-compatible format
 
 export default function BookingModal() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const { token } = useAuth();
 
+  // Authentication & validation checks
   if (!id) {
     router.back();
     return null;
@@ -30,24 +31,27 @@ export default function BookingModal() {
     return null;
   }
 
+  // State management
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(today);
-  const [data, setMachines] = useState<Machine[]>([]);
-  const [events, setEvents] = useState<Schedule[]>([]);
+  const [data, setMachines] = useState<Machine[]>([]); // Stores machine details
+  const [events, setEvents] = useState<Schedule[]>([]); // Stores existing bookings
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [isBooking, setIsBooking] = useState(false);
-  const [bookedHours, setBookedHours] = useState<number[]>([]);
+  const [isBooking, setIsBooking] = useState(false); // Controls booking confirmation modal
+  const [bookedHours, setBookedHours] = useState<number[]>([]); // Selected time slots
   const [bookingError, setBookingError] = useState<string | null>(null);
 
+  // Time calculations for UI display
   const currentHour = currentTime.getHours();
   const currentMinutes = currentTime.getMinutes();
   const currentMinutesPercentage = Math.round((currentMinutes / 60) * 100);
 
-  const hours = Array.from({ length: 14 }, (_, i) => `${i + 8}:00`);
-  const rentalTimes = data.map((item) => (item.type === "wash" ? 2 : 0));
+  const hours = Array.from({ length: 14 }, (_, i) => `${i + 8}:00`); // Generate 8:00 - 22:00 hours
+  const rentalTimes = data.map((item) => (item.type === "wash" ? 2 : 0)); // Washing machines require 3 hours
 
   const api = new Api(token);
 
+  // Fetch machine and schedule data
   async function getData() {
     const machine_data = await api.getMachines();
     const schedule_data = await api.getScheduleById(Number(id));
@@ -58,16 +62,17 @@ export default function BookingModal() {
     setEvents(schedule_data);
   }
 
+  // Initial data loading
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       await getData();
       setLoading(false);
     };
-
     fetchData();
   }, []);
 
+  // Update current time every minute
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -75,11 +80,13 @@ export default function BookingModal() {
     return () => clearInterval(interval);
   }, []);
 
+  // Reset booking state when date changes
   useEffect(() => {
     setBookedHours([]);
     setIsBooking(false);
   }, [selectedDate]);
 
+  // Handle time slot selection
   const handleBookingPress = (hour: number) => {
     const startHour = hour;
     const endHour = hour + Math.max(...rentalTimes);
@@ -91,16 +98,21 @@ export default function BookingModal() {
     setBookedHours(newBookedHours);
   };
 
+  // Submit booking to API
   const handleBookNow = async () => {
-    setBookingError(null); // Reset error state
+    setBookingError(null);
+
+    // Calculate booking start/end times
     const startTime = new Date(selectedDate);
     startTime.setHours(bookedHours[0], 0, 0);
     const endTime = new Date(selectedDate);
     endTime.setHours(bookedHours[bookedHours.length - 1] + 1, 0, 0);
 
+    // Adjust for timezone
     startTime.setHours(startTime.getHours() + 1);
     endTime.setHours(endTime.getHours() + 1);
 
+    // Prepare booking data
     const bookingData = data.map((item) => ({
       machine_type: item.type,
       machine_id: item.id,
@@ -113,13 +125,12 @@ export default function BookingModal() {
         bookingData.map((data) => api.setSchedule(data))
       );
 
-      // Check if response contains error
+      // Handle insufficient credits error
       if (output.some((res) => res.error === "Insufficient credits")) {
         setBookingError("You don't have enough credits for this booking");
         return;
       }
 
-      console.log(output);
       router.back();
     } catch (error) {
       console.error("Error setting schedule:", error);
@@ -127,24 +138,24 @@ export default function BookingModal() {
     }
   };
 
+  // Render time slots with availability status
   const renderHours = hours.map((hour, index) => {
     const hourNumber = parseInt(hour);
     const isCurrentTime = selectedDate === today && currentHour === hourNumber;
 
+    // Check if slot is already booked
     const isEvent =
       Array.isArray(events) &&
       events.some((event) => {
         const eventDate = toDateId(new Date(event.start_time));
-
         if (eventDate !== selectedDate) return false;
-
         const eventStart = new Date(event.start_time).getHours();
         const eventEnd = new Date(event.end_time).getHours();
         const currentHour = hourNumber;
-
         return currentHour >= eventStart && currentHour < eventEnd;
       });
 
+    // Additional availability checks
     const isPastTime =
       selectedDate < today ||
       (selectedDate === today && hourNumber < currentHour);
@@ -154,10 +165,8 @@ export default function BookingModal() {
       events.some((event) => {
         const eventDate = toDateId(new Date(event.start_time));
         if (eventDate !== selectedDate) return false;
-
         const eventStart = new Date(event.start_time).getHours();
         const currentHour = hourNumber;
-
         return (
           currentHour >= eventStart - Math.max(...rentalTimes) &&
           currentHour < eventStart
@@ -165,9 +174,9 @@ export default function BookingModal() {
       });
 
     const isLastHours = index >= hours.length - Math.max(...rentalTimes);
-
     const isBooked = bookedHours.includes(hourNumber);
 
+    // Render time slots
     return (
       <ScrollView key={index} className="relative">
         <View

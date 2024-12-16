@@ -12,6 +12,7 @@ import {
 import { Text } from "~/components/ui/text";
 import { Machine, Schedule } from "~/types";
 
+// ScheduleCard component displays information about a laundry machine schedule
 export default function ScheduleCard({
   data,
   machine,
@@ -19,19 +20,24 @@ export default function ScheduleCard({
   data: Schedule;
   machine: Machine;
 }) {
+  // Convert schedule times to Date objects
   const startTime = new Date(data.start_time);
   const endTime = new Date(data.end_time);
   const router = useRouter();
 
+  // Don't render anything if the schedule has already ended
   if (endTime.getTime() <= Date.now()) {
     return null;
   }
 
+  // Format the start date to display weekday, month and day
   const formattedStartTime = startTime.toLocaleDateString("en-UK", {
     weekday: "long",
     month: "short",
     day: "numeric",
   });
+
+  // Format the time range to show start and end times
   const formattedTimeRange = `${startTime.toLocaleTimeString("da-DK", {
     hour: "2-digit",
     minute: "2-digit",
@@ -39,11 +45,8 @@ export default function ScheduleCard({
     hour: "2-digit",
     minute: "2-digit",
   })}`;
-  // const timeUntilStartInMinutes = Math.max(
-  //   0,
-  //   Math.floor((startTime.getTime() - Date.now()) / 1000 / 60)
-  // ); // in minutes
 
+  // Determine the current status of the schedule
   const getStatus = () => {
     const now = new Date();
     if (now >= startTime && now <= endTime) {
@@ -52,11 +55,12 @@ export default function ScheduleCard({
     return "Ready";
   };
 
+  // Calculate and format time remaining until start or end of schedule
   const getTimeDisplay = () => {
     const now = new Date();
 
     if (now < startTime) {
-      // Time until start
+      // Calculate time until schedule starts
       const timeUntilStartInMinutes = Math.floor(
         (startTime.getTime() - now.getTime()) / 1000 / 60
       );
@@ -64,7 +68,7 @@ export default function ScheduleCard({
       const minutes = timeUntilStartInMinutes % 60;
       return `Starts in: ${hours}h ${minutes}m`;
     } else if (now <= endTime) {
-      // Time until end
+      // Calculate time until schedule ends
       const timeUntilEndInMinutes = Math.floor(
         (endTime.getTime() - now.getTime()) / 1000 / 60
       );
@@ -76,7 +80,6 @@ export default function ScheduleCard({
   };
 
   const timeDisplay = getTimeDisplay();
-
   const status = getStatus();
 
   return (

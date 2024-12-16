@@ -88,6 +88,7 @@ const DARK_THEME: Theme = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayoutNav() {
+  // Opsætning af app tema, som henter native colorScheme fra enheden
   const nativeColorScheme = useNativeColorScheme();
   const [colorScheme, setColorScheme] = useState<Theme>(LIGHT_THEME);
 
@@ -99,6 +100,7 @@ export default function RootLayoutNav() {
     setColorScheme(nativeColorScheme === "dark" ? DARK_THEME : LIGHT_THEME);
   }, [nativeColorScheme]);
 
+  // Opsætning af fonte
   const [loaded, error] = useFonts({
     Poppins_400Regular,
     Poppins_500Medium,
@@ -116,6 +118,7 @@ export default function RootLayoutNav() {
     return null;
   }
 
+  // Returnerer app layout, som indeholder alle context providers
   return (
     <AuthProvider>
       <NotificationProvider>

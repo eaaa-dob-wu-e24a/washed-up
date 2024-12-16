@@ -17,11 +17,8 @@ export class StripeApi extends ApiBase {
       }),
     });
 
-    console.log(response);
-
     const data = await response.json();
 
-    console.log(data);
     return {
       paymentIntent: data.paymentIntent,
       ephemeralKey: data.ephemeralKey,

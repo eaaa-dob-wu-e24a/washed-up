@@ -1,3 +1,4 @@
+import React from "react";
 import { ScrollView, View } from "react-native";
 import Heading from "~/components/heading";
 import InputError from "~/components/input-error";

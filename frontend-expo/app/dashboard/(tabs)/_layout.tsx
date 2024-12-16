@@ -1,21 +1,18 @@
-import { useAuth } from "~/context/auth";
 import { Redirect, Tabs } from "expo-router";
-import {
-  LucideWashingMachine,
-  ScanQrCode,
-  User,
-  WashingMachine,
-  WashingMachineIcon,
-} from "lucide-react-native";
+import { ScanQrCode, User, WashingMachine } from "lucide-react-native";
 import {
   Platform,
   TouchableOpacity,
   TouchableOpacityProps,
 } from "react-native";
+import { useAuth } from "~/context/auth";
 
+// Layout component for the dashboard tab navigation
 export default function Layout() {
+  // Get authentication state from context
   const { isSignedIn } = useAuth();
 
+  // Redirect to home if user is not signed in
   if (!isSignedIn) {
     return <Redirect href={"/"} />;
   }
@@ -23,14 +20,16 @@ export default function Layout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
-        tabBarInactiveTintColor: "#a0a0a0",
-        tabBarActiveTintColor: "#479e96",
+        headerShown: false, // Hide the header for all tab screens
+        tabBarInactiveTintColor: "#a0a0a0", // Gray color for inactive tabs
+        tabBarActiveTintColor: "#479e96", // Teal color for active tab
+        // Android-specific tab bar customization
         ...(Platform.OS === "android" && {
           tabBarStyle: {
             height: 60,
             paddingTop: 4,
           },
+          // Custom touch handler for Android tabs
           tabBarButton: (props) => (
             <TouchableOpacity
               {...(props as TouchableOpacityProps)}
@@ -40,6 +39,7 @@ export default function Layout() {
         }),
       }}
     >
+      {/* Dashboard tab */}
       <Tabs.Screen
         name="index"
         options={{
@@ -47,6 +47,7 @@ export default function Layout() {
           tabBarIcon: ({ color }) => <WashingMachine color={color} />,
         }}
       />
+      {/* User profile tab */}
       <Tabs.Screen
         name="my-page"
         options={{
@@ -54,6 +55,7 @@ export default function Layout() {
           tabBarIcon: ({ color }) => <User color={color} />,
         }}
       />
+      {/* QR code scanner tab */}
       <Tabs.Screen
         name="qr"
         options={{

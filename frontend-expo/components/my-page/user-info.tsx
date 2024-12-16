@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Card,
   CardContent,
@@ -5,11 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Location, User } from "~/types";
 import { useAuth } from "~/context/auth";
-import { View } from "react-native";
+import { Location, User } from "~/types";
 import { Text } from "../ui/text";
 
+// UserInfo component that displays user profile information
+// Takes location and user data as props
 export default function UserInfo({
   location,
   user,
@@ -17,13 +19,17 @@ export default function UserInfo({
   location: Location | null;
   user: User[] | null;
 }) {
+  // Get authentication state from auth context
   const { isSignedIn } = useAuth();
 
+  // Early return if user is not signed in
   if (!isSignedIn) {
     return null;
   }
 
+  // Get the first user from the array (primary user)
   const primaryUser = user?.[0];
+  // Helper function to format dates into localized string
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
   };

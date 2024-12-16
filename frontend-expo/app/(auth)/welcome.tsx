@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 
+// Velkomstskærm
 export default function Welcome() {
   return (
     <SafeAreaView className="flex flex-1 justify-center">

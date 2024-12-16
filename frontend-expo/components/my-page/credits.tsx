@@ -1,5 +1,5 @@
+import React from "react";
 import { Link } from "expo-router";
-import { Modal, View } from "react-native";
 import {
   Card,
   CardContent,
@@ -8,9 +8,9 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Text } from "~/components/ui/text";
+import { cn } from "~/lib/utils";
 import { Credits as CreditsType } from "~/types";
 import { buttonVariants } from "../ui/button";
-import { cn } from "~/lib/utils";
 
 export default function Credits({ credits }: { credits: CreditsType | null }) {
   return (

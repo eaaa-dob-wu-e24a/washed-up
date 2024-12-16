@@ -51,6 +51,7 @@ export function LocationScreen({
   onUpdate,
   onNext,
 }: LocationScreenProps) {
+  // State to track active tab (QR or manual input)
   const [tab, setTab] = useState<"qr" | "manual">("qr");
 
   return (
@@ -99,6 +100,7 @@ export function LocationScreen({
   );
 }
 
+// QR code scanner component for automated location selection
 function QRCodeLocationForm({
   data,
   onUpdate,
@@ -108,16 +110,18 @@ function QRCodeLocationForm({
   onUpdate: (field: keyof LocationFormData, value: string) => void;
   onNext: () => void;
 }) {
+  // Camera permission and scanning state management
   const [permission, requestPermission] = useCameraPermissions();
   const [isScanning, setIsScanning] = useState(false);
   const [isCameraActive, setIsCameraActive] = useState(true);
 
+  // Effect to handle navigation when location data is complete
   useEffect(() => {
     if (data.location && data.locationCode) {
       onNext();
     }
     return () => {
-      setIsCameraActive(false);
+      setIsCameraActive(false); // Stop camera when component unmounts
     };
   }, [data.location, data.locationCode]);
 
@@ -138,6 +142,7 @@ function QRCodeLocationForm({
     );
   }
 
+  // Handler for QR code scanning results
   async function handleBarcodeScanned(scanningResult: BarcodeScanningResult) {
     if (isScanning) return;
     setIsScanning(true);
@@ -147,7 +152,6 @@ function QRCodeLocationForm({
     if (location) {
       onUpdate("location", location.id.toString());
       onUpdate("locationCode", location.code);
-
       return;
     }
     setIsScanning(false);
@@ -171,6 +175,7 @@ function QRCodeLocationForm({
   );
 }
 
+// Manual location selection form component
 function ManualLocationForm({
   data,
   errors,
@@ -184,8 +189,10 @@ function ManualLocationForm({
   locations: Location[];
   contentInsets: { top: number; bottom: number; left: number; right: number };
 }) {
+  // State for storing user's current location
   const [location, setLocation] = useState<LocationObject | null>(null);
 
+  // Effect to get user's current location when component mounts
   useEffect(() => {
     async function getCurrentLocation() {
       let { status } = await requestForegroundPermissionsAsync();
@@ -202,7 +209,7 @@ function ManualLocationForm({
 
   const coordinates = location?.coords;
 
-  // Calculate distances and sort locations
+  // Sort locations by distance from user's current position
   const sortedLocations = locations
     .map((loc) => {
       const distance = coordinates

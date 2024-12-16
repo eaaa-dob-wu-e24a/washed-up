@@ -1,3 +1,4 @@
+import React from "react";
 import { StripeProvider as StripeProviderNative } from "@stripe/stripe-react-native";
 
 export default function StripeProvider({
