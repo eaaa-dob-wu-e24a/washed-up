@@ -43,6 +43,10 @@ Hvis man ønsker at teste admin panel med en selv-registreret bruger, skal man k
 | 6TVRHY | Vesterbro 27, 9000 Aalborg        |
 | 18Q5DN | Exnersgade 22, 6700 Esbjerg       |
 
+### QR-koder til kamerascanning
+
+Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine (hvis man er på den rigtige lokation - VE75PK, Banegårdspladsen 1, 8000 Aarhus)
+
 ## Lokal installation
 
 Ønsker man at teste projektet lokalt, i stedet for den hostede løsning, kan man køre det med følgende steps:
