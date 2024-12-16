@@ -1,11 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BookController;
 use App\Http\Controllers\MachineController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\ScheduleController;
-use App\Http\Controllers\ClerkController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\CreditPurchaseController;
@@ -33,7 +31,6 @@ Route::controller(AuthController::class)->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     // User & Authentication
     Route::get('/user', [AuthController::class, 'index']);                     // Get current user info
-    Route::patch("/clerk-metadata/{id}", [ClerkController::class, 'updateMetadata']); // Update Clerk user metadata
 
     // Machine Management
     Route::get('/machines', [MachineController::class, 'index']);             // List all machines in user's location
