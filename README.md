@@ -57,8 +57,8 @@ Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine
 
 Ønsker man at teste projektet lokalt på sit IOS Device skal man gøre følgende:
 
-- Installer **Expo Go** appen i App Store:
-- Klon projektet og åben de i din foretrukne editor
+- Installer **Expo Go** appen i App Store
+- Klon projektet og åben det i din foretrukne editor
 - Opret en `.env.local`fil på på følgende sti: `/frontend-expo/.env.local`, og indsæt variabler der kan findes i den afleverede PDF fil.
 - `cd /frontend-expo`
 - `bun i` eller `npm i --force`
@@ -66,8 +66,6 @@ Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine
 - Du vil få en QR kode i terminalen du kan scanne med dit kamera på dit IOS device, som vil åbne projektet op i **Expo Go** appen.
 
 For at installere nødvendige dependencies, kør igennem terminalen, npm install (eller bun install) i roden og i frontend-expo.
-
-For at teste development lokalt, kan man i frontend-svelte skrive "npm run dev", i frontend-expo "npm go" for at starte appen i Expo Go, og i backend-laravel "php artisan serve" for at starte php serveren.
 
 ## Kode kommentering
 
