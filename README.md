@@ -67,8 +67,6 @@ Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine
 
 For at installere nødvendige dependencies, kør igennem terminalen, npm install (eller bun install) i roden og i frontend-expo.
 
-For at teste development lokalt, kan man i frontend-svelte skrive "npm run dev", i frontend-expo "npm go" for at starte appen i Expo Go, og i backend-laravel "php artisan serve" for at starte php serveren.
-
 ## Kode kommentering
 
 Da vi har arbejdet i 3 forskellige frameworks, kan det være lidt svært at finde comments. Derfor har vi lavet en liste så i let kan finde de stier vi primært har arbejdet i.
