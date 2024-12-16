@@ -148,11 +148,11 @@ class ScheduleController extends Controller {
         }
 
         // Check if schedule is currently active
-        $now = now()->timestamp;
-        $startTime = Carbon::parse($schedule->start_time)->timestamp;
-        $endTime = Carbon::parse($schedule->end_time)->timestamp;
+        $now = Carbon::now();
+        $startTime = Carbon::parse($schedule->start_time);
+        $endTime = Carbon::parse($schedule->end_time);
 
-        if ($now >= $startTime && $now <= $endTime) {
+        if ($now->between($startTime, $endTime)) {
             return response()->json([
                 'error' => 'Cannot cancel an active schedule'
             ], 400);
