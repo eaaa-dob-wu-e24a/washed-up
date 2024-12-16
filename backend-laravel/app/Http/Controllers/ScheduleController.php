@@ -138,6 +138,14 @@ class ScheduleController extends Controller {
 
     public function destroy($id) {
         $schedule = Schedule::findOrFail($id);
+        $user = Auth::user();
+
+        // Check if schedule belongs to authenticated user
+        if ($schedule->user_id !== $user->id) {
+            return response()->json([
+                'error' => 'Unauthorized to cancel this schedule'
+            ], 403);
+        }
 
         // Check if schedule is currently active
         $now = now();
