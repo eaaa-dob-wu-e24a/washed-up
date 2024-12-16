@@ -4,11 +4,11 @@
 
 ### Svelte (Admin Panel)
 
-* https://washed-up.frederikbarbre.dk
+- https://washed-up.frederikbarbre.dk
 
 ### Expo (User Frontend)
 
-* [Link til Android .apk](https://expo.dev/accounts/washed_up/projects/washedup/builds/c60c72ab-3fca-48d1-a5f6-9122d87d6b21)
+- [Link til Android .apk](https://expo.dev/accounts/washed_up/projects/washedup/builds/c60c72ab-3fca-48d1-a5f6-9122d87d6b21)
 
 Da Apple kræver $100 for at få æren for at installere preview builds af appen, kræver det desværre at man kører et build lokalt, ønsker man at teste appen på iOS. Se nedenstående steps omkring lokal installation.
 
@@ -49,31 +49,31 @@ Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine
 
 ![QR Location](https://github.com/eaaa-dob-wu-e24a/final-project-fucc/blob/main/qr_location.png)
 
-#### Maskine #7 (Ved ovenstående lokation)
+#### Maskine #5 (Ved ovenstående lokation)
 
 ![QR Machine](https://github.com/eaaa-dob-wu-e24a/final-project-fucc/blob/main/qr_machine.png)
 
 ## Lokal installation
 
 Ønsker man at teste projektet lokalt på sit IOS Device skal man gøre følgende:
- 
+
 - Installer **Expo Go** appen i App Store:
 - Klon projektet og åben de i din foretrukne editor
-- Opret en ```.env.local```fil på på følgende sti: ```/frontend-expo/.env.local```, og indsæt variabler der kan findes i den afleverede PDF fil.
-- ```cd /frontend-expo```
-- ```bun i``` eller ```npm i --force```
-- ```bun go``` eller ```npm go```
+- Opret en `.env.local`fil på på følgende sti: `/frontend-expo/.env.local`, og indsæt variabler der kan findes i den afleverede PDF fil.
+- `cd /frontend-expo`
+- `bun i` eller `npm i --force`
+- `bun go` eller `npm go`
 - Du vil få en QR kode i terminalen du kan scanne med dit kamera på dit IOS device, som vil åbne projektet op i **Expo Go** appen.
 
-For at installere nødvendige depandencies, kør igennem terminalen, npm install (eller bun install) i roden og i frontend-expo.
+For at installere nødvendige dependencies, kør igennem terminalen, npm install (eller bun install) i roden og i frontend-expo.
 
 For at teste development lokalt, kan man i frontend-svelte skrive "npm run dev", i frontend-expo "npm go" for at starte appen i Expo Go, og i backend-laravel "php artisan serve" for at starte php serveren.
 
 ## Kode kommentering
 
-Da vi har arbejdet i 3 forskellige frameworks, kan det være lidt svært at finde comments. Derfor har vi lavet en liste så i let kan finde de stier vi primært har arbejdet i. 
+Da vi har arbejdet i 3 forskellige frameworks, kan det være lidt svært at finde comments. Derfor har vi lavet en liste så i let kan finde de stier vi primært har arbejdet i.
 
-**NB** Vi har ikke kommenteret shadcn-components.
+**NB!** Vi har ikke kommenteret shadcn-components.
 
 | Framework | Path                             |
 | --------- | -------------------------------- |
