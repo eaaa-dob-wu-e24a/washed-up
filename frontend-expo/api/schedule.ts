@@ -77,16 +77,15 @@ export class ScheduleApi extends ApiBase {
         return { success: true };
       }
 
-      const data = await response.json();
+      const errorData = await response.json();
       return {
         success: false,
-        error: data.error,
+        error: errorData.error || "Failed to cancel schedule",
       };
     } catch (error) {
-      console.error("Error cancelling schedule", error);
       return {
         success: false,
-        error: "Failed to cancel schedule",
+        error: "Network error while cancelling schedule",
       };
     }
   }

@@ -123,17 +123,15 @@ export default function BookingModal() {
     try {
       const response = await api.setSchedule(bookingData);
 
-      if (response.status === 201) {
-        router.back(); // Success - return to previous screen
-      } else if (response.status === 409) {
-        setBookingError("This time slot is already booked");
-      } else if (response.status === 400) {
-        // Handle specific 400 errors from backend
-        setBookingError(
-          response.data?.error || "Unable to book this time slot"
-        );
+      if (response) {
+        if (response.id) {
+          // Schedule created successfully
+          router.back();
+        } else if (response.error) {
+          setBookingError(response.error);
+        }
       } else {
-        setBookingError("Failed to create booking");
+        setBookingError("Unable to create booking");
       }
     } catch (error) {
       setBookingError("An error occurred while booking");

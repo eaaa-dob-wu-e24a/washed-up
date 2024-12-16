@@ -10,7 +10,7 @@ use App\Models\Schedule;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\NewSampleNotification;
-
+use Illuminate\Support\Carbon;
 
 class ScheduleController extends Controller {
     public function index() {
@@ -140,7 +140,7 @@ class ScheduleController extends Controller {
         $schedule = Schedule::findOrFail($id);
         $user = Auth::user();
 
-        // Check if schedule belongs to authenticated user
+        // Check if the user owns this schedule
         if ($schedule->user_id !== $user->id) {
             return response()->json([
                 'error' => 'Unauthorized to cancel this schedule'
@@ -148,9 +148,9 @@ class ScheduleController extends Controller {
         }
 
         // Check if schedule is currently active
-        $now = now();
-        $startTime = strtotime($schedule->start_time);
-        $endTime = strtotime($schedule->end_time);
+        $now = now()->timestamp;
+        $startTime = Carbon::parse($schedule->start_time)->timestamp;
+        $endTime = Carbon::parse($schedule->end_time)->timestamp;
 
         if ($now >= $startTime && $now <= $endTime) {
             return response()->json([
@@ -162,7 +162,6 @@ class ScheduleController extends Controller {
         $duration = (strtotime($schedule->end_time) - strtotime($schedule->start_time)) / 60;
         $duration_in_hours = $duration / 60;
 
-        $user = User::find($schedule->user_id);
         $credits = Credits::where('user_id', $user->id)->first();
 
         // Create credit usage record for refund
