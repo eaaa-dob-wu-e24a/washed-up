@@ -12,7 +12,8 @@
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff",
-      "backgroundColorDark": "#09090B"
+      "backgroundColorDark": "#09090B",
+      "imageBackgroundTransparent": true
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -23,7 +24,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "backgroundColorDark": "#09090B"
+        "backgroundColorDark": "#09090B",
+        "resizeMode": "contain"
+      },
+      "notification": {
+        "icon": "./assets/images/favicon.png",
+        "color": "#ffffff"
       },
       "package": "com.fred9891.washedup",
       "googleServicesFile": "./google-services.json"

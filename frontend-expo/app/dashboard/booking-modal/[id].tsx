@@ -126,7 +126,7 @@ export default function BookingModal() {
       if (response) {
         if (response.id) {
           // Schedule created successfully
-          router.back();
+          router.push("/dashboard/(tabs)");
         } else if (response.error) {
           setBookingError(response.error);
         }
