@@ -192,7 +192,11 @@ export default function Dashboard() {
                 selectedBadge === "all" ? true : a.type === selectedBadge
               )
               .map((machine) => (
-                <MachineCard key={machine.id} data={machine} />
+                <MachineCard
+                  key={machine.id}
+                  data={machine}
+                  refreshing={refreshing}
+                />
               ))}
           </View>
         ) : (

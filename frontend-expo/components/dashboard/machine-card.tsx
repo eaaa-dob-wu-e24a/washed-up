@@ -19,7 +19,13 @@ import { Skeleton } from "../ui/skeleton";
  * Displays information about a laundry machine including its availability status
  * and current operating state
  */
-export default function MachineCard({ data }: { data: Machine }) {
+export default function MachineCard({
+  data,
+  refreshing, // Add this prop
+}: {
+  data: Machine;
+  refreshing: boolean;
+}) {
   const router = useRouter();
   const { token } = useAuth();
   // State for storing machine schedules and loading status
@@ -53,6 +59,12 @@ export default function MachineCard({ data }: { data: Machine }) {
       fetchData();
     }, [])
   );
+
+  useEffect(() => {
+    if (!refreshing) {
+      getData();
+    }
+  }, [refreshing]);
 
   /**
    * Checks if the machine is currently in use by comparing current time
