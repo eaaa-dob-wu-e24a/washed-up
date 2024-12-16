@@ -57,8 +57,8 @@ Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine
 
 Ønsker man at teste projektet lokalt på sit IOS Device skal man gøre følgende:
 
-- Installer **Expo Go** appen i App Store:
-- Klon projektet og åben de i din foretrukne editor
+- Installer **Expo Go** appen i App Store
+- Klon projektet og åben det i din foretrukne editor
 - Opret en `.env.local`fil på på følgende sti: `/frontend-expo/.env.local`, og indsæt variabler der kan findes i den afleverede PDF fil.
 - `cd /frontend-expo`
 - `bun i` eller `npm i --force`
