@@ -14,9 +14,7 @@ Da Apple kræver $100 for at få æren for at installere preview builds af appen
 
 ## Test Bruger
 
-Det er muligt at oprette en bruger selv, men i tilfældet at noget ikke virker korrekt, kan man anvende den nedenstående testbruger.
-
-Hvis man ønsker at teste admin panel med en selv-registreret bruger, skal man køre en commandline fra laravel mappen. Se venligst steps omkring lokal installation og vores liste af commands.
+Det er muligt at oprette en bruger selv, men for at få adgang to admin panelet, kan man anvende den nedenstående testbruger.
 
 ### Email
 
