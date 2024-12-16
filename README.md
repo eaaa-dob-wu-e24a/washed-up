@@ -8,7 +8,7 @@
 
 ### Expo (User Frontend)
 
-* [Link til Android .apk](https://expo.dev/accounts/washed_up/projects/washedup/builds/c60c72ab-3fca-48d1-a5f6-9122d87d6b21)
+* [Link til Android .apk](https://github.com/eaaa-dob-wu-e24a/final-project-fucc/releases)
 
 Da Apple kræver $100 for at få æren for at installere preview builds af appen, kræver det desværre at man kører et build lokalt, ønsker man at teste appen på iOS. Se nedenstående steps omkring lokal installation.
 
