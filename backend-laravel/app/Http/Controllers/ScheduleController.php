@@ -148,7 +148,7 @@ class ScheduleController extends Controller {
         }
 
         // Check if schedule is currently active
-        $now = Carbon::now();
+        $now = Carbon::now()->addHour();
         $startTime = Carbon::parse($schedule->start_time);
         $endTime = Carbon::parse($schedule->end_time);
 
