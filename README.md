@@ -1,5 +1,13 @@
 # Washed Up
 
+## Lokal installation
+
+Ønsker man at teste projektet lokalt, i stedet for den hostede løsning, kan man køre det med følgende steps:
+
+For at installere nødvendige node modules, kør igennem terminalen, npm install (eller bun install) i roden, i frontend-expo, i frontend-svelte og backend-laravel. I backend-laravel kræver det også man kører "composer install".
+
+For at teste development lokalt, kan man i frontend-svelte skrive "npm run dev", i frontend-expo "npm go" for at starte appen i Expo Go, og i backend-laravel "php artisan serve" for at starte php serveren.
+
 ## Test Bruger
 
 ## Kode kommentering
