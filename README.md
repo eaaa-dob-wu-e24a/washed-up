@@ -64,7 +64,7 @@ Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine
 - Opret en ```.env.local```fil på på følgende sti: ```/frontend-expo/.env.local```, og indsæt variabler der kan findes i den afleverede PDF fil.
 - ```cd /frontend-expo```
 - ```bun i``` eller ```npm i --force```
-- ```bun go```
+- ```bun go``` eller ```npm go```
 - Du vil få en QR kode i terminalen du kan scanne med dit kamera på dit IOS device, som vil åbne projektet op i **Expo Go** appen.
 
 For at installere nødvendige depandencies, kør igennem terminalen, npm install (eller bun install) i roden og i frontend-expo.
