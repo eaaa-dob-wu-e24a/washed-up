@@ -1,3 +1,5 @@
+// Utility function for formatting dates to a specific format that is used in the backend
+
 export function getDateRanges(start: Date, end: Date) {
 	const startDate = formatDate(start);
 	const endDate = formatDate(end);

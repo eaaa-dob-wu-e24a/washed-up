@@ -25,11 +25,10 @@ export class NotifyerApi extends ApiBase {
 				})
 			});
 
-			// if (!response.ok) {
-			// 	return false;
-			// }
+			if (!response.ok) {
+				return false;
+			}
 			const data = await response.json();
-			console.log(data);
 			return data;
 		} catch (error) {
 			console.error('Error sending notification', error);

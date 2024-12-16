@@ -97,7 +97,6 @@
 			});
 
 			const responseData = await response.json();
-			console.log(responseData);
 
 			formData.title = '';
 			formData.body = '';

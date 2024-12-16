@@ -1,10 +1,12 @@
 <script lang="ts" module>
+	// This component is from Shadcn Svelte
+
 	import WashingMachine from 'lucide-svelte/icons/washing-machine';
 	import Calendar from 'lucide-svelte/icons/calendar';
 	import LineChart from 'lucide-svelte/icons/line-chart';
 	import Users from 'lucide-svelte/icons/users';
 	import Bell from 'lucide-svelte/icons/bell';
-	// This is sample data.
+
 	const data: {
 		navMain: MenuItems[];
 	} = {

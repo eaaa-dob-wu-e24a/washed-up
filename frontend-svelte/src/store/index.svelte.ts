@@ -1,5 +1,7 @@
 import { browser } from '$app/environment';
 
+// This is a local store that is used to store data in the browser's localStorage
+
 export class LocalStore<T> {
 	value = $state<T>() as T;
 	key = '';
