@@ -113,28 +113,21 @@ export default function BookingModal() {
     endTime.setHours(endTime.getHours() + 1);
 
     // Prepare booking data
-    const bookingData = data.map((item) => ({
-      machine_type: item.type,
-      machine_id: item.id,
+    const bookingData = {
+      machine_type: data[0].type,
+      machine_id: data[0].id,
       start_time: startTime.toISOString().replace("T", " ").substring(0, 19),
       end_time: endTime.toISOString().replace("T", " ").substring(0, 19),
-    }));
+    };
 
-    try {
-      const output = await Promise.all(
-        bookingData.map((data) => api.setSchedule(data))
-      );
+    const response = await api.setSchedule(bookingData);
 
-      // Handle insufficient credits error
-      if (output.some((res) => res.error === "Insufficient credits")) {
-        setBookingError("You don't have enough credits for this booking");
-        return;
-      }
-
-      router.back();
-    } catch (error) {
-      console.error("Error setting schedule:", error);
-      setBookingError(`${error}`);
+    if (response?.success) {
+      router.back(); // Return to previous screen after successful booking
+    } else if (response?.error) {
+      setBookingError(`${response.error}`);
+    } else {
+      setBookingError("Failed to create booking");
     }
   };
 

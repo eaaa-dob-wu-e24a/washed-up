@@ -62,7 +62,9 @@ export class ScheduleApi extends ApiBase {
     }
   }
 
-  public async cancelSchedule(id: number): Promise<boolean> {
+  public async cancelSchedule(
+    id: number
+  ): Promise<{ success: boolean; error?: string }> {
     try {
       const response = await fetch(`${this.baseUrl}/api/schedule/${id}`, {
         method: "DELETE",
@@ -70,13 +72,22 @@ export class ScheduleApi extends ApiBase {
           Authorization: `Bearer ${this.accessToken}`,
         },
       });
-      if (!response.ok) {
-        return false;
+
+      if (response.status === 204) {
+        return { success: true };
       }
-      return true;
+
+      const data = await response.json();
+      return {
+        success: false,
+        error: data.error,
+      };
     } catch (error) {
       console.error("Error cancelling schedule", error);
-      return false;
+      return {
+        success: false,
+        error: "Failed to cancel schedule",
+      };
     }
   }
 

@@ -83,12 +83,15 @@ export default function ScheduleModal() {
   // Handle schedule cancellation
   const handleDelete = async () => {
     setBookingError(null);
-    try {
-      await api.cancelSchedule(Number(id));
-      router.back(); // Return to previous screen after cancellation
-    } catch (error) {
-      console.error("Failed to cancel schedule:", error);
-      setBookingError(`${error}`);
+
+    const response = await api.cancelSchedule(Number(id));
+
+    if (response.success) {
+      router.back(); // Return to previous screen after successful cancellation
+    } else if (response.error) {
+      setBookingError(`${response.error}`);
+    } else {
+      setBookingError("Failed to cancel schedule");
     }
   };
 
