@@ -47,6 +47,9 @@ Hvis man ønsker at teste admin panel med en selv-registreret bruger, skal man k
 
 Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine (hvis man er på den rigtige lokation - VE75PK, Banegårdspladsen 1, 8000 Aarhus)
 
+![QR Location](#file:qr_location.png-context)
+![QR Machine](#file:qr_machine.png-context)
+
 ## Lokal installation
 
 Ønsker man at teste projektet lokalt, i stedet for den hostede løsning, kan man køre det med følgende steps:
