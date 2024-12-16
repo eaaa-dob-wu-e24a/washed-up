@@ -1,5 +1,28 @@
 # Washed Up
 
+## Test Bruger
+
+## Kode kommentering
+
+Da vi har arbejdet i 3 forskellige frameworks, kan det være lidt svært at finde comments. Derfor har vi lavet en liste så i let kan finde de stier vi primært har arbejdet i.
+
+| Framework | Path                             |
+| --------- | -------------------------------- |
+| Laravel   | `backend-laravel/app/`           |
+| Laravel   | `backend-laravel/database/`      |
+| Laravel   | `backend-laravel/routes/api.php` |
+| Expo      | `frontend-expo/api`              |
+| Expo      | `frontend-expo/app`              |
+| Expo      | `frontend-expo/components`       |
+| Svelte    | `frontend-svelte/src`            |
+
+## CLI Commands
+
+- `php artisan users:list`
+- `php artisan admin:create {{user_id}}`
+- `php artisan location:create "Ringvej Syd 104, 8260 Viby"`
+- `php artisan db:nuke`
+
 ## Tech stack
 
 ### Frontend
@@ -17,7 +40,7 @@
 - VPS (Hetzner)
 - Docker
 - Docker Compose
-- Nginx 
+- Nginx
 
 ## Case specifics
 
@@ -43,10 +66,3 @@
 ### Backend
 
 - Laravel -> MySQL database
-
-## CLI Commands
-
-- ```php artisan users:list```
-- ```php artisan admin:create {{user_id}}```
-- ```php artisan location:create "Ringvej Syd 104, 8260 Viby"```
-- ```php artisan db:nuke```
