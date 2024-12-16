@@ -1,3 +1,4 @@
+import type { Schedule } from '@/types';
 import { ApiBase } from './base';
 
 export class ScheduleApi extends ApiBase {
@@ -19,7 +20,7 @@ export class ScheduleApi extends ApiBase {
 		}
 	}
 
-	public async getSchedules(): Promise<[]> {
+	public async getSchedules(): Promise<Schedule[]> {
 		try {
 			const response = await fetch(`${this.baseUrl}/api/admin/schedules`, {
 				headers: {

@@ -5,6 +5,7 @@
 	import Button from '@/components/ui/button/button.svelte';
 	import Label from '@/components/ui/label/label.svelte';
 
+	// Define validation schema
 	const notificationSchema = z.object({
 		title: z
 			.string()
@@ -28,12 +29,14 @@
 
 	let { data } = $props();
 
+	// Define form data
 	let formData: NotificationSchema = $state({
 		title: '',
 		body: '',
 		selectedUsers: []
 	});
 
+	// Define users
 	const users = $derived(
 		data.users.map((user) => ({
 			value: String(user.id),
@@ -41,6 +44,7 @@
 		}))
 	);
 
+	// Define errors
 	let errors = $state({
 		title: '',
 		body: '',
@@ -51,6 +55,7 @@
 
 	let hasSubmitted = $state(false);
 
+	// Check if the form has been submitted, and if it has, check if it is valid
 	$effect(() => {
 		if (hasSubmitted) {
 			const result = notificationSchema.safeParse(formData);
@@ -75,6 +80,7 @@
 		}
 	});
 
+	// Handle the form submission
 	async function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
 		hasSubmitted = true;
@@ -87,7 +93,7 @@
 		isLoading = true;
 
 		try {
-			const response = await fetch('/svelte/api/notify', {
+			await fetch('/svelte/api/notify', {
 				method: 'POST',
 				body: JSON.stringify({
 					title: formData.title,
@@ -95,8 +101,6 @@
 					users: formData.selectedUsers.map((user) => Number(user.value))
 				})
 			});
-
-			const responseData = await response.json();
 
 			formData.title = '';
 			formData.body = '';

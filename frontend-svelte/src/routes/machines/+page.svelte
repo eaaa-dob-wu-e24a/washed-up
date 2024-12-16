@@ -1,17 +1,16 @@
 <script lang="ts">
-	import type { Machine } from '@/types';
+	import { enhance } from '$app/forms';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
-	import Button from '@/components/ui/button/button.svelte';
-	import { Loader2, Plus, Trash2 } from 'lucide-svelte';
 	import CreateMachineForm, { createMachineSchema } from '@/components/create-machine-form.svelte';
-	import type { Infer, SuperValidated } from 'sveltekit-superforms';
-	import { enhance } from '$app/forms';
-	import { navigating } from '$app/stores';
-	import { cn } from '@/utils';
-	import { buttonVariants } from '@/components/ui/button';
-	import { getMachineStatus } from '@/utils/machine-status';
 	import { Badge } from '@/components/ui/badge';
+	import { buttonVariants } from '@/components/ui/button';
+	import Button from '@/components/ui/button/button.svelte';
+	import type { Machine } from '@/types';
+	import { cn } from '@/utils';
+	import { getMachineStatus } from '@/utils/machine-status';
+	import { Loader2, Plus, Trash2 } from 'lucide-svelte';
+	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 
 	let {
 		data
@@ -26,6 +25,7 @@
 		id: null
 	});
 
+	// Toggle the dialog
 	function toggleDialog() {
 		open = !open;
 	}

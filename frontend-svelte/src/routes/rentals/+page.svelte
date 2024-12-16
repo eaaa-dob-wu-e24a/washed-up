@@ -1,22 +1,9 @@
 <script lang="ts">
-	import type { Schedule } from '@/types';
+	import { enhance } from '$app/forms';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import { Loader2 } from 'lucide-svelte';
-	import { enhance } from '$app/forms';
 
-	interface PageData {
-		session: {
-			user: {
-				name: string;
-				email: string;
-				token: string;
-			};
-			expires: string;
-		};
-		schedules: Schedule[];
-	}
-
-	let { data } = $props<{ data: PageData }>();
+	let { data } = $props();
 
 	function formatDate(dateString: string) {
 		return new Date(dateString).toLocaleString('da-DK', {
@@ -37,22 +24,26 @@
 	});
 
 	const now = new Date();
+
 	let schedules = $state(
 		[...data.schedules].sort(
 			(a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
 		)
 	);
 
+	// Get sessions that are running now
 	const runningNow = $derived(
 		schedules.filter(
 			(schedule) => new Date(schedule.start_time) <= now && new Date(schedule.end_time) > now
 		)
 	);
 
+	// Get sessions that are upcoming
 	const upcomingSessions = $derived(
 		schedules.filter((schedule) => new Date(schedule.start_time) > now)
 	);
 
+	// Get sessions that are past
 	const pastSessions = $derived(
 		schedules
 			.filter((schedule) => new Date(schedule.end_time) <= now)

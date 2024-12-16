@@ -89,11 +89,13 @@
 			date_ranges?.end.toDate('Europe/Copenhagen')
 		);
 
+		// Fetch the stats from api route located in src/routes/svelte/api/stats/+server.ts
 		const res = await fetch(`/svelte/api/stats?start=${dateRanges.start}&end=${dateRanges.end}`);
 		const data = await res.json();
 		return data;
 	}
 
+	// Every time the date ranges change, fetch the stats, and update the data
 	$effect(() => {
 		if (open) return;
 		loading = true;

@@ -23,12 +23,18 @@
 		id: null
 	});
 
+	// Handle the print action
 	const handlePrint = (id: string) => {
+		// Get the print content
 		const printContent = document.getElementById(`${id}`);
+		// Get the original body
 		const originalBody = document.body.innerHTML;
 
+		// Set the body to the print content
 		document.body.innerHTML = printContent!.innerHTML;
+		// Print the content
 		window.print();
+		// Reset the body to the original content
 		document.body.innerHTML = originalBody;
 	};
 
@@ -60,7 +66,7 @@
 					)}
 					type="submit"
 				>
-				<Power class="mr-2" />
+					<Power class="mr-2" />
 					{isLoading ? 'Updating...' : getMachineStatus(data?.machine?.status ?? 0).text}
 				</button>
 			</form>

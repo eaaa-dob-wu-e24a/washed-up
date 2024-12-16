@@ -5,17 +5,20 @@
 
 	let { data } = $props();
 
-	function getInitials(name: string) {
+	// Get user initials for avatar fallback
+	const getInitials = (name: string) => {
 		return name
 			.split(' ')
 			.map((word) => word[0])
 			.join('')
-			.toUpperCase();
-	}
+			.toUpperCase()
+			.slice(0, 2);
+	};
 
-	function formatDate(dateString: string) {
+	// Format date helper
+	const formatDate = (dateString: string) => {
 		return new Date(dateString).toLocaleDateString();
-	}
+	};
 </script>
 
 <div class="mx-auto max-w-7xl">

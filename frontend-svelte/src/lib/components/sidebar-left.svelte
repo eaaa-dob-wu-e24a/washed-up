@@ -50,13 +50,11 @@
 
 	let {
 		session,
-		location,
 		ref = $bindable(null),
 		collapsible = 'icon',
 		...restProps
 	}: {
 		session: Session;
-		location: Location;
 		ref?: any;
 		collapsible?: string;
 	} & ComponentProps<typeof Sidebar.Root> = $props();

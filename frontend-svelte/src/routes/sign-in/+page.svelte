@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 
+	// Get the error from the url
 	const urlError = $derived($page.url.searchParams.get('error'));
 
 	import { Button } from '$lib/components/ui/button/index.js';
@@ -23,29 +24,36 @@
 		password: ''
 	});
 
+	// Handle the form submission
 	function handleSubmit(event: Event) {
 		event.preventDefault();
 
+		// Parse the form data
 		const result = formSchema.safeParse(form);
 
+		// If the form is not valid, set the errors
 		if (!result.success) {
 			isSubmitted = true;
 			errors = result.error.flatten().fieldErrors;
 			return;
 		}
 
+		// Sign in with credentials using auth.js
 		signIn('credentials', form);
 	}
 
+	// Check if the form has been submitted, and if it has, check if it is valid
 	$effect(() => {
 		if (isSubmitted) {
 			const result = formSchema.safeParse(form);
 
+			// If the form is not valid, set the errors
 			if (!result.success) {
 				errors = result.error.flatten().fieldErrors;
 				return;
 			}
 
+			// If the form is valid, clear the errors
 			errors = {};
 		}
 	});

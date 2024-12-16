@@ -11,12 +11,14 @@
 
 	let { data } = $props();
 
+	// Format the date string to a readable format
 	const formatDate = (dateString: string) => {
 		return new Date(dateString).toLocaleString();
 	};
 
 	let map: maplibregl.Map;
 
+	// Initialize the map
 	$effect(() => {
 		map = new maplibregl.Map({
 			container: 'map',
@@ -32,6 +34,7 @@
 			.addTo(map);
 	});
 
+	// Handle the print action
 	const handlePrint = (id: string) => {
 		const printContent = document.getElementById(`${id}`);
 		const originalBody = document.body.innerHTML;
@@ -41,7 +44,6 @@
 		document.body.innerHTML = originalBody;
 	};
 
-	// Add new state variables
 	let price = $state(data?.location?.price_per_credit || 0);
 	let currency = $state(data?.location?.currency || 'EUR');
 

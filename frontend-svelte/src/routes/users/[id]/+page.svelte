@@ -14,7 +14,8 @@
 		.split(' ')
 		.map((n) => n[0])
 		.join('')
-		.toUpperCase();
+		.toUpperCase()
+		.slice(0, 2);
 
 	// Format date helper
 	const formatDate = (dateString: string) => {
@@ -27,26 +28,31 @@
 
 	const now = new Date();
 
+	// Sort the schedules by start time
 	let sortedSchedules = $state(
 		[...(user?.schedules || [])].sort(
 			(a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime()
 		)
 	);
 
+	// Get running now schedules
 	const runningNow = $derived(
 		sortedSchedules.filter(
 			(schedule) => new Date(schedule.start_time) <= now && new Date(schedule.end_time) > now
 		)
 	);
 
+	// Get upcoming schedules
 	const upcomingSessions = $derived(
 		sortedSchedules.filter((schedule) => new Date(schedule.start_time) > now)
 	);
 
+	// Get past schedules
 	const pastSessions = $derived(
 		sortedSchedules.filter((schedule) => new Date(schedule.end_time) <= now)
 	);
 
+	// Define form loading state
 	let formLoading: {
 		loading: boolean;
 		id: string | null;

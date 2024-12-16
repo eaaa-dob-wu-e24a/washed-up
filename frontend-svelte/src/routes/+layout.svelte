@@ -12,6 +12,7 @@
 	const pathname = $derived($page.url.pathname);
 	let breadcrumbs = $derived(pathname.split('/'));
 
+	// Get the breadcrumb slug
 	function getBreadcrumbSlug(path: string) {
 		// get the full path and make sure to split it where the slug is equal to the path so you'll get the correct slug for every breadcrumb
 
@@ -25,7 +26,7 @@
 	{@render children()}
 {:else}
 	<Sidebar.Provider>
-		<SidebarLeft location={data.location} session={data.session} />
+		<SidebarLeft session={data.session} />
 		<Sidebar.Inset>
 			<header
 				class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
