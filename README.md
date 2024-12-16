@@ -51,7 +51,7 @@ Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine
 
 ![QR Location](https://github.com/eaaa-dob-wu-e24a/final-project-fucc/blob/main/qr_location.png)
 
-#### Maskine #2 (Ved ovenstående lokation)
+#### Maskine #7 (Ved ovenstående lokation)
 
 ![QR Machine](https://github.com/eaaa-dob-wu-e24a/final-project-fucc/blob/main/qr_machine.png)
 
