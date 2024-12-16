@@ -5,6 +5,48 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useState } from "react";
 import { cn } from "~/lib/utils";
 
+const ITEMS_PER_PAGE = 10;
+
+function PageControls({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}) {
+  return (
+    <View className="flex-row justify-between items-center">
+      <View className="flex-row gap-2">
+        <Text
+          className={cn(
+            "px-6 py-3 bg-secondary rounded-md",
+            currentPage === 1 && "opacity-50"
+          )}
+          onPress={() => currentPage > 1 && onPageChange(currentPage - 1)}
+        >
+          Previous
+        </Text>
+        <Text
+          className={cn(
+            "px-6 py-3 bg-secondary rounded-md",
+            currentPage === totalPages && "opacity-50"
+          )}
+          onPress={() =>
+            currentPage < totalPages && onPageChange(currentPage + 1)
+          }
+        >
+          Next
+        </Text>
+      </View>
+      <Text className="text-secondary-foreground">
+        Page {currentPage} of {totalPages}
+      </Text>
+    </View>
+  );
+}
+
 export default function Transactions({
   creditPurchases,
   creditUsages,
@@ -40,6 +82,17 @@ export default function Transactions({
 }
 
 function UsageTransactions({ creditUsages }: { creditUsages: CreditUsage[] }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(creditUsages.length / ITEMS_PER_PAGE)
+  );
+
+  const paginatedUsages = creditUsages.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <View className="flex-col gap-3">
       {creditUsages.length === 0 && (
@@ -47,7 +100,14 @@ function UsageTransactions({ creditUsages }: { creditUsages: CreditUsage[] }) {
           No usage transactions yet.
         </Text>
       )}
-      {creditUsages.map((usage) => (
+      {creditUsages.length > 0 && (
+        <PageControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
+      {paginatedUsages.map((usage) => (
         <View key={usage.id} className="flex-col p-3 rounded-lg bg-secondary">
           <View className="flex-row justify-between mb-1">
             <Text className="font-semibold text-xl">
@@ -92,6 +152,17 @@ function PurchaseTransactions({
 }: {
   creditPurchases: CreditPurchase[];
 }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.max(
+    1,
+    Math.ceil(creditPurchases.length / ITEMS_PER_PAGE)
+  );
+
+  const paginatedPurchases = creditPurchases.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <View className="flex-col gap-3">
       {creditPurchases.length === 0 && (
@@ -99,7 +170,14 @@ function PurchaseTransactions({
           No purchase transactions yet.
         </Text>
       )}
-      {creditPurchases.map((purchase) => (
+      {creditPurchases.length > 0 && (
+        <PageControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
+      {paginatedPurchases.map((purchase) => (
         <View
           key={purchase.id}
           className="flex-col p-3 rounded-lg bg-secondary"
