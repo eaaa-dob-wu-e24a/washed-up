@@ -14,9 +14,7 @@ Da Apple kræver $100 for at få æren for at installere preview builds af appen
 
 ## Test Bruger
 
-Det er muligt at oprette en bruger selv, men i tilfældet at noget ikke virker korrekt, kan man anvende den nedenstående testbruger.
-
-Hvis man ønsker at teste admin panel med en selv-registreret bruger, skal man køre en commandline fra laravel mappen. Se venligst steps omkring lokal installation og vores liste af commands.
+Det er muligt at oprette en bruger selv, men for at få adgang to admin panelet, kan man anvende den nedenstående testbruger.
 
 ### Email
 
@@ -57,15 +55,25 @@ Disse QR-koder kan bruges til at registere en ny bruger, eller scanne en maskine
 
 ## Lokal installation
 
-Ønsker man at teste projektet lokalt, i stedet for den hostede løsning, kan man køre det med følgende steps:
+Ønsker man at teste projektet lokalt på sit IOS Device skal man gøre følgende:
+ 
+- Installer **Expo Go** appen i App Store:
+- Klon projektet og åben de i din foretrukne editor
+- Opret en ```.env.local```fil på på følgende sti: ```/frontend-expo/.env.local```, og indsæt variabler der kan findes i den afleverede PDF fil.
+- ```cd /frontend-expo```
+- ```bun i``` eller ```npm i --force```
+- ```bun go``` eller ```npm go```
+- Du vil få en QR kode i terminalen du kan scanne med dit kamera på dit IOS device, som vil åbne projektet op i **Expo Go** appen.
 
-For at installere nødvendige node modules, kør igennem terminalen, npm install (eller bun install) i roden, i frontend-expo, i frontend-svelte og backend-laravel. I backend-laravel kræver det også man kører "composer install".
+For at installere nødvendige depandencies, kør igennem terminalen, npm install (eller bun install) i roden og i frontend-expo.
 
 For at teste development lokalt, kan man i frontend-svelte skrive "npm run dev", i frontend-expo "npm go" for at starte appen i Expo Go, og i backend-laravel "php artisan serve" for at starte php serveren.
 
 ## Kode kommentering
 
-Da vi har arbejdet i 3 forskellige frameworks, kan det være lidt svært at finde comments. Derfor har vi lavet en liste så i let kan finde de stier vi primært har arbejdet i.
+Da vi har arbejdet i 3 forskellige frameworks, kan det være lidt svært at finde comments. Derfor har vi lavet en liste så i let kan finde de stier vi primært har arbejdet i. 
+
+**NB** Vi har ikke kommenteret shadcn-components.
 
 | Framework | Path                             |
 | --------- | -------------------------------- |
