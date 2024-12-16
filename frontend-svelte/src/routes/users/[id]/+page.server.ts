@@ -21,8 +21,6 @@ export const actions = {
 		const formdata = await event.request.formData();
 		const id = formdata.get('id');
 
-		console.log(id);
-
 		await api.cancelSchedule(Number(id));
 	}
 };

@@ -119,7 +119,6 @@ export default function BookingModal() {
         return;
       }
 
-      console.log(output);
       router.back();
     } catch (error) {
       console.error("Error setting schedule:", error);

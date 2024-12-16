@@ -58,9 +58,10 @@ export class MachineApi extends ApiBase {
 			});
 
 			const data = await response.json();
-			console.log(data);
+			return data;
 		} catch (error) {
 			console.error('Error creating machine', error);
+			return null;
 		}
 	}
 

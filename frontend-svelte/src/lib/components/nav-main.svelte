@@ -1,4 +1,5 @@
 <script lang="ts">
+	// This component is from Shadcn Svelte
 	import * as Collapsible from '$lib/components/ui/collapsible/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';

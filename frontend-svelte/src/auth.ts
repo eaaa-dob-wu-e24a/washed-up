@@ -1,3 +1,5 @@
+// This is the configuration file for setting up auth.js with SvelteKit
+
 import { Api } from '@/api';
 import { SvelteKitAuth, type DefaultSession, type SvelteKitAuthConfig } from '@auth/sveltekit';
 import Credentials from '@auth/sveltekit/providers/credentials';

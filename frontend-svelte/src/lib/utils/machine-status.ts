@@ -1,4 +1,6 @@
-import type { Badge, BadgeVariant } from '@/components/ui/badge';
+// Utility function for getting the machine status
+
+import type { BadgeVariant } from '@/components/ui/badge';
 
 export type MachineStatus = {
 	text: string;

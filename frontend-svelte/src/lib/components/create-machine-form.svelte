@@ -1,6 +1,7 @@
 <script module>
 	import { z } from 'zod';
 
+	// Validation schema for the create machine form
 	export const createMachineSchema = z.object({
 		type: z
 			.string({ required_error: 'Please select a machine type' })
@@ -26,8 +27,11 @@
 	}: { toggleDialog: () => void; data: SuperValidated<Infer<typeof createMachineSchema>> } =
 		$props();
 
+	// Create a superForm instance with the data and validation schema
 	const form = superForm(data, {
 		validators: zodClient(createMachineSchema),
+
+		// Handle the result of the form submission
 		onResult: ({ result }) => {
 			if (result.status === 200) {
 				formLoading = true;

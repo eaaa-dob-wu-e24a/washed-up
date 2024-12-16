@@ -53,9 +53,11 @@ export class CreditsApi extends ApiBase {
       }
 
       const data = await response.json();
+      if (data) {
+        return "success";
+      }
 
-      console.log(data);
-      return "success";
+      return "error";
     } catch (error) {
       console.error("Error buying credits", error);
       return "error";

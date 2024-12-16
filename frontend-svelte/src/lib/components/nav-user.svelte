@@ -1,4 +1,5 @@
 <script lang="ts">
+	// This component is from Shadcn Svelte
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 	import LogOut from 'lucide-svelte/icons/log-out';
 
