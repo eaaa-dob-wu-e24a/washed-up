@@ -1,5 +1,17 @@
 # Washed Up
 
+## Deployed project
+
+### Svelte (Admin Panel)
+
+https://washed-up.frederikbarbre.dk
+
+### Expo (User Frontend)
+
+- Link til apk indsættes her
+
+Da Apple kræver $100 for at få æren for at installere preview builds af appen, kræver det desværre at man kører et build lokalt, ønsker man at teste appen på iOS. Se nedenstående steps omkring lokal installation.
+
 ## Lokal installation
 
 Ønsker man at teste projektet lokalt, i stedet for den hostede løsning, kan man køre det med følgende steps:
