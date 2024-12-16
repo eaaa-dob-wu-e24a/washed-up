@@ -43,12 +43,17 @@ class ScheduleController extends Controller {
     }
 
     public function store(Request $request) {
+        // First check if the machine exists and is enabled (status = 1)
+        $machine = Machine::find($request->machine_id);
+        if (!$machine || $machine->status !== 1) {
+            return response()->json(['error' => 'Machine is not available for booking'], 400);
+        }
+
         if ($this->hasOverlap($request->machine_id, $request->start_time, $request->end_time)) {
             return response()->json(['error' => 'Schedule overlaps with an existing entry'], 409);
         }
 
         $duration = (strtotime($request->end_time) - strtotime($request->start_time)) / 60;
-
         $duration_in_hours = $duration / 60;
 
         $user = Auth::user();
@@ -133,6 +138,18 @@ class ScheduleController extends Controller {
 
     public function destroy($id) {
         $schedule = Schedule::findOrFail($id);
+
+        // Check if schedule is currently active
+        $now = now();
+        $startTime = strtotime($schedule->start_time);
+        $endTime = strtotime($schedule->end_time);
+
+        if ($now >= $startTime && $now <= $endTime) {
+            return response()->json([
+                'error' => 'Cannot cancel an active schedule'
+            ], 400);
+        }
+
         $machine = Machine::findOrFail($schedule->machine_id);
         $duration = (strtotime($schedule->end_time) - strtotime($schedule->start_time)) / 60;
         $duration_in_hours = $duration / 60;

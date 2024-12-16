@@ -134,7 +134,7 @@ export default function BookingModal() {
       router.back();
     } catch (error) {
       console.error("Error setting schedule:", error);
-      setBookingError("An error occurred while booking");
+      setBookingError(`${error}`);
     }
   };
 
@@ -279,13 +279,11 @@ export default function BookingModal() {
             Time: {bookedHours[0]}:00 -{" "}
             {bookedHours[bookedHours.length - 1] + 1}:00
           </Text>
-
           {bookingError && (
             <Text className="mb-4 text-destructive font-medium">
               {bookingError}
             </Text>
           )}
-
           <View className="flex-row justify-between gap-4">
             <Button
               variant="outline"

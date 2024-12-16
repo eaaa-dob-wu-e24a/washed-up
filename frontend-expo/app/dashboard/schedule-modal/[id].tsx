@@ -39,6 +39,7 @@ export default function ScheduleModal() {
   const [schedule, setSchedule] = useState<Schedule[]>([]); // Store schedule data
   const [loading, setLoading] = useState(true); // Loading state
   const [deleteConfirm, setDeleteConfirm] = useState(false); // Delete confirmation modal state
+  const [bookingError, setBookingError] = useState<string | null>(null);
 
   // Initialize API with auth token
   const api = new Api(token);
@@ -81,11 +82,13 @@ export default function ScheduleModal() {
 
   // Handle schedule cancellation
   const handleDelete = async () => {
+    setBookingError(null);
     try {
       await api.cancelSchedule(Number(id));
       router.back(); // Return to previous screen after cancellation
     } catch (error) {
       console.error("Failed to cancel schedule:", error);
+      setBookingError(`${error}`);
     }
   };
 
@@ -150,15 +153,21 @@ export default function ScheduleModal() {
       </ScrollView>
       {deleteConfirm && (
         <View className="p-6 border-t border-secondary">
-          <View className="mb-2">
-            <Text className="text-xl font-bold mb-4">Cancel Booking</Text>
-            <Text>Do you wish to cancel this booking?</Text>
-            <Text className="mb-2">Your credits will be refunded.</Text>
-          </View>
+          <Text className="text-xl font-bold mb-4">Cancel Booking</Text>
+          <Text>Do you wish to cancel this booking?</Text>
+          <Text className="mb-2">Your credits will be refunded.</Text>
+          {bookingError && (
+            <Text className="mb-4 text-destructive font-medium">
+              {bookingError}
+            </Text>
+          )}
           <View className="flex-row justify-between gap-4">
             <Button
               variant="outline"
-              onPress={() => setDeleteConfirm(false)}
+              onPress={() => {
+                setDeleteConfirm(false);
+                setBookingError(null);
+              }}
               className="flex-1"
             >
               <Text>No</Text>
